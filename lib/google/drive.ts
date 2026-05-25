@@ -22,6 +22,7 @@ export async function uploadPublicImage(
   const folderId = getInviteBgFolderId();
 
   const created = await drive.files.create({
+    supportsAllDrives: true,
     requestBody: {
       name: fileName,
       parents: [folderId],
@@ -40,6 +41,7 @@ export async function uploadPublicImage(
 
   await drive.permissions.create({
     fileId,
+    supportsAllDrives: true,
     requestBody: {
       role: "reader",
       type: "anyone",
