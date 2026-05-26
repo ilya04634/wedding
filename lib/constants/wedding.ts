@@ -8,27 +8,27 @@ export const WEDDING_ADDRESS_LINE = "Аалы Токомбаева улица, 2
 export const WEDDING_MAP_URL = "https://go.2gis.com/F89Ms";
 
 export const RSVP_SECTION_DESCRIPTION =
-  "Пожалуйста, заполните форму до 1 июля 2026.";
+  "Пожалуйста, заполните анкету до 1 июля 2026. Ответ можно указать отдельно для каждого гостя из приглашения.";
 
 export const PROGRAM_ITEMS = [
   {
     time: "13:00",
     title: "Сбор гостей",
-    description: "Welcome-зона, напитки",
+    description: "Welcome-зона, легкие напитки и первые фотографии",
   },
   {
     time: "14:00",
     title: "Церемония",
-    description: "Торжественная часть",
+    description: "Торжественная часть и теплые слова",
   },
   {
     time: "15:30",
     title: "Банкет",
-    description: "Ужин и тосты",
+    description: "Ужин, поздравления и праздничная программа",
   },
   {
     time: "18:00",
     title: "Танцы",
-    description: "Праздник продолжается",
+    description: "Музыка, танцы и продолжение вечера",
   },
 ] as const;

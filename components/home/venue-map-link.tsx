@@ -7,12 +7,9 @@ export function VenueMapLink() {
       href={WEDDING_MAP_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className="group mt-1 inline-flex flex-col items-center gap-2 rounded-lg transition-opacity hover:opacity-90"
+      className="group mt-1 inline-flex items-center gap-2 rounded-lg px-2 py-1 transition-colors hover:bg-neutral-100"
       aria-label={`Открыть ${WEDDING_ADDRESS_LINE} в 2ГИС`}
     >
-      <span className="text-center text-neutral-500 group-hover:text-neutral-700">
-        {WEDDING_ADDRESS_LINE}
-      </span>
       <Image
         src="/2gis-badge.svg"
         alt="Открыть в 2ГИС"
@@ -20,6 +17,9 @@ export function VenueMapLink() {
         height={32}
         className="h-8 w-8"
       />
+      <span className="text-left text-neutral-500 group-hover:text-neutral-700">
+        {WEDDING_ADDRESS_LINE}
+      </span>
     </a>
   );
 }

@@ -13,13 +13,19 @@ interface HeroSectionProps {
 
 export function HeroSection({ guestName }: HeroSectionProps) {
   return (
-    <section className="py-12 text-center sm:py-16">
-      <p className="mb-3 text-sm uppercase tracking-[0.2em] text-neutral-500">
-        {guestName ? `${guestName}, приглашаем вас на свадьбу` : "Приглашаем вас на свадьбу"}
+    <section className="py-14 text-center sm:py-20">
+      <p className="mb-3 text-sm uppercase text-neutral-500">
+        {guestName
+          ? `${guestName}, приглашаем вас на свадьбу`
+          : "Приглашаем вас на свадьбу"}
       </p>
       <h1 className="text-balance font-[family-name:var(--font-geist-sans)] text-4xl font-light tracking-tight text-neutral-900 sm:text-5xl">
         {COUPLE_NAMES}
       </h1>
+      <p className="mx-auto mt-5 max-w-xl text-balance text-base leading-7 text-neutral-600">
+        Будем счастливы разделить с вами день, который станет началом нашей
+        семейной истории.
+      </p>
       <div className="mx-auto mt-8 flex max-w-md flex-col gap-3 text-sm text-neutral-700">
         <p className="flex items-center justify-center gap-2">
           <Calendar className="h-4 w-4 shrink-0 text-neutral-400" aria-hidden />
@@ -39,7 +45,7 @@ export function HeroSection({ guestName }: HeroSectionProps) {
         href="#rsvp"
         className="mt-10 inline-block rounded-lg border border-neutral-900 px-6 py-2.5 text-sm font-medium text-neutral-900 transition-colors hover:bg-neutral-900 hover:text-white"
       >
-        Подтвердить присутствие
+        Перейти к анкете
       </a>
     </section>
   );

@@ -7,7 +7,7 @@ export function ProgramSection() {
     <Section
       id="program"
       title="Программа дня"
-      description="Расписание торжества — уточнения сообщим ближе к дате."
+      description="Основные моменты дня. Если детали изменятся, мы сообщим гостям заранее."
     >
       <ol className="space-y-0">
         {PROGRAM_ITEMS.map((item) => (
@@ -24,7 +24,9 @@ export function ProgramSection() {
                 <Clock className="h-3.5 w-3.5" aria-hidden />
                 {item.time}
               </p>
-              <h3 className="mt-1 font-medium text-neutral-900">{item.title}</h3>
+              <h3 className="mt-1 font-medium text-neutral-900">
+                {item.title}
+              </h3>
               <p className="mt-1 text-sm text-neutral-600">{item.description}</p>
             </div>
           </li>
