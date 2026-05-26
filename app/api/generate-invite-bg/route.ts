@@ -8,26 +8,11 @@
 
 import { getInviteById, updateInviteBackground } from "@/lib/google/guests";
 import { generateAndUploadInviteBackground } from "@/lib/invite/generate-background";
+import { buildPublicInviteUrl } from "@/lib/invite/url";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
-
-function getSiteUrl(request: NextRequest) {
-  const configuredUrl = process.env.SITE_URL?.trim();
-  if (configuredUrl) return configuredUrl.replace(/\/$/, "");
-
-  const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
-  const forwardedHost = request.headers.get("x-forwarded-host");
-  const host = forwardedHost || request.headers.get("host");
-
-  if (host) return `${forwardedProto}://${host}`;
-  return request.nextUrl.origin;
-}
-
-function buildInviteUrl(request: NextRequest, inviteId: string) {
-  return `${getSiteUrl(request)}/i/${encodeURIComponent(inviteId)}`;
-}
 
 export async function POST(request: NextRequest) {
   let stage = "init";
@@ -63,7 +48,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invite not found" }, { status: 404 });
   }
 
-  const inviteUrl = buildInviteUrl(request, invite.id);
+  const inviteUrl = buildPublicInviteUrl(invite.id);
 
   if (invite.bgUrl && invite.status === "done") {
     if (invite.inviteUrl !== inviteUrl) {

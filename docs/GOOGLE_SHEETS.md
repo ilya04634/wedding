@@ -154,3 +154,8 @@ After updating the script in Google Apps Script:
 
 The panel opens Web App links for all pending invites or the selected invite.
 The older direct menu items are still kept as a fallback.
+
+Note: Google may still ask for authorization when using a custom Sheets menu,
+because the menu itself runs inside Google Apps Script. The recommended MVP flow
+is to run generation from `/admin` on the site and use Sheets only as data
+storage.

@@ -6,10 +6,13 @@ import {
   setAdminSession,
 } from "@/lib/admin/auth";
 import {
+  getInviteById,
   updateGuestPerson,
   updateInviteBackground,
   type GuestPersonUpdate,
 } from "@/lib/google/guests";
+import { generateAndUploadInviteBackground } from "@/lib/invite/generate-background";
+import { buildPublicInviteUrl } from "@/lib/invite/url";
 import {
   settingsToFormData,
   updateSiteSettings,
@@ -73,6 +76,43 @@ export async function clearInviteBackgroundAction(formData: FormData) {
   revalidatePath("/admin");
   revalidatePath(`/i/${id}`);
   revalidatePath(`/?guestId=${id}`);
+}
+
+export async function generateInviteBackgroundAction(formData: FormData) {
+  assertAdminAuthenticated();
+
+  const id = getRequiredString(formData, "id");
+  const invite = await getInviteById(id);
+  if (!invite) {
+    throw new Error(`Invite not found: ${id}`);
+  }
+
+  const inviteUrl = buildPublicInviteUrl(invite.id);
+
+  if (invite.bgUrl && invite.status === "done") {
+    await updateInviteBackground(invite.id, invite.bgUrl, "done", inviteUrl);
+    revalidatePath("/admin");
+    revalidatePath(`/i/${invite.id}`);
+    revalidatePath(`/?guestId=${invite.id}`);
+    return;
+  }
+
+  const openaiKey = process.env.OPENAI_API_KEY?.trim();
+  if (!openaiKey) {
+    throw new Error("OPENAI_API_KEY is not configured");
+  }
+
+  await updateInviteBackground(invite.id, "", "pending");
+  const bgUrl = await generateAndUploadInviteBackground(
+    invite.id,
+    invite.inviteName,
+    openaiKey,
+  );
+  await updateInviteBackground(invite.id, bgUrl, "done", inviteUrl);
+
+  revalidatePath("/admin");
+  revalidatePath(`/i/${invite.id}`);
+  revalidatePath(`/?guestId=${invite.id}`);
 }
 
 export async function updateSiteSettingsAction(formData: FormData) {

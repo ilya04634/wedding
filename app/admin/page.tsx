@@ -1,5 +1,6 @@
 import {
   clearInviteBackgroundAction,
+  generateInviteBackgroundAction,
   loginAdmin,
   logoutAdmin,
   updateSiteSettingsAction,
@@ -17,6 +18,7 @@ import { getSiteSettings, settingsToFormData } from "@/lib/google/settings";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 120;
 
 interface AdminPageProps {
   searchParams: { error?: string };
@@ -99,9 +101,10 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
 
       <section className="mt-6 rounded-lg border border-neutral-200 bg-neutral-50 p-4 text-sm text-neutral-700">
         <p>
-          Чтобы перегенерировать фон: очистите фон у приглашения кнопкой
-          &quot;Очистить фон&quot;, затем запустите в Google Sheets меню{" "}
-          <span className="font-medium">Wedding - Generate all pending backgrounds</span>.
+          Генерацию лучше запускать здесь, в админке сайта. Google Sheets остается
+          таблицей данных, а сайт сам запишет `bg_url`, `invite_url` и `status`.
+          Если фон уже готов, кнопка генерации только дозапишет `invite_url` и не
+          потратит OpenAI-кредиты.
         </p>
       </section>
 
@@ -244,12 +247,22 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                   </Link>
                 ) : null}
               </div>
-              <form action={clearInviteBackgroundAction}>
-                <input type="hidden" name="id" value={invite.id} />
-                <Button type="submit" variant="secondary">
-                  Очистить фон
-                </Button>
-              </form>
+              <div className="flex flex-wrap gap-2">
+                <form action={generateInviteBackgroundAction}>
+                  <input type="hidden" name="id" value={invite.id} />
+                  <Button type="submit">
+                    {invite.bgUrl && invite.status === "done"
+                      ? "Записать invite_url"
+                      : "Сгенерировать фон"}
+                  </Button>
+                </form>
+                <form action={clearInviteBackgroundAction}>
+                  <input type="hidden" name="id" value={invite.id} />
+                  <Button type="submit" variant="secondary">
+                    Очистить фон
+                  </Button>
+                </form>
+              </div>
             </header>
 
             <div className="divide-y divide-neutral-200">

@@ -62,3 +62,21 @@ uploadLinkEnabled | true
 ```text
 uploadLinkEnabled | false
 ```
+
+## Invite background generation
+
+Recommended MVP flow: generate invite backgrounds from `/admin`, not from Google
+Sheets. This avoids repeated Google Apps Script authorization prompts.
+
+In `/admin`, every invite card has:
+
+- `Сгенерировать фон` - generates the AI background, uploads it to Drive, and
+  writes `bg_url`, `invite_url`, and `status=done` to every row with this `id`.
+- `Записать invite_url` - appears when `bg_url` is already ready and
+  `status=done`; it only writes the public site link and does not spend OpenAI
+  credits.
+- `Очистить фон` - clears the background/status so the invite can be generated
+  again.
+
+Google Apps Script can remain as a fallback, but it is no longer the main path
+for generation.
