@@ -130,7 +130,7 @@ function rowToGuestPerson(
   const personName =
     getCell(row, columnIndex, "person_name") || getCell(row, columnIndex, "name");
 
-  if (!id || !personName) return null;
+  if (!personName) return null;
 
   return {
     id,
@@ -207,9 +207,15 @@ async function fetchGuestRows(): Promise<{
 }
 
 function peopleToInvite(id: string, people: GuestPerson[]): GuestInvite | null {
-  const invitePeople = people.filter((person) => person.id.toLowerCase() === id);
+  const invitePeople = people.filter(
+    (person) => person.id && person.id.toLowerCase() === id,
+  );
   if (!invitePeople.length) return null;
 
+  return peopleGroupToInvite(invitePeople[0].id, invitePeople);
+}
+
+function peopleGroupToInvite(id: string, invitePeople: GuestPerson[]): GuestInvite {
   const explicitInviteName = invitePeople.find((person) => person.inviteName)
     ?.inviteName;
   const adultNames = invitePeople
@@ -220,7 +226,7 @@ function peopleToInvite(id: string, people: GuestPerson[]): GuestInvite | null {
     explicitInviteName || formatInviteName(adultNames.length ? adultNames : allNames);
 
   return {
-    id: invitePeople[0].id,
+    id,
     inviteName,
     people: invitePeople,
     prompt: invitePeople.find((person) => person.prompt)?.prompt ?? null,
@@ -234,20 +240,18 @@ function peopleToInvite(id: string, people: GuestPerson[]): GuestInvite | null {
 }
 
 function groupPeopleByInvite(people: GuestPerson[]): GuestInvite[] {
-  const ids: string[] = [];
-  const seen = new Set<string>();
+  const groups = new Map<string, GuestPerson[]>();
 
   people.forEach((person) => {
-    const normalized = person.id.toLowerCase();
-    if (!seen.has(normalized)) {
-      seen.add(normalized);
-      ids.push(normalized);
-    }
+    const groupKey = person.id
+      ? `id:${person.id.toLowerCase()}`
+      : `missing:${(person.inviteName || person.personName).toLowerCase()}`;
+    groups.set(groupKey, [...(groups.get(groupKey) ?? []), person]);
   });
 
-  return ids
-    .map((id) => peopleToInvite(id, people))
-    .filter((invite): invite is GuestInvite => invite !== null);
+  return Array.from(groups.values()).map((group) =>
+    peopleGroupToInvite(group.find((person) => person.id)?.id ?? "", group),
+  );
 }
 
 function requireColumn(columnIndex: ColumnIndex, key: GuestColumn): number {

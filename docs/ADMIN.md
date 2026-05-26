@@ -87,6 +87,11 @@ default prompt as a small preference, not used as a full replacement.
 
 Use `Заполнить пустые id` when helpers filled `invite_name` and guest names but
 left `id` empty. Rows with the same `invite_name` receive the same generated id.
+Rows without `id` are still shown in `/admin`, but background generation is
+disabled until ids are filled.
+
+The invite list in `/admin` has search and collapsible invite groups so large
+guest lists are easier to navigate.
 
 RSVP answers update existing rows by `Invite_Id + Person_Name`, so repeat
 submissions do not create duplicates.
