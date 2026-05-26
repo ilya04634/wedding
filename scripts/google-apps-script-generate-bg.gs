@@ -17,8 +17,8 @@
  * invite_url is the public site URL you send to guests.
  */
 
-const WEBHOOK_URL = "https://YOUR_DOMAIN.vercel.app/api/generate-invite-bg";
-const WEBHOOK_SECRET = "YOUR_WEBHOOK_SECRET";
+const WEBHOOK_URL = "";
+const WEBHOOK_SECRET = "";
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwU3iGa-i1A1lMyuQwL2AWpBy8OGKkAxVFQATUkNZ0wNvAot5lYLQB8cJDzC3pnJQMo/exec";
 const GUESTS_SHEET_NAME = "Guests";
 

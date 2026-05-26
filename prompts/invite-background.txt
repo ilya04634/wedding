@@ -1,16 +1,11 @@
-Abstract elegant wedding invitation background for a personal digital invite.
+Abstract minimalist wedding invitation background for a vertical mobile screen.
 
 Guest name: {{guestName}}
 
-Create only a background image. Do not include text, letters, words, numbers,
-logos, monograms, people, faces, hands, or readable signs.
+Create ONLY a background image. Do not include text, letters, words, numbers, logos, monograms, people, faces, hands, or readable signs.
 
-Style: romantic, airy, refined, high-end wedding stationery, soft natural light,
-visible delicate floral bokeh around the edges, subtle fabric or paper texture,
-gentle depth, graceful composition for a vertical mobile screen.
+Style: minimalist continuous fine-line botanical art, elegant single black stroke sketches of summer garden flowers (peonies, roses, eucalyptus leaves). Combined with soft, semi-transparent watercolor wash spots placed subtly underneath the line art. Warm, joyful, airy, and modern aesthetic. Subtle paper texture.
 
-Palette: soft ivory, warm white, muted champagne gold, pale blush, sage accents.
+Palette: soft ivory/cream background, delicate watercolor splashes in sage green, peony pink, and soft lemon sorbet yellow.
 
-The background must be visibly decorative, not blank or plain white. Leave
-comfortable calm space in the center for website text to be overlaid later with
-HTML/CSS, but keep soft floral and light details visible around the frame.
+Layout: The background must be visibly decorative, not blank or plain white. Leave a wide, comfortable calm space in the center for website text to be overlaid later with HTML/CSS, but keep soft floral and light watercolor details visible around the frame and outer edges to naturally border the image.
