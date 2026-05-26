@@ -33,7 +33,7 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
   const rsvpUrl = `${detailsUrl}#rsvp`;
 
   return (
-    <main className="relative min-h-[100dvh] w-full overflow-hidden bg-[#34312d] text-white">
+    <main className="relative min-h-[100dvh] w-full overflow-hidden bg-neutral-950 text-white">
       {hasBackground ? (
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -48,11 +48,8 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
         />
       )}
 
-      <div className="absolute inset-0 bg-black/24" aria-hidden />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/42 via-black/20 to-black/48" aria-hidden />
-      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/62 via-black/24 to-transparent" aria-hidden />
-      <div className="absolute -right-24 top-10 h-72 w-72 rounded-full bg-[radial-gradient(circle,_rgba(231,151,150,0.24),_rgba(231,151,150,0)_70%)]" aria-hidden />
-      <div className="absolute -left-24 bottom-20 h-72 w-72 rounded-full bg-[radial-gradient(circle,_rgba(138,154,122,0.22),_rgba(138,154,122,0)_70%)]" aria-hidden />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/70" aria-hidden />
+      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/70 to-transparent" aria-hidden />
 
       <section className="relative z-10 mx-auto flex min-h-[100dvh] max-w-4xl flex-col justify-between px-4 py-6 text-center sm:px-8 sm:py-10">
         <header className="flex items-center justify-center text-[0.68rem] uppercase tracking-[0.16em] text-white/75 sm:justify-between sm:text-xs">
@@ -60,7 +57,7 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
           <span className="hidden sm:inline">{settings.coupleNames}</span>
         </header>
 
-        <div className="mx-auto flex max-w-2xl flex-1 flex-col items-center justify-center rounded-[2rem] bg-black/18 px-4 py-8 shadow-[0_24px_80px_rgba(0,0,0,0.22)] backdrop-blur-[1px] sm:px-8 sm:py-12">
+        <div className="mx-auto flex max-w-2xl flex-1 flex-col items-center justify-center py-8 sm:py-12">
           <p className="rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white/90 backdrop-blur-sm sm:text-sm sm:tracking-[0.22em]">Приглашение</p>
           <h1 className="font-display mt-4 text-balance text-3xl leading-tight sm:mt-5 sm:text-6xl">
             {invite.inviteName}
@@ -76,11 +73,11 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
           ) : null}
 
           <div className="mt-7 grid w-full max-w-lg gap-2 text-sm text-white/90 sm:mt-9 sm:grid-cols-3 sm:gap-3">
-            <p className="flex min-h-12 items-center justify-center gap-2 rounded-md border border-white/40 bg-black/30 px-3 py-3 backdrop-blur-[2px]">
+            <p className="flex min-h-12 items-center justify-center gap-2 rounded-md border border-white/20 bg-black/20 px-3 py-3 backdrop-blur-sm">
               <Calendar className="h-4 w-4 shrink-0" aria-hidden />
               <span>{settings.weddingTime}</span>
             </p>
-            <p className="flex min-h-12 items-center justify-center gap-2 rounded-md border border-white/40 bg-black/30 px-3 py-3 backdrop-blur-[2px] sm:col-span-2">
+            <p className="flex min-h-12 items-center justify-center gap-2 rounded-md border border-white/20 bg-black/20 px-3 py-3 backdrop-blur-sm sm:col-span-2">
               <MapPin className="h-4 w-4 shrink-0" aria-hidden />
               <span>{settings.weddingVenue}</span>
             </p>
