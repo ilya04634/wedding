@@ -3,11 +3,10 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { UploadFileItem } from "@/components/upload/upload-file-item";
 import { cn } from "@/lib/utils";
-import { ImagePlus, Images } from "lucide-react";
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { ImagePlus, Images, Upload } from "lucide-react";
+import { useCallback, useId, useRef, useState } from "react";
 
 export type UploadFileStatus = "pending" | "uploading" | "done" | "error";
 
@@ -16,6 +15,7 @@ export interface UploadFileState {
   file: File;
   progress: number;
   status: UploadFileStatus;
+  caption: string;
   error?: string;
   stage?: string;
 }
@@ -123,13 +123,10 @@ function uploadFileToDrive(
 export function UploadZone() {
   const inputId = useId();
   const uploaderNameId = useId();
-  const uploadNoteId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
-  const autoUploadRef = useRef(false);
   const [files, setFiles] = useState<UploadFileState[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [uploaderName, setUploaderName] = useState("");
-  const [uploadNote, setUploadNote] = useState("");
 
   const addFiles = useCallback((incoming: FileList | File[]) => {
     const list = Array.from(incoming).filter(
@@ -142,7 +139,7 @@ export function UploadZone() {
       for (const file of list) {
         const id = createFileId(file);
         if (!existing.has(id)) {
-          next.push({ id, file, progress: 0, status: "pending" });
+          next.push({ id, file, caption: "", progress: 0, status: "pending" });
         }
       }
       return next;
@@ -188,7 +185,7 @@ export function UploadZone() {
         await uploadFileToDrive(
           item.file,
           uploaderName.trim(),
-          uploadNote.trim(),
+          item.caption.trim(),
           (progress) => updateFile(item.id, { progress }),
           (stage) => updateFile(item.id, { stage }),
         );
@@ -204,19 +201,12 @@ export function UploadZone() {
         });
       }
     }
-  }, [files, updateFile, uploadNote, uploaderName]);
+  }, [files, updateFile, uploaderName]);
 
+  const hasUploadable = files.some(
+    (file) => file.status === "pending" || file.status === "error",
+  );
   const isUploading = files.some((file) => file.status === "uploading");
-
-  useEffect(() => {
-    const hasPending = files.some((file) => file.status === "pending");
-    if (!hasPending || isUploading || autoUploadRef.current) return;
-
-    autoUploadRef.current = true;
-    startUpload().finally(() => {
-      autoUploadRef.current = false;
-    });
-  }, [files, isUploading, startUpload]);
 
   return (
     <div className="space-y-6">
@@ -231,19 +221,8 @@ export function UploadZone() {
             maxLength={80}
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor={uploadNoteId}>Комментарий к фото/видео</Label>
-          <Textarea
-            id={uploadNoteId}
-            value={uploadNote}
-            onChange={(event) => setUploadNote(event.target.value)}
-            placeholder="Например: первый танец, церемония, стол друзей"
-            maxLength={120}
-            rows={3}
-          />
-        </div>
         <p className="text-xs text-neutral-500">
-          Необязательно, но так нам будет проще потом разобрать фотографии и видео.
+          Необязательно. Название для каждого файла можно будет указать после выбора.
         </p>
       </div>
 
@@ -304,19 +283,31 @@ export function UploadZone() {
       </div>
 
       {files.length > 0 ? (
-        <ul className="space-y-3" aria-live="polite">
-          {files.map((file) => (
-            <UploadFileItem
-              key={file.id}
-              file={file}
-              onRemove={removeFile}
-            />
-          ))}
-        </ul>
+        <div className="space-y-4">
+          <ul className="space-y-3" aria-live="polite">
+            {files.map((file) => (
+              <UploadFileItem
+                key={file.id}
+                file={file}
+                onCaptionChange={(caption) => updateFile(file.id, { caption })}
+                onRemove={removeFile}
+              />
+            ))}
+          </ul>
+          <Button
+            type="button"
+            className="w-full"
+            disabled={!hasUploadable || isUploading}
+            onClick={startUpload}
+          >
+            <Upload className="mr-2 h-4 w-4" aria-hidden />
+            {isUploading ? "Загружаем..." : "Загрузить файлы"}
+          </Button>
+        </div>
       ) : null}
 
       <p className="text-center text-xs text-neutral-500">
-        После выбора или съемки загрузка начнется автоматически. Большие видео
+        После выбора подпишите файлы, если хотите, и нажмите загрузку. Большие видео
         могут загружаться несколько минут.
       </p>
     </div>

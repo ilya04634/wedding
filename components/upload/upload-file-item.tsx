@@ -1,3 +1,4 @@
+import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { formatFileSize } from "@/lib/utils";
 import { FileImage, FileVideo, X } from "lucide-react";
@@ -5,12 +6,18 @@ import type { UploadFileState } from "./upload-zone";
 
 interface UploadFileItemProps {
   file: UploadFileState;
+  onCaptionChange: (caption: string) => void;
   onRemove: (id: string) => void;
 }
 
-export function UploadFileItem({ file, onRemove }: UploadFileItemProps) {
+export function UploadFileItem({
+  file,
+  onCaptionChange,
+  onRemove,
+}: UploadFileItemProps) {
   const isVideo = file.file.type.startsWith("video/");
   const Icon = isVideo ? FileVideo : FileImage;
+  const canEditCaption = file.status === "pending" || file.status === "error";
 
   const statusLabel =
     file.status === "pending"
@@ -51,6 +58,15 @@ export function UploadFileItem({ file, onRemove }: UploadFileItemProps) {
               </button>
             ) : null}
           </div>
+          <Input
+            className="mt-3"
+            value={file.caption}
+            onChange={(event) => onCaptionChange(event.target.value)}
+            disabled={!canEditCaption}
+            maxLength={120}
+            aria-label={`Название или комментарий для ${file.file.name}`}
+            placeholder="Название или комментарий: первый танец, церемония..."
+          />
           <Progress
             className="mt-3"
             value={file.progress}
