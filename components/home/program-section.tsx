@@ -31,58 +31,68 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
           </p>
         </div>
 
-        <ol className="relative mx-auto mt-10 max-w-xl overflow-visible px-1 py-8 sm:mt-14 sm:max-w-2xl sm:py-12">
+        <ol className="relative mx-auto mt-10 max-w-xl overflow-visible px-1 py-8 sm:mt-14 sm:max-w-3xl sm:py-12">
           <svg
-            className="pointer-events-none absolute -bottom-10 -top-10 left-0 z-0 h-[calc(100%+5rem)] w-full text-[#8a9a7a]/32 sm:hidden"
-            viewBox="0 0 320 860"
+            className="pointer-events-none absolute -bottom-16 -top-16 left-0 z-0 h-[calc(100%+8rem)] w-full text-[#8a9a7a]/34 sm:hidden"
+            viewBox="0 0 320 980"
             preserveAspectRatio="none"
             aria-hidden
           >
             <path
-              d="M18 -10 C184 72 208 152 104 230 C8 302 45 400 211 470 C318 525 283 666 74 812 C36 838 18 858 12 880"
+              d="M-8 -20 C52 52 86 92 82 148 C76 226 236 228 254 326 C272 428 56 430 54 548 C52 670 264 662 260 780 C256 866 86 884 8 1000"
               fill="none"
               stroke="currentColor"
-              strokeWidth="1.8"
+              strokeWidth="1.7"
               strokeLinecap="round"
             />
           </svg>
           <svg
-            className="pointer-events-none absolute -bottom-16 -top-16 left-1/2 z-0 hidden h-[calc(100%+8rem)] w-[min(54rem,120vw)] -translate-x-1/2 text-[#8a9a7a]/36 sm:block"
-            viewBox="0 0 760 940"
+            className="pointer-events-none absolute -bottom-20 -top-20 left-1/2 z-0 hidden h-[calc(100%+10rem)] w-[min(58rem,118vw)] -translate-x-1/2 text-[#8a9a7a]/34 sm:block"
+            viewBox="0 0 860 1040"
             preserveAspectRatio="none"
             aria-hidden
           >
             <path
-              d="M-40 8 C632 80 646 198 316 294 C-40 398 44 532 604 614 C876 654 760 798 162 906 C60 924 -22 936 -72 958"
+              d="M-70 -24 C116 58 206 102 198 176 C188 278 656 274 700 396 C746 524 116 526 114 668 C112 806 700 782 690 914 C684 1002 144 1016 -82 1070"
               fill="none"
               stroke="currentColor"
-              strokeWidth="2.1"
+              strokeWidth="2"
               strokeLinecap="round"
             />
           </svg>
           {items.map((item, index) => {
             const Icon = ICONS[index] ?? ChampagneLineArt;
             const color = COLORS[index] ?? "#8a9a7a";
-            const isRight = index % 2 === 1;
+            const isRight = index % 2 === 0;
 
             return (
               <li
                 key={`${item.time}-${item.title}`}
-                className={[
-                  "relative z-10 flex min-h-32 w-[82%] items-center gap-3 py-4 sm:min-h-40 sm:w-[66%] sm:gap-4",
-                  isRight ? "ml-auto flex-row-reverse text-right" : "mr-auto text-left",
-                ].join(" ")}
+                className="relative z-10 min-h-48 py-5 sm:min-h-56 sm:py-7"
               >
                 <div
-                  className="absolute inset-0 -z-10 rounded-full opacity-40 blur-2xl"
+                  className={[
+                    "absolute top-1/2 -z-10 h-36 w-52 -translate-y-1/2 rounded-full opacity-35 blur-2xl",
+                    isRight ? "right-4" : "left-4",
+                  ].join(" ")}
                   style={{
                     background: `radial-gradient(circle, ${color} 0%, transparent 70%)`,
                   }}
                 />
-                <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-[#fdfbf7]/88 text-[#6f7b62] shadow-[0_12px_35px_rgba(52,49,45,0.06)] sm:h-24 sm:w-24">
+                <div
+                  className={[
+                    "absolute top-1/2 z-10 flex h-16 w-16 -translate-y-1/2 items-center justify-center rounded-full bg-[#fdfbf7]/90 text-[#6f7b62] shadow-[0_12px_35px_rgba(52,49,45,0.06)] sm:h-24 sm:w-24",
+                    isRight ? "left-2 sm:left-10" : "right-2 sm:right-10",
+                  ].join(" ")}
+                >
                   <Icon className="h-14 w-14 sm:h-16 sm:w-16" />
                 </div>
-                <div className="min-w-0 rounded-[1.5rem] bg-[#fdfbf7]/72 px-3 py-2 backdrop-blur-[2px] sm:px-4">
+                <div
+                  className={[
+                    "relative z-20 w-[64%] rounded-[1.5rem] bg-[#fdfbf7]/92 px-4 py-3 shadow-[0_14px_45px_rgba(52,49,45,0.06)] backdrop-blur-[2px] sm:w-[48%] sm:px-5 sm:py-4",
+                    isRight ? "ml-auto text-left" : "mr-auto text-right",
+                  ].join(" ")}
+                >
                   <p className="font-script text-3xl leading-none sm:text-4xl" style={{ color }}>
                     {item.title}
                   </p>
