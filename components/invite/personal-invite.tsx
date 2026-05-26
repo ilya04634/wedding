@@ -28,6 +28,7 @@ function getChildrenLine(invite: GuestInvite) {
 export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
   const hasBackground = Boolean(invite.bgUrl);
   const childrenLine = getChildrenLine(invite);
+  const backgroundUrl = `/api/invite-bg/${encodeURIComponent(invite.id)}`;
   const detailsUrl = `/?guestId=${encodeURIComponent(invite.id)}`;
   const rsvpUrl = `${detailsUrl}#rsvp`;
 
@@ -36,7 +37,7 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
       {hasBackground ? (
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${invite.bgUrl})` }}
+          style={{ backgroundImage: `url(${backgroundUrl})` }}
           role="img"
           aria-label="Персональный фон приглашения"
         />

@@ -347,6 +347,16 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                   </div>
 
                   <div className="sm:col-span-2 lg:col-span-8">
+                    <Label htmlFor={`prompt-${person.sheetRow}`}>prompt</Label>
+                    <textarea
+                      id={`prompt-${person.sheetRow}`}
+                      name="prompt"
+                      defaultValue={person.prompt ?? invite.prompt ?? ""}
+                      className="min-h-24 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2 lg:col-span-8">
                     <Label htmlFor={`bgUrl-${person.sheetRow}`}>bg_url</Label>
                     <Input
                       id={`bgUrl-${person.sheetRow}`}

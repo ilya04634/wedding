@@ -5,7 +5,7 @@
 Первая строка должна быть заголовками:
 
 ```text
-id | invite_name | person_name | person_type | child_age | bg_url | invite_url | status
+id | invite_name | person_name | person_type | child_age | prompt | bg_url | invite_url | status
 ```
 
 Колонки:
@@ -159,3 +159,15 @@ Note: Google may still ask for authorization when using a custom Sheets menu,
 because the menu itself runs inside Google Apps Script. The recommended MVP flow
 is to run generation from `/admin` on the site and use Sheets only as data
 storage.
+
+## Per-invite prompt
+
+The `Guests` sheet can include an optional `prompt` column:
+
+```text
+id | invite_name | person_name | person_type | child_age | prompt | bg_url | invite_url | status
+```
+
+If `prompt` is empty, the invite background uses the default prompt from
+`prompts/invite-background.txt`. If `prompt` is filled, it is used only for that
+invite/group. You can use `{{guestName}}` inside the prompt.

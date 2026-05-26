@@ -80,3 +80,7 @@ In `/admin`, every invite card has:
 
 Google Apps Script can remain as a fallback, but it is no longer the main path
 for generation.
+
+Each guest row can also have a `prompt` value. If it is empty, generation uses
+the default prompt file. If it is filled, the custom prompt is used for this
+invite/group.

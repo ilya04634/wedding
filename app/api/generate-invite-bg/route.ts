@@ -84,6 +84,7 @@ export async function POST(request: NextRequest) {
       invite.id,
       invite.inviteName,
       openaiKey,
+      invite.prompt ?? undefined,
     );
 
     stage = "sheet-update-done";

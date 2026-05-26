@@ -10,6 +10,7 @@ const GUEST_COLUMNS = [
   "person_name",
   "person_type",
   "child_age",
+  "prompt",
   "name",
   "bg_url",
   "invite_url",
@@ -26,6 +27,7 @@ export interface GuestPersonUpdate {
   personName: string;
   personType: GuestPersonType;
   childAge: string;
+  prompt: string;
   bgUrl: string;
   inviteUrl: string;
   status: string;
@@ -82,6 +84,7 @@ function rowToGuestPerson(
     personName,
     personType: normalizePersonType(getCell(row, columnIndex, "person_type")),
     childAge: getCell(row, columnIndex, "child_age") || null,
+    prompt: getCell(row, columnIndex, "prompt") || null,
     bgUrl: getCell(row, columnIndex, "bg_url") || null,
     inviteUrl: getCell(row, columnIndex, "invite_url") || null,
     status: getCell(row, columnIndex, "status") || null,
@@ -166,6 +169,7 @@ function peopleToInvite(id: string, people: GuestPerson[]): GuestInvite | null {
     id: invitePeople[0].id,
     inviteName,
     people: invitePeople,
+    prompt: invitePeople.find((person) => person.prompt)?.prompt ?? null,
     bgUrl: invitePeople.find((person) => person.bgUrl)?.bgUrl ?? null,
     inviteUrl: invitePeople.find((person) => person.inviteUrl)?.inviteUrl ?? null,
     status:
@@ -227,6 +231,7 @@ export async function updateGuestPerson(update: GuestPersonUpdate): Promise<void
     ["person_name", update.personName],
     ["person_type", update.personType],
     ["child_age", update.childAge],
+    ["prompt", update.prompt],
     ["bg_url", update.bgUrl],
     ["invite_url", update.inviteUrl],
     ["status", update.status],
@@ -238,7 +243,9 @@ export async function updateGuestPerson(update: GuestPersonUpdate): Promise<void
       valueInputOption: "USER_ENTERED",
       data: fields.flatMap(([key, value]) => {
         const index = columnIndex[key];
-        if (index === undefined && key === "invite_url") return [];
+        if (index === undefined && (key === "invite_url" || key === "prompt")) {
+          return [];
+        }
 
         const column = columnLetter(requireColumn(columnIndex, key));
         return {

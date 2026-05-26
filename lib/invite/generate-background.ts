@@ -53,16 +53,18 @@ function buildImageRequestBody(model: string, prompt: string) {
   };
 }
 
-function getInviteBackgroundPrompt(guestName: string) {
-  let template = DEFAULT_PROMPT;
+function getInviteBackgroundPrompt(guestName: string, customPrompt?: string | null) {
+  let template = customPrompt?.trim() || DEFAULT_PROMPT;
 
-  try {
-    const filePrompt = readFileSync(PROMPT_FILE_PATH, "utf8").trim();
-    if (filePrompt) {
-      template = filePrompt;
+  if (!customPrompt?.trim()) {
+    try {
+      const filePrompt = readFileSync(PROMPT_FILE_PATH, "utf8").trim();
+      if (filePrompt) {
+        template = filePrompt;
+      }
+    } catch (error) {
+      console.warn("[generate-invite-bg] prompt file fallback", error);
     }
-  } catch (error) {
-    console.warn("[generate-invite-bg] prompt file fallback", error);
   }
 
   if (template.includes("{{guestName}}")) {
@@ -75,9 +77,10 @@ function getInviteBackgroundPrompt(guestName: string) {
 export async function generateImageWithOpenAI(
   apiKey: string,
   guestName: string,
+  customPrompt?: string | null,
 ): Promise<Buffer> {
   const model = getImageModel();
-  const prompt = getInviteBackgroundPrompt(guestName);
+  const prompt = getInviteBackgroundPrompt(guestName, customPrompt);
 
   const response = await fetch("https://api.openai.com/v1/images/generations", {
     method: "POST",
@@ -127,8 +130,13 @@ export async function generateAndUploadInviteBackground(
   guestId: string,
   guestName: string,
   openaiApiKey: string,
+  customPrompt?: string | null,
 ): Promise<string> {
-  const buffer = await generateImageWithOpenAI(openaiApiKey, guestName);
+  const buffer = await generateImageWithOpenAI(
+    openaiApiKey,
+    guestName,
+    customPrompt,
+  );
   const safeId = guestId.replace(/[^a-zA-Z0-9_-]/g, "_");
   const fileName = `invite-bg-${safeId}-${Date.now()}.png`;
 

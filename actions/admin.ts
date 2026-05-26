@@ -57,6 +57,7 @@ export async function updateGuestPersonAction(formData: FormData) {
     personName: getRequiredString(formData, "personName"),
     personType: personType === "child" ? "child" : ("adult" as GuestPersonType),
     childAge: getRequiredString(formData, "childAge"),
+    prompt: getRequiredString(formData, "prompt"),
     bgUrl: getRequiredString(formData, "bgUrl"),
     inviteUrl: getRequiredString(formData, "inviteUrl"),
     status: getRequiredString(formData, "status"),
@@ -107,6 +108,7 @@ export async function generateInviteBackgroundAction(formData: FormData) {
     invite.id,
     invite.inviteName,
     openaiKey,
+    invite.prompt ?? undefined,
   );
   await updateInviteBackground(invite.id, bgUrl, "done", inviteUrl);
 
