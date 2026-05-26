@@ -22,6 +22,22 @@ function createFileId(file: File): string {
   return `${file.name}-${file.size}-${file.lastModified}`;
 }
 
+function parseGoogleUploadError(xhr: XMLHttpRequest) {
+  if (!xhr.responseText) return `Google Drive вернул ошибку ${xhr.status}`;
+
+  try {
+    const data = JSON.parse(xhr.responseText) as {
+      error?: { message?: string };
+    };
+    return (
+      data.error?.message ||
+      `Google Drive вернул ошибку ${xhr.status}: ${xhr.responseText}`
+    );
+  } catch {
+    return `Google Drive вернул ошибку ${xhr.status}: ${xhr.responseText}`;
+  }
+}
+
 function uploadFileToDrive(
   file: File,
   onProgress: (progress: number) => void,
@@ -72,7 +88,7 @@ function uploadFileToDrive(
           return;
         }
 
-        reject(new Error(`Google Drive вернул ошибку ${xhr.status}`));
+        reject(new Error(parseGoogleUploadError(xhr)));
       };
 
       xhr.onerror = () => reject(new Error("Сеть прервала загрузку"));

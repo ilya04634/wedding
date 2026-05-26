@@ -107,3 +107,18 @@ The `/upload` page is controlled by `uploadLinkEnabled` in `/admin`.
   large videos do not go through Vercel as request bodies.
 
 Uploaded media is stored in the Drive folder from `FOLDER_ID`.
+
+For a normal personal Google Drive folder, media upload must use Drive OAuth
+credentials:
+
+```env
+GOOGLE_DRIVE_CLIENT_ID=
+GOOGLE_DRIVE_CLIENT_SECRET=
+GOOGLE_DRIVE_REFRESH_TOKEN=
+```
+
+If these are missing, the app falls back to the service account. Google Drive
+does not give service accounts personal storage quota, so uploads to a regular
+My Drive folder can fail with `Service Accounts do not have storage quota`.
+Service account upload is only suitable for Shared Drives or other setups where
+the service account has usable Drive storage.
