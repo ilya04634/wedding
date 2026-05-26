@@ -1,6 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { UploadFileItem } from "@/components/upload/upload-file-item";
 import { cn } from "@/lib/utils";
 import { ImagePlus, Images } from "lucide-react";
@@ -38,6 +41,8 @@ function parseGoogleUploadError(xhr: XMLHttpRequest) {
 
 function uploadFileToDrive(
   file: File,
+  uploaderName: string,
+  uploadNote: string,
   onProgress: (progress: number) => void,
   onStage: (stage: string) => void,
 ): Promise<void> {
@@ -57,6 +62,8 @@ function uploadFileToDrive(
           fileName: file.name,
           mimeType: file.type || "application/octet-stream",
           fileSize: file.size,
+          uploaderName,
+          uploadNote,
         }),
       });
 
@@ -115,10 +122,14 @@ function uploadFileToDrive(
 
 export function UploadZone() {
   const inputId = useId();
+  const uploaderNameId = useId();
+  const uploadNoteId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const autoUploadRef = useRef(false);
   const [files, setFiles] = useState<UploadFileState[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+  const [uploaderName, setUploaderName] = useState("");
+  const [uploadNote, setUploadNote] = useState("");
 
   const addFiles = useCallback((incoming: FileList | File[]) => {
     const list = Array.from(incoming).filter(
@@ -176,6 +187,8 @@ export function UploadZone() {
       try {
         await uploadFileToDrive(
           item.file,
+          uploaderName.trim(),
+          uploadNote.trim(),
           (progress) => updateFile(item.id, { progress }),
           (stage) => updateFile(item.id, { stage }),
         );
@@ -191,7 +204,7 @@ export function UploadZone() {
         });
       }
     }
-  }, [files, updateFile]);
+  }, [files, updateFile, uploadNote, uploaderName]);
 
   const isUploading = files.some((file) => file.status === "uploading");
 
@@ -207,6 +220,33 @@ export function UploadZone() {
 
   return (
     <div className="space-y-6">
+      <div className="space-y-4 rounded-lg border border-neutral-200 bg-white p-4">
+        <div className="space-y-2">
+          <Label htmlFor={uploaderNameId}>Ваше имя</Label>
+          <Input
+            id={uploaderNameId}
+            value={uploaderName}
+            onChange={(event) => setUploaderName(event.target.value)}
+            placeholder="Например: Иван"
+            maxLength={80}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor={uploadNoteId}>Комментарий к фото/видео</Label>
+          <Textarea
+            id={uploadNoteId}
+            value={uploadNote}
+            onChange={(event) => setUploadNote(event.target.value)}
+            placeholder="Например: первый танец, церемония, стол друзей"
+            maxLength={120}
+            rows={3}
+          />
+        </div>
+        <p className="text-xs text-neutral-500">
+          Необязательно, но так нам будет проще потом разобрать фотографии и видео.
+        </p>
+      </div>
+
       <div
         role="button"
         tabIndex={0}

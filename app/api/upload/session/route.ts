@@ -16,6 +16,14 @@ function sanitizeFileName(fileName: string) {
   return cleanName || "wedding-media";
 }
 
+function sanitizeLabel(value: string, maxLength = 80) {
+  return value
+    .replace(/[\\/:*?"<>|]/g, "_")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, maxLength);
+}
+
 function isAllowedMimeType(mimeType: string) {
   return ALLOWED_MIME_PREFIXES.some((prefix) => mimeType.startsWith(prefix));
 }
@@ -25,11 +33,15 @@ export async function POST(request: NextRequest) {
     fileName?: string;
     mimeType?: string;
     fileSize?: number;
+    uploaderName?: string;
+    uploadNote?: string;
   } | null;
 
   const fileName = sanitizeFileName(String(body?.fileName ?? ""));
   const mimeType = String(body?.mimeType ?? "").trim();
   const fileSize = Number(body?.fileSize ?? 0);
+  const uploaderName = sanitizeLabel(String(body?.uploaderName ?? ""));
+  const uploadNote = sanitizeLabel(String(body?.uploadNote ?? ""), 120);
 
   if (!fileName || !mimeType || !Number.isFinite(fileSize)) {
     return NextResponse.json({ error: "Invalid upload metadata" }, { status: 400 });
@@ -61,7 +73,16 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const datedName = `${new Date().toISOString().replace(/[:.]/g, "-")} ${fileName}`;
+  const labelParts = [uploaderName, uploadNote].filter(Boolean);
+  const humanLabel = labelParts.length ? `${labelParts.join(" - ")} - ` : "";
+  const datedName = `${new Date().toISOString().replace(/[:.]/g, "-")} ${humanLabel}${fileName}`;
+  const description = [
+    uploaderName ? `От кого: ${uploaderName}` : "",
+    uploadNote ? `Комментарий: ${uploadNote}` : "",
+    `Исходное имя файла: ${fileName}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
 
   const response = await fetch(
     "https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&supportsAllDrives=true",
@@ -77,6 +98,7 @@ export async function POST(request: NextRequest) {
         name: datedName,
         parents: [getGoogleDriveFolderId()],
         mimeType,
+        description,
       }),
     },
   );
