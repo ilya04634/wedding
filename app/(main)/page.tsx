@@ -21,6 +21,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         <RsvpForm
           guestId={invite?.id ?? guestId}
           initialName={invite?.inviteName}
+          people={invite?.people}
         />
       </div>
     </div>

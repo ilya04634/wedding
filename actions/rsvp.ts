@@ -1,6 +1,6 @@
 "use server";
 
-import { appendRsvpRow } from "@/lib/google/sheets";
+import { appendRsvpRows } from "@/lib/google/sheets";
 import { rsvpFormSchema } from "@/lib/validations/rsvp";
 import type { RsvpFormData } from "@/types/rsvp";
 
@@ -16,12 +16,21 @@ export async function submitRsvp(
   if (!parsed.success) {
     return {
       ok: false,
-      error: "Проверьте правильность заполнения формы.",
+      error: "Проверьте правильность заполнения анкеты.",
     };
   }
 
   try {
-    await appendRsvpRow(parsed.data);
+    await appendRsvpRows({
+      guestId: parsed.data.guestId,
+      people: parsed.data.people.map((person) => ({
+        ...person,
+        drink:
+          person.personType === "child" || person.status === "declined"
+            ? "not_applicable"
+            : person.drink ?? "no_alcohol",
+      })),
+    });
     return { ok: true };
   } catch (error) {
     console.error("[submitRsvp]", error);

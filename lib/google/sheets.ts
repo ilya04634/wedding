@@ -1,71 +1,63 @@
 import "server-only";
 
-import {
-  formatChildrenAgesColumn,
-  formatChildrenForSheet,
-  formatChildrenNamesColumn,
-} from "@/lib/rsvp/format-children";
-import type { RsvpFormData } from "@/types/rsvp";
+import type { RsvpFormData, RsvpPersonData } from "@/types/rsvp";
 import { getGoogleSpreadsheetId, getRsvpSheetName } from "./auth";
 import { getSheetsClient } from "./sheets-client";
 
-const STATUS_LABELS: Record<RsvpFormData["status"], string> = {
-  confirmed: "Точно буду",
+const STATUS_LABELS: Record<RsvpPersonData["status"], string> = {
+  confirmed: "Буду",
   maybe: "Пока не уверен(а)",
-  declined: "Не смогу",
+  declined: "Не буду",
 };
 
-const DRINK_LABELS: Record<RsvpFormData["drinks"][number], string> = {
+const PERSON_TYPE_LABELS: Record<RsvpPersonData["personType"], string> = {
+  adult: "Взрослый",
+  child: "Ребенок",
+};
+
+const DRINK_LABELS: Record<RsvpPersonData["drink"], string> = {
   wine: "Вино",
+  champagne: "Шампанское",
   strong: "Крепкое",
-  non_alcoholic: "Безалкогольное",
+  no_alcohol: "Не буду алкоголь",
+  not_applicable: "Не применимо",
 };
 
-function formatPlusOne(data: RsvpFormData): string {
-  if (!data.withPartner) return "Нет";
-  return data.partnerName?.trim() || "Да";
+function formatDrink(person: RsvpPersonData): string {
+  if (person.personType === "child" || person.status === "declined") {
+    return DRINK_LABELS.not_applicable;
+  }
+
+  return DRINK_LABELS[person.drink] ?? "";
 }
 
-function formatWithChildren(data: RsvpFormData): string {
-  if (!data.withChildren) return "Нет";
-  return "Да";
-}
+function formatRows(data: RsvpFormData): string[][] {
+  const timestamp = new Date().toISOString();
 
-/**
- * Timestamp | Guest_Id | Guest_Name | Will_Attend | Plus_One | With_Children |
- * Children_List | Children_Names | Children_Ages | Alcohol_Pref | Food_Allergies
- */
-function formatRow(data: RsvpFormData): string[] {
-  const children = data.withChildren ? data.children : [];
-
-  return [
-    new Date().toISOString(),
+  return data.people.map((person) => [
+    timestamp,
     data.guestId?.trim() || "",
-    data.name,
-    STATUS_LABELS[data.status],
-    formatPlusOne(data),
-    formatWithChildren(data),
-    formatChildrenForSheet(children),
-    formatChildrenNamesColumn(children),
-    formatChildrenAgesColumn(children),
-    data.drinks.length
-      ? data.drinks.map((d) => DRINK_LABELS[d]).join(", ")
-      : "—",
-    data.allergies?.trim() || "",
-  ];
+    person.personName,
+    PERSON_TYPE_LABELS[person.personType],
+    STATUS_LABELS[person.status],
+    formatDrink(person),
+    person.allergens?.trim() || "",
+  ]);
 }
 
-export async function appendRsvpRow(data: RsvpFormData): Promise<void> {
+export async function appendRsvpRows(data: RsvpFormData): Promise<void> {
   const sheets = getSheetsClient();
   const sheetName = getRsvpSheetName();
 
   await sheets.spreadsheets.values.append({
     spreadsheetId: getGoogleSpreadsheetId(),
-    range: `${sheetName}!A:K`,
+    range: `${sheetName}!A:G`,
     valueInputOption: "USER_ENTERED",
     insertDataOption: "INSERT_ROWS",
     requestBody: {
-      values: [formatRow(data)],
+      values: formatRows(data),
     },
   });
 }
+
+export const appendRsvpRow = appendRsvpRows;

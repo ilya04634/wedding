@@ -1,19 +1,18 @@
-import type { ChildEntry } from "./child";
+import type { GuestPersonType } from "./guest";
 
-/** Статус ответа гостя */
 export type RsvpStatus = "confirmed" | "maybe" | "declined";
 
-/** Напитки (можно выбрать несколько) */
-export type DrinkPreference = "wine" | "strong" | "non_alcoholic";
+export type DrinkPreference = "wine" | "champagne" | "strong" | "no_alcohol";
+
+export interface RsvpPersonData {
+  personName: string;
+  personType: GuestPersonType;
+  status: RsvpStatus;
+  drink: DrinkPreference | "not_applicable";
+  allergens?: string;
+}
 
 export interface RsvpFormData {
   guestId?: string;
-  name: string;
-  status: RsvpStatus;
-  withPartner: boolean;
-  partnerName?: string;
-  withChildren: boolean;
-  children: ChildEntry[];
-  drinks: DrinkPreference[];
-  allergies?: string;
+  people: RsvpPersonData[];
 }
