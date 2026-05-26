@@ -1,68 +1,92 @@
-# Структура Google Таблицы
+# Google Sheets Setup
 
-Одна таблица (`SPREADSHEET_ID`), два листа.
+## Лист `Guests`
 
-## Лист `Guests` (персональные приглашения)
+Первая строка должна быть заголовками:
 
-| Колонка | Описание | Пример |
-|---------|----------|--------|
-| `id` | Уникальный алиас в URL | `ivan` |
-| `name` | Имя для обращения | `Иван` |
-| `bg_url` | Публичный URL фона (Google Drive) | `https://drive.google.com/uc?export=view&id=...` |
-| `status` | `pending` / `done` / `error` | `done` |
-
-**Ссылка гостю:** `https://ваш-сайт.vercel.app/i/ivan`
-
-## Лист `RSVP` (ответы)
-
-| Колонка | Описание |
-|---------|----------|
-| `Timestamp` | ISO-дата отправки |
-| `Guest_Id` | Алиас из `?guestId=` |
-| `Guest_Name` | Имя из формы |
-| `Will_Attend` | Точно буду / Пока не уверен / Не смогу |
-| `Plus_One` | Партнёр: имя, «Да» или «Нет» |
-| `With_Children` | Да / Нет |
-| `Children_List` | Сводка: «Маша — 5 лет; Петя — 3 года» |
-| `Children_Names` | Имена через `;` |
-| `Children_Ages` | Возрасты через `;` (в том же порядке) |
-| `Alcohol_Pref` | Напитки |
-| `Food_Allergies` | Аллергии и пожелания |
-
-**Первая строка** — заголовки (скопируйте строку выше в таблицу).
-
-## Доступ сервисного аккаунта
-
-`CLIENT_EMAIL` → **Редактор** на таблицу и на папки Drive.
-
-## AI-фоны (DALL-E 3 → Drive)
-
-### Переменные `.env.local`
-
-```env
-OPENAI_API_KEY=sk-...
-GENERATE_BG_WEBHOOK_SECRET=случайная_длинная_строка
-INVITE_BG_FOLDER_ID=id_папки_для_фонов   # опционально, иначе FOLDER_ID
+```text
+id | invite_name | person_name | person_type | child_age | bg_url | status
 ```
 
-### Папка Drive
+Колонки:
 
-1. Создайте папку «Invite Backgrounds» (или используйте существующую).
-2. Поделитесь с `CLIENT_EMAIL` (Редактор).
-3. ID папки → `INVITE_BG_FOLDER_ID`.
+| Колонка | Что писать |
+| --- | --- |
+| `id` | Общий alias приглашения. Одинаковый у всех людей из одной пары/семьи/группы. |
+| `invite_name` | Обращение на приглашении: `Татьяна и Дмитрий`, `Иван и Мария с детьми`. Можно повторить во всех строках группы. |
+| `person_name` | Имя конкретного человека для RSVP. |
+| `person_type` | `adult` для взрослых, `child` для детей. |
+| `child_age` | Возраст ребенка, можно оставить пустым. |
+| `bg_url` | Оставить пустым. Заполнится после генерации. |
+| `status` | Оставить пустым. Заполнится `pending`, `done` или `error`. |
 
-### Запуск генерации
+Пример пары:
 
-1. Добавьте строку на лист `Guests` (id + name, `bg_url` пустой).
-2. Apps Script из `scripts/google-apps-script-generate-bg.gs` вызовет  
-   `POST /api/generate-invite-bg` с заголовком `x-webhook-secret`.
-3. Сервер: DALL-E → скачивание → загрузка в Drive → публичная ссылка в `bg_url`, `status=done`.
-
-Ручной тест (после деплоя):
-
-```bash
-curl -X POST https://ваш-сайт/api/generate-invite-bg \
-  -H "Content-Type: application/json" \
-  -H "x-webhook-secret: ВАШ_СЕКРЕТ" \
-  -d "{\"guestId\":\"ivan\"}"
+```text
+tatiana-dmitry | Татьяна и Дмитрий | Татьяна | adult |  |  |
+tatiana-dmitry | Татьяна и Дмитрий | Дмитрий | adult |  |  |
 ```
+
+Пример семьи:
+
+```text
+ivan-family | Иван и Мария с детьми | Иван | adult |  |  |
+ivan-family | Иван и Мария с детьми | Мария | adult |  |  |
+ivan-family | Иван и Мария с детьми | Алиса | child | 7 |  |
+```
+
+Ссылка для гостей:
+
+```text
+https://ваш-домен.vercel.app/i/ivan-family
+```
+
+## Лист `RSVP`
+
+Первая строка должна быть заголовками:
+
+```text
+Timestamp | Invite_Id | Person_Name | Person_Type | Will_Attend | Alcohol_Pref | Allergens
+```
+
+Сайт сам добавляет строки. Один человек = одна строка.
+
+Пример результата:
+
+```text
+2026-05-26T... | ivan-family | Иван | Взрослый | Буду | Вино | орехи
+2026-05-26T... | ivan-family | Мария | Взрослый | Буду | Шампанское |
+2026-05-26T... | ivan-family | Алиса | Ребенок | Буду | Не применимо | мед
+```
+
+## Массовая генерация AI-фонов
+
+Вставьте код из:
+
+```text
+scripts/google-apps-script-generate-bg.gs
+```
+
+в Google Sheets -> Extensions -> Apps Script.
+
+В скрипте замените:
+
+```javascript
+const WEBHOOK_URL = "https://YOUR_DOMAIN.vercel.app/api/generate-invite-bg";
+const WEBHOOK_SECRET = "YOUR_WEBHOOK_SECRET";
+```
+
+После сохранения перезагрузите Google Sheet. Появится меню:
+
+```text
+Wedding -> Generate all pending backgrounds
+```
+
+Эта команда:
+
+1. Смотрит лист `Guests`.
+2. Собирает уникальные `id`, где `bg_url` пустой, а `status` не `pending` и не `done`.
+3. По очереди вызывает webhook для каждого `id`.
+4. Webhook генерирует один фон и записывает `bg_url/status` во все строки этого `id`.
+
+Для теста сначала сделайте 2-3 приглашения, запустите генерацию, проверьте `bg_url`, затем запускайте на полном списке.
