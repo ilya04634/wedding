@@ -30,7 +30,7 @@ export function HeroSection({ guestName, settings }: HeroSectionProps) {
             Коваль
           </p>
           <h1 className="font-script mt-1 text-balance text-[4.4rem] leading-[0.86] text-[#e79796] sm:text-8xl lg:text-9xl">
-            Илья и Даша
+            {settings.coupleNames}
           </h1>
         </div>
         <p className="font-display mx-auto mt-5 max-w-2xl text-balance text-2xl leading-tight text-[#34312d] sm:text-4xl lg:text-5xl">
