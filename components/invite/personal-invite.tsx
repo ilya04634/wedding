@@ -1,20 +1,29 @@
 import { COUPLE_NAMES } from "@/lib/constants/wedding";
-import type { Guest } from "@/types/guest";
+import type { GuestInvite } from "@/types/guest";
 import Link from "next/link";
 
 interface PersonalInviteProps {
-  guest: Guest;
+  invite: GuestInvite;
 }
 
-export function PersonalInvite({ guest }: PersonalInviteProps) {
-  const hasBackground = Boolean(guest.bgUrl);
+function getChildrenLine(invite: GuestInvite) {
+  const children = invite.people.filter((person) => person.personType === "child");
+  if (!children.length) return null;
+
+  const names = children.map((child) => child.personName).join(", ");
+  return `И, конечно, будем рады видеть ${names}.`;
+}
+
+export function PersonalInvite({ invite }: PersonalInviteProps) {
+  const hasBackground = Boolean(invite.bgUrl);
+  const childrenLine = getChildrenLine(invite);
 
   return (
     <div className="relative min-h-[100dvh] w-full overflow-hidden">
       {hasBackground ? (
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${guest.bgUrl})` }}
+          style={{ backgroundImage: `url(${invite.bgUrl})` }}
           role="img"
           aria-label="Фон приглашения"
         />
@@ -32,14 +41,19 @@ export function PersonalInvite({ guest }: PersonalInviteProps) {
           Приглашение
         </p>
         <p className="text-balance text-3xl font-light leading-snug sm:text-4xl">
-          {guest.name},
+          {invite.inviteName},
           <br />
-          мы будем рады видеть вас на нашей свадьбе!
+          приглашаем вас на нашу свадьбу!
         </p>
+        {childrenLine ? (
+          <p className="mt-5 max-w-md text-balance text-base text-white/85">
+            {childrenLine}
+          </p>
+        ) : null}
         <p className="mt-6 text-lg text-white/90">{COUPLE_NAMES}</p>
 
         <Link
-          href={`/?guestId=${encodeURIComponent(guest.id)}`}
+          href={`/?guestId=${encodeURIComponent(invite.id)}`}
           className="mt-12 rounded-lg bg-white px-8 py-3 text-sm font-medium text-neutral-900 transition-colors hover:bg-neutral-100"
         >
           Перейти к деталям
@@ -47,7 +61,7 @@ export function PersonalInvite({ guest }: PersonalInviteProps) {
 
         {!hasBackground ? (
           <p className="mt-8 max-w-xs text-xs text-white/70">
-            Персональный фон появится после генерации (лист Guests → bg_url).
+            Персональный фон появится после генерации.
           </p>
         ) : null}
       </div>

@@ -1,10 +1,20 @@
-export interface Guest {
-  /** Уникальный алиас в URL, напр. ivan */
+export type GuestPersonType = "adult" | "child";
+
+export interface GuestPerson {
   id: string;
-  /** Имя для обращения на приглашении */
-  name: string;
-  /** Публичный URL фона (Google Drive) */
+  inviteName: string | null;
+  personName: string;
+  personType: GuestPersonType;
+  childAge: string | null;
   bgUrl: string | null;
-  /** Статус генерации фона: pending | done | error */
+  status: string | null;
+  sheetRow: number;
+}
+
+export interface GuestInvite {
+  id: string;
+  inviteName: string;
+  people: GuestPerson[];
+  bgUrl: string | null;
   status: string | null;
 }

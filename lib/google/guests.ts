@@ -1,32 +1,117 @@
 import "server-only";
 
-import type { Guest } from "@/types/guest";
-import {
-  getGoogleSpreadsheetId,
-  getGuestsSheetName,
-} from "./auth";
+import type { GuestInvite, GuestPerson, GuestPersonType } from "@/types/guest";
+import { getGoogleSpreadsheetId, getGuestsSheetName } from "./auth";
 import { getSheetsClient } from "./sheets-client";
 
-const GUEST_COLUMNS = ["id", "name", "bg_url", "status"] as const;
+const GUEST_COLUMNS = [
+  "id",
+  "invite_name",
+  "person_name",
+  "person_type",
+  "child_age",
+  "name",
+  "bg_url",
+  "status",
+] as const;
+
+type GuestColumn = (typeof GUEST_COLUMNS)[number];
+type ColumnIndex = Partial<Record<GuestColumn, number>>;
 
 function normalizeHeader(value: string): string {
   return value.trim().toLowerCase().replace(/\s+/g, "_");
 }
 
-function rowToGuest(row: string[], columnIndex: Record<string, number>): Guest | null {
-  const id = row[columnIndex.id]?.trim();
-  const name = row[columnIndex.name]?.trim();
-  if (!id || !name) return null;
+function columnLetter(index: number): string {
+  let dividend = index + 1;
+  let column = "";
+
+  while (dividend > 0) {
+    const modulo = (dividend - 1) % 26;
+    column = String.fromCharCode(65 + modulo) + column;
+    dividend = Math.floor((dividend - modulo) / 26);
+  }
+
+  return column;
+}
+
+function formatInviteName(names: string[]): string {
+  if (names.length === 0) return "";
+  if (names.length === 1) return names[0];
+  if (names.length === 2) return `${names[0]} и ${names[1]}`;
+
+  return `${names.slice(0, -1).join(", ")} и ${names[names.length - 1]}`;
+}
+
+function normalizePersonType(value: string | undefined): GuestPersonType {
+  return value?.trim().toLowerCase() === "child" ? "child" : "adult";
+}
+
+function getCell(row: string[], columnIndex: ColumnIndex, key: GuestColumn) {
+  const index = columnIndex[key];
+  return index === undefined ? "" : row[index]?.trim() ?? "";
+}
+
+function rowToGuestPerson(
+  row: string[],
+  sheetRow: number,
+  columnIndex: ColumnIndex,
+): GuestPerson | null {
+  const id = getCell(row, columnIndex, "id");
+  const personName =
+    getCell(row, columnIndex, "person_name") || getCell(row, columnIndex, "name");
+
+  if (!id || !personName) return null;
 
   return {
     id,
-    name,
-    bgUrl: row[columnIndex.bg_url]?.trim() || null,
-    status: row[columnIndex.status]?.trim() || null,
+    inviteName: getCell(row, columnIndex, "invite_name") || null,
+    personName,
+    personType: normalizePersonType(getCell(row, columnIndex, "person_type")),
+    childAge: getCell(row, columnIndex, "child_age") || null,
+    bgUrl: getCell(row, columnIndex, "bg_url") || null,
+    status: getCell(row, columnIndex, "status") || null,
+    sheetRow,
   };
 }
 
-async function fetchGuestRows(): Promise<Guest[]> {
+function buildColumnIndex(headerRow: unknown[]): ColumnIndex {
+  const columnIndex: ColumnIndex = {};
+
+  headerRow.forEach((cell, index) => {
+    const key = normalizeHeader(String(cell));
+    if ((GUEST_COLUMNS as readonly string[]).includes(key)) {
+      columnIndex[key as GuestColumn] = index;
+    }
+  });
+
+  if (columnIndex.id === undefined) {
+    columnIndex.id = 0;
+  }
+
+  if (
+    columnIndex.name === undefined &&
+    columnIndex.person_name === undefined &&
+    columnIndex.invite_name === undefined
+  ) {
+    columnIndex.name = 1;
+  }
+
+  if (columnIndex.bg_url === undefined) {
+    columnIndex.bg_url = 2;
+  }
+
+  if (columnIndex.status === undefined) {
+    columnIndex.status = 3;
+  }
+
+  return columnIndex;
+}
+
+async function fetchGuestRows(): Promise<{
+  people: GuestPerson[];
+  columnIndex: ColumnIndex;
+}> {
   const sheets = getSheetsClient();
   const sheetName = getGuestsSheetName();
 
@@ -36,59 +121,98 @@ async function fetchGuestRows(): Promise<Guest[]> {
   });
 
   const rows = response.data.values;
-  if (!rows?.length) return [];
+  if (!rows?.length) return { people: [], columnIndex: {} };
 
   const [headerRow, ...dataRows] = rows;
-  const columnIndex: Record<string, number> = {};
+  const columnIndex = buildColumnIndex(headerRow);
 
-  headerRow.forEach((cell, index) => {
-    const key = normalizeHeader(String(cell));
-    if ((GUEST_COLUMNS as readonly string[]).includes(key)) {
-      columnIndex[key] = index;
-    }
-  });
+  const people = dataRows
+    .map((row, index) =>
+      rowToGuestPerson(row.map(String), index + 2, columnIndex),
+    )
+    .filter((person): person is GuestPerson => person !== null);
 
-  if (columnIndex.id === undefined || columnIndex.name === undefined) {
-    columnIndex.id = 0;
-    columnIndex.name = 1;
-    columnIndex.bg_url = 2;
-    columnIndex.status = 3;
-  }
-
-  return dataRows
-    .map((row) => rowToGuest(row.map(String), columnIndex))
-    .filter((g): g is Guest => g !== null);
+  return { people, columnIndex };
 }
 
-export async function getGuestById(id: string): Promise<Guest | null> {
+function peopleToInvite(id: string, people: GuestPerson[]): GuestInvite | null {
+  const invitePeople = people.filter((person) => person.id.toLowerCase() === id);
+  if (!invitePeople.length) return null;
+
+  const explicitInviteName = invitePeople.find((person) => person.inviteName)
+    ?.inviteName;
+  const adultNames = invitePeople
+    .filter((person) => person.personType !== "child")
+    .map((person) => person.personName);
+  const allNames = invitePeople.map((person) => person.personName);
+  const inviteName =
+    explicitInviteName || formatInviteName(adultNames.length ? adultNames : allNames);
+
+  return {
+    id: invitePeople[0].id,
+    inviteName,
+    people: invitePeople,
+    bgUrl: invitePeople.find((person) => person.bgUrl)?.bgUrl ?? null,
+    status:
+      invitePeople.find((person) => person.status === "done")?.status ??
+      invitePeople.find((person) => person.status)?.status ??
+      null,
+  };
+}
+
+export async function getInviteById(id: string): Promise<GuestInvite | null> {
   const normalized = id.trim().toLowerCase();
   if (!normalized) return null;
 
-  const guests = await fetchGuestRows();
-  return guests.find((g) => g.id.toLowerCase() === normalized) ?? null;
+  const { people } = await fetchGuestRows();
+  return peopleToInvite(normalized, people);
 }
 
-export async function updateGuestBackground(
+export const getGuestById = getInviteById;
+
+export async function updateInviteBackground(
   id: string,
   bgUrl: string,
   status: string,
 ): Promise<void> {
   const sheets = getSheetsClient();
   const sheetName = getGuestsSheetName();
-  const guests = await fetchGuestRows();
-  const rowIndex = guests.findIndex((g) => g.id.toLowerCase() === id.toLowerCase());
+  const { people, columnIndex } = await fetchGuestRows();
+  const matchingPeople = people.filter(
+    (person) => person.id.toLowerCase() === id.toLowerCase(),
+  );
 
-  if (rowIndex === -1) {
-    throw new Error(`Guest not found: ${id}`);
+  if (!matchingPeople.length) {
+    throw new Error(`Invite not found: ${id}`);
   }
 
-  const sheetRow = rowIndex + 2;
-  await sheets.spreadsheets.values.update({
-    spreadsheetId: getGoogleSpreadsheetId(),
-    range: `${sheetName}!C${sheetRow}:D${sheetRow}`,
-    valueInputOption: "USER_ENTERED",
-    requestBody: {
-      values: [[bgUrl, status]],
-    },
-  });
+  if (columnIndex.bg_url === undefined || columnIndex.status === undefined) {
+    throw new Error("Guests sheet must contain bg_url and status columns");
+  }
+
+  const bgUrlColumn = columnLetter(columnIndex.bg_url);
+  const statusColumn = columnLetter(columnIndex.status);
+
+  await Promise.all(
+    matchingPeople.map((person) =>
+      sheets.spreadsheets.values.batchUpdate({
+        spreadsheetId: getGoogleSpreadsheetId(),
+        requestBody: {
+          valueInputOption: "USER_ENTERED",
+          data: [
+            {
+              range: `${sheetName}!${bgUrlColumn}${person.sheetRow}`,
+              values: [[bgUrl]],
+            },
+            {
+              range: `${sheetName}!${statusColumn}${person.sheetRow}`,
+              values: [[status]],
+            },
+          ],
+        },
+      }),
+    ),
+  );
 }
+
+export const updateGuestBackground = updateInviteBackground;

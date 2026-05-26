@@ -1,5 +1,5 @@
 import { PersonalInvite } from "@/components/invite/personal-invite";
-import { getGuestById } from "@/lib/google/guests";
+import { getInviteById } from "@/lib/google/guests";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -12,19 +12,19 @@ interface InvitePageProps {
 export async function generateMetadata({
   params,
 }: InvitePageProps): Promise<Metadata> {
-  const guest = await getGuestById(params.id);
-  if (!guest) return { title: "Приглашение" };
+  const invite = await getInviteById(params.id);
+  if (!invite) return { title: "Приглашение" };
   return {
-    title: `Приглашение для ${guest.name}`,
+    title: `Приглашение для ${invite.inviteName}`,
   };
 }
 
 export default async function InvitePage({ params }: InvitePageProps) {
-  const guest = await getGuestById(params.id);
+  const invite = await getInviteById(params.id);
 
-  if (!guest) {
+  if (!invite) {
     notFound();
   }
 
-  return <PersonalInvite guest={guest} />;
+  return <PersonalInvite invite={invite} />;
 }

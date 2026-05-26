@@ -1,12 +1,12 @@
 /**
  * Webhook: generate AI invite background, upload it to Google Drive,
- * and write the resulting public URL to the Guests sheet.
+ * and write the resulting public URL to every row with the same invite id.
  *
  * POST { "guestId": "ivan" }
  * Header: x-webhook-secret: <GENERATE_BG_WEBHOOK_SECRET>
  */
 
-import { getGuestById, updateGuestBackground } from "@/lib/google/guests";
+import { getInviteById, updateInviteBackground } from "@/lib/google/guests";
 import { generateAndUploadInviteBackground } from "@/lib/invite/generate-background";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -41,17 +41,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "guestId required" }, { status: 400 });
   }
 
-  stage = "get-guest";
-  const guest = await getGuestById(guestId);
-  if (!guest) {
-    return NextResponse.json({ error: "Guest not found" }, { status: 404 });
+  stage = "get-invite";
+  const invite = await getInviteById(guestId);
+  if (!invite) {
+    return NextResponse.json({ error: "Invite not found" }, { status: 404 });
   }
 
-  if (guest.bgUrl && guest.status === "done") {
+  if (invite.bgUrl && invite.status === "done") {
     return NextResponse.json({
       ok: true,
-      guestId: guest.id,
-      bgUrl: guest.bgUrl,
+      guestId: invite.id,
+      bgUrl: invite.bgUrl,
+      people: invite.people.length,
       skipped: true,
     });
   }
@@ -66,29 +67,30 @@ export async function POST(request: NextRequest) {
 
   try {
     stage = "sheet-update-pending";
-    console.log("[generate-invite-bg] stage", stage, { guestId: guest.id });
-    await updateGuestBackground(guest.id, "", "pending");
+    console.log("[generate-invite-bg] stage", stage, { guestId: invite.id });
+    await updateInviteBackground(invite.id, "", "pending");
 
     stage = "openai-generate-and-drive-upload";
-    console.log("[generate-invite-bg] stage", stage, { guestId: guest.id });
+    console.log("[generate-invite-bg] stage", stage, { guestId: invite.id });
     const bgUrl = await generateAndUploadInviteBackground(
-      guest.id,
-      guest.name,
+      invite.id,
+      invite.inviteName,
       openaiKey,
     );
 
     stage = "sheet-update-done";
-    console.log("[generate-invite-bg] stage", stage, { guestId: guest.id });
-    await updateGuestBackground(guest.id, bgUrl, "done");
+    console.log("[generate-invite-bg] stage", stage, { guestId: invite.id });
+    await updateInviteBackground(invite.id, bgUrl, "done");
 
     return NextResponse.json({
       ok: true,
-      guestId: guest.id,
+      guestId: invite.id,
       bgUrl,
+      people: invite.people.length,
     });
   } catch (error) {
     console.error("[generate-invite-bg]", { stage, error });
-    await updateGuestBackground(guest.id, "", "error").catch(() => {});
+    await updateInviteBackground(invite.id, "", "error").catch(() => {});
     return NextResponse.json(
       {
         error: "Generation failed",
