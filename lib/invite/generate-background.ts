@@ -18,6 +18,62 @@ type OpenAIImagesResponse = {
   data?: OpenAIImage[];
 };
 
+type InviteVisualVariant = {
+  flower: string;
+  palette: string;
+  composition: string;
+  light: string;
+  texture: string;
+  seed: number;
+};
+
+const FLOWER_VARIANTS = [
+  "garden roses with peony-like soft petals",
+  "lavender sprigs and tiny meadow flowers",
+  "white daisies with small yellow centers",
+  "airy baby's breath and delicate jasmine",
+  "soft ranunculus blossoms and sage leaves",
+  "wild chamomile flowers and pale greenery",
+  "sweet pea vines with subtle blush petals",
+  "minimal magnolia petals with botanical line accents",
+];
+
+const PALETTE_VARIANTS = [
+  "peony pink, warm ivory, muted sage green",
+  "sage green, cream, pale lavender accents",
+  "lemon sorbet yellow, warm white, fresh green",
+  "soft blush, champagne gold, eucalyptus green",
+  "pale peach, ivory, dusty olive",
+  "buttery yellow, linen cream, gentle rose",
+  "powder pink, pearl white, herbal green",
+  "light apricot, cream, soft pistachio",
+];
+
+const COMPOSITION_VARIANTS = [
+  "florals gathered in the upper-left and lower-right corners",
+  "a loose botanical wreath around the edges with a calm center",
+  "asymmetric flowers along the bottom edge with floating petals above",
+  "a soft vertical garland on the left side with open space in the center",
+  "corner bouquets with a thin one-line-art floral contour",
+  "delicate flowers framing the top and bottom like stationery borders",
+];
+
+const LIGHT_VARIANTS = [
+  "morning garden light",
+  "warm golden-hour glow",
+  "soft diffused summer daylight",
+  "gentle backlit bokeh",
+  "airy overcast garden light",
+];
+
+const TEXTURE_VARIANTS = [
+  "subtle watercolor wash",
+  "fine handmade paper grain",
+  "soft silk-like fabric texture",
+  "barely visible watercolor bloom",
+  "delicate stationery paper texture",
+];
+
 function getImageModel() {
   return process.env.OPENAI_IMAGE_MODEL?.trim() || "gpt-image-1";
 }
@@ -53,7 +109,39 @@ function buildImageRequestBody(model: string, prompt: string) {
   };
 }
 
-function getInviteBackgroundPrompt(guestName: string, customPrompt?: string | null) {
+function hashStringToNumber(value: string) {
+  let hash = 2166136261;
+
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+
+  return hash >>> 0;
+}
+
+function pickVariant<T>(items: T[], seed: number, salt: number) {
+  return items[(seed + salt * 2654435761) % items.length];
+}
+
+function getInviteVisualVariant(guestId: string): InviteVisualVariant {
+  const seed = hashStringToNumber(guestId || "default-invite");
+
+  return {
+    flower: pickVariant(FLOWER_VARIANTS, seed, 1),
+    palette: pickVariant(PALETTE_VARIANTS, seed, 2),
+    composition: pickVariant(COMPOSITION_VARIANTS, seed, 3),
+    light: pickVariant(LIGHT_VARIANTS, seed, 4),
+    texture: pickVariant(TEXTURE_VARIANTS, seed, 5),
+    seed,
+  };
+}
+
+function getInviteBackgroundPrompt(
+  guestId: string,
+  guestName: string,
+  customPrompt?: string | null,
+) {
   let template = DEFAULT_PROMPT;
 
   try {
@@ -69,21 +157,33 @@ function getInviteBackgroundPrompt(guestName: string, customPrompt?: string | nu
     ? template.replaceAll("{{guestName}}", guestName)
     : `${template}. Subtle celebratory mood inspired by welcoming ${guestName}, keep it abstract only.`;
 
-  const promptAddon = customPrompt?.trim();
-  if (!promptAddon) return basePrompt;
+  const variant = getInviteVisualVariant(guestId);
+  const variantPrompt = `${basePrompt}
 
-  return `${basePrompt}
+Deterministic guest-specific visual variant based on invite id. Keep the overall style consistent with the main prompt, but use this variant to make this invite distinct:
+- Floral motif: ${variant.flower}.
+- Accent palette: ${variant.palette}.
+- Composition: ${variant.composition}.
+- Lighting: ${variant.light}.
+- Surface texture: ${variant.texture}.
+- Internal visual seed reference: ${variant.seed}. Do not render this number or any text.`;
+
+  const promptAddon = customPrompt?.trim();
+  if (!promptAddon) return variantPrompt;
+
+  return `${variantPrompt}
 
 Additional guest-specific preferences. Treat these as accents only and keep the same overall wedding style: ${promptAddon}`;
 }
 
 export async function generateImageWithOpenAI(
   apiKey: string,
+  guestId: string,
   guestName: string,
   customPrompt?: string | null,
 ): Promise<Buffer> {
   const model = getImageModel();
-  const prompt = getInviteBackgroundPrompt(guestName, customPrompt);
+  const prompt = getInviteBackgroundPrompt(guestId, guestName, customPrompt);
 
   const response = await fetch("https://api.openai.com/v1/images/generations", {
     method: "POST",
@@ -137,6 +237,7 @@ export async function generateAndUploadInviteBackground(
 ): Promise<string> {
   const buffer = await generateImageWithOpenAI(
     openaiApiKey,
+    guestId,
     guestName,
     customPrompt,
   );

@@ -174,6 +174,12 @@ addition to the default prompt, not as a replacement. Use it for small
 preferences like colors, flowers, or mood accents. You can use `{{guestName}}`
 inside it.
 
+In addition, the site automatically derives a stable visual variant from each
+invite `id`: flower type, accent palette, composition, light, and texture. This
+keeps the overall wedding style consistent while making backgrounds different
+for different invites. The optional `prompt` column is applied after this
+automatic variant, as an extra accent.
+
 ## Auto-fill invite ids
 
 For easier data entry, helpers can fill only:
