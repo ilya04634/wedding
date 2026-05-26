@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { UploadFileItem } from "@/components/upload/upload-file-item";
 import { cn } from "@/lib/utils";
-import { Camera, ImagePlus, Images } from "lucide-react";
+import { ImagePlus, Images } from "lucide-react";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 
 export type UploadFileStatus = "pending" | "uploading" | "done" | "error";
@@ -24,18 +24,15 @@ function createFileId(file: File): string {
 }
 
 function parseGoogleUploadError(xhr: XMLHttpRequest) {
-  if (!xhr.responseText) return `Google Drive вернул ошибку ${xhr.status}`;
+  if (!xhr.responseText) return `Не удалось завершить загрузку. Код ошибки: ${xhr.status}`;
 
   try {
     const data = JSON.parse(xhr.responseText) as {
       error?: { message?: string };
     };
-    return (
-      data.error?.message ||
-      `Google Drive вернул ошибку ${xhr.status}: ${xhr.responseText}`
-    );
+    return data.error?.message || `Не удалось завершить загрузку. Код ошибки: ${xhr.status}`;
   } catch {
-    return `Google Drive вернул ошибку ${xhr.status}: ${xhr.responseText}`;
+    return `Не удалось завершить загрузку. Код ошибки: ${xhr.status}`;
   }
 }
 
@@ -52,7 +49,7 @@ function uploadFileToDrive(
     };
 
     try {
-      onStage("Готовим загрузку");
+      onStage("Подготавливаем файл");
       const sessionResponse = await fetch("/api/upload/session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -69,16 +66,12 @@ function uploadFileToDrive(
 
       if (!sessionResponse.ok || !session?.uploadUrl) {
         reject(
-          new Error(
-            session?.error ||
-              session?.message ||
-              "Не удалось подготовить загрузку",
-          ),
+          new Error("Не удалось начать загрузку. Попробуйте еще раз"),
         );
         return;
       }
 
-      onStage("Отправляем в Google Drive");
+      onStage("Загружаем файл");
       setProgress(1);
 
       const xhr = new XMLHttpRequest();
@@ -93,7 +86,7 @@ function uploadFileToDrive(
 
       xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 300) {
-          onStage("Загружено");
+          onStage("Готово");
           setProgress(100);
           resolve();
           return;
@@ -104,15 +97,15 @@ function uploadFileToDrive(
 
       xhr.onerror = () => {
         if (lastProgress >= 100) {
-          onStage("Загружено, Drive закрыл ответ");
+          onStage("Готово");
           resolve();
           return;
         }
 
-        reject(new Error("Сеть прервала загрузку"));
+        reject(new Error("Загрузка прервалась. Попробуйте еще раз"));
       };
       xhr.ontimeout = () =>
-        reject(new Error("Загрузка заняла слишком много времени"));
+        reject(new Error("Загрузка заняла слишком много времени. Попробуйте еще раз"));
       xhr.send(file);
     } catch (error) {
       reject(error);
@@ -122,9 +115,7 @@ function uploadFileToDrive(
 
 export function UploadZone() {
   const inputId = useId();
-  const cameraInputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
-  const cameraInputRef = useRef<HTMLInputElement>(null);
   const autoUploadRef = useRef(false);
   const [files, setFiles] = useState<UploadFileState[]>([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -192,7 +183,7 @@ export function UploadZone() {
       } catch (error) {
         updateFile(item.id, {
           status: "error",
-          stage: "Ошибка",
+          stage: "Не удалось загрузить",
           error:
             error instanceof Error
               ? error.message
@@ -261,35 +252,14 @@ export function UploadZone() {
         }}
       />
 
-      <input
-        ref={cameraInputRef}
-        id={cameraInputId}
-        type="file"
-        accept={ACCEPT}
-        capture="environment"
-        className="sr-only"
-        onChange={(event) => {
-          if (event.target.files) addFiles(event.target.files);
-          event.target.value = "";
-        }}
-      />
-
-      <div className="grid gap-3 sm:grid-cols-2">
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={() => cameraInputRef.current?.click()}
-        >
-          <Camera className="mr-2 h-4 w-4" aria-hidden />
-          Снять на камеру
-        </Button>
+      <div className="flex justify-center">
         <Button
           type="button"
           variant="secondary"
           onClick={() => inputRef.current?.click()}
         >
           <Images className="mr-2 h-4 w-4" aria-hidden />
-          Выбрать из галереи
+          Добавить фото/видео
         </Button>
       </div>
 
