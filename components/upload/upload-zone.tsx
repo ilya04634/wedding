@@ -45,6 +45,12 @@ function uploadFileToDrive(
   onStage: (stage: string) => void,
 ): Promise<void> {
   return new Promise(async (resolve, reject) => {
+    let lastProgress = 0;
+    const setProgress = (progress: number) => {
+      lastProgress = Math.max(lastProgress, progress);
+      onProgress(lastProgress);
+    };
+
     try {
       onStage("Готовим загрузку");
       const sessionResponse = await fetch("/api/upload/session", {
@@ -73,7 +79,7 @@ function uploadFileToDrive(
       }
 
       onStage("Отправляем в Google Drive");
-      onProgress(1);
+      setProgress(1);
 
       const xhr = new XMLHttpRequest();
       xhr.open("PUT", session.uploadUrl);
@@ -82,13 +88,13 @@ function uploadFileToDrive(
 
       xhr.upload.onprogress = (event) => {
         if (!event.lengthComputable) return;
-        onProgress(Math.round((event.loaded / event.total) * 100));
+        setProgress(Math.round((event.loaded / event.total) * 100));
       };
 
       xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 300) {
           onStage("Загружено");
-          onProgress(100);
+          setProgress(100);
           resolve();
           return;
         }
@@ -96,7 +102,15 @@ function uploadFileToDrive(
         reject(new Error(parseGoogleUploadError(xhr)));
       };
 
-      xhr.onerror = () => reject(new Error("Сеть прервала загрузку"));
+      xhr.onerror = () => {
+        if (lastProgress >= 100) {
+          onStage("Загружено, Drive закрыл ответ");
+          resolve();
+          return;
+        }
+
+        reject(new Error("Сеть прервала загрузку"));
+      };
       xhr.ontimeout = () =>
         reject(new Error("Загрузка заняла слишком много времени"));
       xhr.send(file);
