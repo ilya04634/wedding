@@ -16,9 +16,9 @@ export function VenueMapLink() {
       <Image
         src="/2gis-badge.svg"
         alt="Открыть в 2ГИС"
-        width={120}
+        width={32}
         height={32}
-        className="h-8 w-auto"
+        className="h-8 w-8"
       />
     </a>
   );
