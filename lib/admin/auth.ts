@@ -4,9 +4,15 @@ import { createHash } from "node:crypto";
 import { cookies } from "next/headers";
 
 const ADMIN_COOKIE_NAME = "wedding_admin";
+const ADMIN_PASSWORD_NOT_CONFIGURED = "ADMIN_PASSWORD_NOT_CONFIGURED";
+const INVALID_ADMIN_PASSWORD = "INVALID_ADMIN_PASSWORD";
 
 function getAdminPassword() {
   return process.env.ADMIN_PASSWORD?.trim();
+}
+
+export function isAdminPasswordConfigured() {
+  return Boolean(getAdminPassword());
 }
 
 function getAdminToken() {
@@ -33,8 +39,12 @@ export function setAdminSession(password: string) {
   const expectedPassword = getAdminPassword();
   const token = getAdminToken();
 
-  if (!expectedPassword || !token || password !== expectedPassword) {
-    throw new Error("Invalid admin password");
+  if (!expectedPassword || !token) {
+    throw new Error(ADMIN_PASSWORD_NOT_CONFIGURED);
+  }
+
+  if (password !== expectedPassword) {
+    throw new Error(INVALID_ADMIN_PASSWORD);
   }
 
   cookies().set(ADMIN_COOKIE_NAME, token, {

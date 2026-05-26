@@ -8,7 +8,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { isAdminAuthenticated } from "@/lib/admin/auth";
+import {
+  isAdminAuthenticated,
+  isAdminPasswordConfigured,
+} from "@/lib/admin/auth";
 import { listInvites } from "@/lib/google/guests";
 import { getSiteSettings, settingsToFormData } from "@/lib/google/settings";
 import Link from "next/link";
@@ -19,7 +22,20 @@ interface AdminPageProps {
   searchParams: { error?: string };
 }
 
-function LoginForm({ hasError }: { hasError: boolean }) {
+function LoginForm({
+  error,
+  isPasswordConfigured,
+}: {
+  error?: string;
+  isPasswordConfigured: boolean;
+}) {
+  const errorText =
+    error === "not-configured" || !isPasswordConfigured
+      ? "В Vercel не настроена переменная ADMIN_PASSWORD для этого окружения."
+      : error === "invalid"
+        ? "Неверный пароль администратора."
+        : "";
+
   return (
     <main className="mx-auto flex min-h-[100dvh] max-w-sm flex-col justify-center px-4">
       <h1 className="text-2xl font-semibold text-neutral-900">Админ-панель</h1>
@@ -31,9 +47,9 @@ function LoginForm({ hasError }: { hasError: boolean }) {
           <Label htmlFor="password">Пароль</Label>
           <Input id="password" name="password" type="password" required />
         </div>
-        {hasError ? (
+        {errorText ? (
           <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-            Неверный пароль администратора.
+            {errorText}
           </p>
         ) : null}
         <Button type="submit" className="w-full">
@@ -46,7 +62,15 @@ function LoginForm({ hasError }: { hasError: boolean }) {
 
 export default async function AdminPage({ searchParams }: AdminPageProps) {
   const isAuthenticated = isAdminAuthenticated();
-  if (!isAuthenticated) return <LoginForm hasError={searchParams.error === "1"} />;
+  const isPasswordConfigured = isAdminPasswordConfigured();
+  if (!isAuthenticated) {
+    return (
+      <LoginForm
+        error={searchParams.error}
+        isPasswordConfigured={isPasswordConfigured}
+      />
+    );
+  }
 
   const [invites, settings] = await Promise.all([
     listInvites(),

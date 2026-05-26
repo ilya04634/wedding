@@ -28,8 +28,12 @@ export async function loginAdmin(formData: FormData) {
   const password = getRequiredString(formData, "password");
   try {
     setAdminSession(password);
-  } catch {
-    redirect("/admin?error=1");
+  } catch (error) {
+    const code =
+      error instanceof Error && error.message === "ADMIN_PASSWORD_NOT_CONFIGURED"
+        ? "not-configured"
+        : "invalid";
+    redirect(`/admin?error=${code}`);
   }
   redirect("/admin");
 }
