@@ -133,3 +133,24 @@ https://your-domain.vercel.app/i/ivan-family
 Send `invite_url` to guests. The site opens this page, reads the same `id`,
 uses `bg_url` as the background, and then passes the guest data into the RSVP
 form.
+
+## Apps Script Web App mode
+
+The menu can work through a deployed Apps Script Web App.
+
+Current `WEB_APP_URL` in `scripts/google-apps-script-generate-bg.gs`:
+
+```text
+https://script.google.com/macros/s/AKfycbwU3iGa-i1A1lMyuQwL2AWpBy8OGKkAxVFQATUkNZ0wNvAot5lYLQB8cJDzC3pnJQMo/exec
+```
+
+After updating the script in Google Apps Script:
+
+1. Deploy or redeploy it as Web App.
+2. Keep "Execute as" set to your account.
+3. Keep access set to users who should be able to run it.
+4. Reload Google Sheets.
+5. Use `Wedding -> Open generator panel`.
+
+The panel opens Web App links for all pending invites or the selected invite.
+The older direct menu items are still kept as a fallback.
