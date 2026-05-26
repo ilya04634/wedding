@@ -16,18 +16,22 @@ function formatNames(names: string[]) {
   return `${names.slice(0, -1).join(", ")} и ${names[names.length - 1]}`;
 }
 
-function getChildrenLine(invite: GuestInvite) {
+function getChildrenLine(invite: GuestInvite, settings: SiteSettings) {
   const children = invite.people.filter((person) => person.personType === "child");
   if (!children.length) return null;
 
-  return `Также будем очень рады видеть: ${formatNames(
+  return `${settings.inviteChildrenPrefix} ${formatNames(
     children.map((child) => child.personName),
   )}.`;
 }
 
+function formatCountTemplate(template: string, count: number) {
+  return template.replaceAll("{{count}}", String(count));
+}
+
 export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
   const hasBackground = Boolean(invite.bgUrl);
-  const childrenLine = getChildrenLine(invite);
+  const childrenLine = getChildrenLine(invite, settings);
   const backgroundUrl = `/api/invite-bg/${encodeURIComponent(invite.id)}`;
   const detailsUrl = `/?guestId=${encodeURIComponent(invite.id)}`;
   const rsvpUrl = `${detailsUrl}#rsvp`;
@@ -58,12 +62,12 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
         </header>
 
         <div className="mx-auto flex max-w-2xl flex-1 flex-col items-center justify-center py-8 sm:py-12">
-          <p className="rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white/90 backdrop-blur-sm sm:text-sm sm:tracking-[0.22em]">Приглашение</p>
+          <p className="rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white/90 backdrop-blur-sm sm:text-sm sm:tracking-[0.22em]">{settings.inviteLabel}</p>
           <h1 className="font-display mt-4 text-balance text-3xl leading-tight sm:mt-5 sm:text-6xl">
             {invite.inviteName}
           </h1>
           <p className="mt-5 max-w-xl text-balance text-lg font-light leading-7 text-white/95 sm:mt-6 sm:text-2xl sm:leading-8">
-            приглашаем вас разделить с нами день нашей свадьбы
+            {settings.inviteBodyText}
           </p>
 
           {childrenLine ? (
@@ -85,7 +89,12 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
 
           <div className="mt-5 flex items-center justify-center gap-2 text-xs leading-5 text-white/80 sm:mt-7 sm:text-sm">
             <Users className="h-4 w-4 shrink-0" aria-hidden />
-            <span>{invite.people.length} приглашенных в этой ссылке</span>
+            <span>
+              {formatCountTemplate(
+                settings.inviteGuestCountTemplate,
+                invite.people.length,
+              )}
+            </span>
           </div>
         </div>
 
@@ -94,18 +103,18 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
             href={detailsUrl}
             className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#fdfbf7] px-5 py-3 text-sm font-semibold text-[#34312d] shadow-[0_16px_35px_rgba(253,251,247,0.22)] transition-colors hover:bg-white sm:px-6"
           >
-            Перейти к основной странице
+            {settings.invitePrimaryButtonLabel}
             <ArrowRight className="h-4 w-4" aria-hidden />
           </Link>
           <Link
             href={rsvpUrl}
             className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/35 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/15 sm:px-6"
           >
-            Перейти сразу к анкете
+            {settings.inviteRsvpButtonLabel}
           </Link>
           {!hasBackground ? (
             <p className="pt-2 text-xs text-white/65">
-              Персональный фон появится здесь после генерации.
+              {settings.inviteMissingBackgroundText}
             </p>
           ) : null}
         </footer>

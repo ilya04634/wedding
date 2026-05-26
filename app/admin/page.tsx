@@ -135,6 +135,10 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             <Input id="navTitle" name="navTitle" defaultValue={settingsForm.navTitle} />
           </div>
           <div>
+            <Label htmlFor="heroFamilyName">Фамилия в hero</Label>
+            <Input id="heroFamilyName" name="heroFamilyName" defaultValue={settingsForm.heroFamilyName} />
+          </div>
+          <div>
             <Label htmlFor="uploadLinkLabel">Текст ссылки загрузки</Label>
             <Input id="uploadLinkLabel" name="uploadLinkLabel" defaultValue={settingsForm.uploadLinkLabel} />
           </div>
@@ -156,6 +160,10 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             <Input id="heroPersonalEyebrowTemplate" name="heroPersonalEyebrowTemplate" defaultValue={settingsForm.heroPersonalEyebrowTemplate} />
           </div>
           <div className="sm:col-span-2">
+            <Label htmlFor="heroSubtitle">Подзаголовок hero</Label>
+            <Input id="heroSubtitle" name="heroSubtitle" defaultValue={settingsForm.heroSubtitle} />
+          </div>
+          <div className="sm:col-span-2">
             <Label htmlFor="heroText">Основной текст hero</Label>
             <textarea
               id="heroText"
@@ -163,6 +171,40 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               defaultValue={settingsForm.heroText}
               className="min-h-20 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
             />
+          </div>
+          <div>
+            <Label htmlFor="inviteLabel">Метка на приглашении</Label>
+            <Input id="inviteLabel" name="inviteLabel" defaultValue={settingsForm.inviteLabel} />
+          </div>
+          <div>
+            <Label htmlFor="inviteChildrenPrefix">Текст перед детьми</Label>
+            <Input id="inviteChildrenPrefix" name="inviteChildrenPrefix" defaultValue={settingsForm.inviteChildrenPrefix} />
+          </div>
+          <div className="sm:col-span-2">
+            <Label htmlFor="inviteBodyText">Основной текст приглашения</Label>
+            <textarea
+              id="inviteBodyText"
+              name="inviteBodyText"
+              defaultValue={settingsForm.inviteBodyText}
+              className="min-h-20 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <Label htmlFor="inviteGuestCountTemplate">Текст количества гостей</Label>
+            <Input id="inviteGuestCountTemplate" name="inviteGuestCountTemplate" defaultValue={settingsForm.inviteGuestCountTemplate} />
+            <p className="mt-1 text-xs text-neutral-500">Используйте {"{{count}}"} для количества гостей.</p>
+          </div>
+          <div>
+            <Label htmlFor="invitePrimaryButtonLabel">Кнопка на главную</Label>
+            <Input id="invitePrimaryButtonLabel" name="invitePrimaryButtonLabel" defaultValue={settingsForm.invitePrimaryButtonLabel} />
+          </div>
+          <div>
+            <Label htmlFor="inviteRsvpButtonLabel">Кнопка анкеты</Label>
+            <Input id="inviteRsvpButtonLabel" name="inviteRsvpButtonLabel" defaultValue={settingsForm.inviteRsvpButtonLabel} />
+          </div>
+          <div className="sm:col-span-2">
+            <Label htmlFor="inviteMissingBackgroundText">Текст без фона приглашения</Label>
+            <Input id="inviteMissingBackgroundText" name="inviteMissingBackgroundText" defaultValue={settingsForm.inviteMissingBackgroundText} />
           </div>
           <div>
             <Label htmlFor="weddingDate">Дата</Label>

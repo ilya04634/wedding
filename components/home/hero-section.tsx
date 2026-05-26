@@ -27,14 +27,14 @@ export function HeroSection({ guestName, settings }: HeroSectionProps) {
         </p>
         <div className="mt-7 max-w-full sm:mt-8">
           <p className="font-display text-4xl font-semibold uppercase tracking-[0.22em] text-[#34312d] sm:text-6xl sm:tracking-[0.28em]">
-            Коваль
+            {settings.heroFamilyName}
           </p>
           <h1 className="font-script mt-1 text-balance text-[4.4rem] leading-[0.86] text-[#e79796] sm:text-8xl lg:text-9xl">
             {settings.coupleNames}
           </h1>
         </div>
         <p className="font-display mx-auto mt-5 max-w-2xl text-balance text-2xl leading-tight text-[#34312d] sm:text-4xl lg:text-5xl">
-          Летняя свадьба в садовом настроении
+          {settings.heroSubtitle}
         </p>
         <p className="mx-auto mt-5 max-w-2xl text-balance text-[0.95rem] leading-7 text-[#746f66] sm:mt-6 sm:text-lg sm:leading-8">
           {settings.heroText}

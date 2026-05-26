@@ -8,8 +8,10 @@ export interface SiteSettings {
   coupleNames: string;
   siteTitle: string;
   navTitle: string;
+  heroFamilyName: string;
   heroDefaultEyebrow: string;
   heroPersonalEyebrowTemplate: string;
+  heroSubtitle: string;
   heroText: string;
   weddingDate: string;
   weddingTime: string;
@@ -20,6 +22,13 @@ export interface SiteSettings {
   programDescription: string;
   programItems: ProgramItem[];
   rsvpDescription: string;
+  inviteLabel: string;
+  inviteBodyText: string;
+  inviteChildrenPrefix: string;
+  inviteGuestCountTemplate: string;
+  invitePrimaryButtonLabel: string;
+  inviteRsvpButtonLabel: string;
+  inviteMissingBackgroundText: string;
   footerText: string;
   uploadLinkEnabled: boolean;
   uploadLinkLabel: string;

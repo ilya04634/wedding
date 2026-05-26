@@ -14,8 +14,10 @@ const SETTING_KEYS = [
   "coupleNames",
   "siteTitle",
   "navTitle",
+  "heroFamilyName",
   "heroDefaultEyebrow",
   "heroPersonalEyebrowTemplate",
+  "heroSubtitle",
   "heroText",
   "weddingDate",
   "weddingTime",
@@ -26,6 +28,13 @@ const SETTING_KEYS = [
   "programDescription",
   "programItemsJson",
   "rsvpDescription",
+  "inviteLabel",
+  "inviteBodyText",
+  "inviteChildrenPrefix",
+  "inviteGuestCountTemplate",
+  "invitePrimaryButtonLabel",
+  "inviteRsvpButtonLabel",
+  "inviteMissingBackgroundText",
   "footerText",
   "uploadLinkEnabled",
   "uploadLinkLabel",
@@ -92,12 +101,15 @@ function settingsFromMap(map: Map<string, string>): SiteSettings {
     coupleNames: map.get("coupleNames") || DEFAULT_SITE_SETTINGS.coupleNames,
     siteTitle: map.get("siteTitle") || DEFAULT_SITE_SETTINGS.siteTitle,
     navTitle: map.get("navTitle") || DEFAULT_SITE_SETTINGS.navTitle,
+    heroFamilyName:
+      map.get("heroFamilyName") || DEFAULT_SITE_SETTINGS.heroFamilyName,
     heroDefaultEyebrow:
       map.get("heroDefaultEyebrow") ||
       DEFAULT_SITE_SETTINGS.heroDefaultEyebrow,
     heroPersonalEyebrowTemplate:
       map.get("heroPersonalEyebrowTemplate") ||
       DEFAULT_SITE_SETTINGS.heroPersonalEyebrowTemplate,
+    heroSubtitle: map.get("heroSubtitle") || DEFAULT_SITE_SETTINGS.heroSubtitle,
     heroText: map.get("heroText") || DEFAULT_SITE_SETTINGS.heroText,
     weddingDate: map.get("weddingDate") || DEFAULT_SITE_SETTINGS.weddingDate,
     weddingTime: map.get("weddingTime") || DEFAULT_SITE_SETTINGS.weddingTime,
@@ -111,6 +123,24 @@ function settingsFromMap(map: Map<string, string>): SiteSettings {
     programItems: parseProgramItems(map.get("programItemsJson")),
     rsvpDescription:
       map.get("rsvpDescription") || DEFAULT_SITE_SETTINGS.rsvpDescription,
+    inviteLabel: map.get("inviteLabel") || DEFAULT_SITE_SETTINGS.inviteLabel,
+    inviteBodyText:
+      map.get("inviteBodyText") || DEFAULT_SITE_SETTINGS.inviteBodyText,
+    inviteChildrenPrefix:
+      map.get("inviteChildrenPrefix") ||
+      DEFAULT_SITE_SETTINGS.inviteChildrenPrefix,
+    inviteGuestCountTemplate:
+      map.get("inviteGuestCountTemplate") ||
+      DEFAULT_SITE_SETTINGS.inviteGuestCountTemplate,
+    invitePrimaryButtonLabel:
+      map.get("invitePrimaryButtonLabel") ||
+      DEFAULT_SITE_SETTINGS.invitePrimaryButtonLabel,
+    inviteRsvpButtonLabel:
+      map.get("inviteRsvpButtonLabel") ||
+      DEFAULT_SITE_SETTINGS.inviteRsvpButtonLabel,
+    inviteMissingBackgroundText:
+      map.get("inviteMissingBackgroundText") ||
+      DEFAULT_SITE_SETTINGS.inviteMissingBackgroundText,
     footerText: map.get("footerText") || DEFAULT_SITE_SETTINGS.footerText,
     uploadLinkEnabled: parseBoolean(
       map.get("uploadLinkEnabled"),
@@ -153,8 +183,10 @@ export function settingsToFormData(settings: SiteSettings): SiteSettingsFormData
     coupleNames: settings.coupleNames,
     siteTitle: settings.siteTitle,
     navTitle: settings.navTitle,
+    heroFamilyName: settings.heroFamilyName,
     heroDefaultEyebrow: settings.heroDefaultEyebrow,
     heroPersonalEyebrowTemplate: settings.heroPersonalEyebrowTemplate,
+    heroSubtitle: settings.heroSubtitle,
     heroText: settings.heroText,
     weddingDate: settings.weddingDate,
     weddingTime: settings.weddingTime,
@@ -165,6 +197,13 @@ export function settingsToFormData(settings: SiteSettings): SiteSettingsFormData
     programDescription: settings.programDescription,
     programItemsJson: serializeProgramItems(settings),
     rsvpDescription: settings.rsvpDescription,
+    inviteLabel: settings.inviteLabel,
+    inviteBodyText: settings.inviteBodyText,
+    inviteChildrenPrefix: settings.inviteChildrenPrefix,
+    inviteGuestCountTemplate: settings.inviteGuestCountTemplate,
+    invitePrimaryButtonLabel: settings.invitePrimaryButtonLabel,
+    inviteRsvpButtonLabel: settings.inviteRsvpButtonLabel,
+    inviteMissingBackgroundText: settings.inviteMissingBackgroundText,
     footerText: settings.footerText,
     uploadLinkEnabled: String(settings.uploadLinkEnabled),
     uploadLinkLabel: settings.uploadLinkLabel,

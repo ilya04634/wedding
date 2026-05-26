@@ -57,7 +57,7 @@ export function AdminInviteList({ invites }: AdminInviteListProps) {
       </div>
 
       <div className="space-y-4">
-        {filteredInvites.map((invite, index) => {
+        {filteredInvites.map((invite) => {
           const hasId = Boolean(invite.id);
           const inviteKey =
             invite.id ||
@@ -66,7 +66,7 @@ export function AdminInviteList({ invites }: AdminInviteListProps) {
           return (
             <details
               key={inviteKey}
-              open={Boolean(normalizedQuery) || index < 3}
+              open={Boolean(normalizedQuery)}
               className="rounded-lg border border-neutral-200 bg-white"
             >
               <summary className="cursor-pointer list-none border-b border-neutral-200 p-4">

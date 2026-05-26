@@ -4,8 +4,10 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   coupleNames: "Илья и Дарья",
   siteTitle: "Приглашение на свадьбу",
   navTitle: "Приглашение",
+  heroFamilyName: "Коваль",
   heroDefaultEyebrow: "Приглашаем вас на свадьбу",
   heroPersonalEyebrowTemplate: "{{guestName}}, приглашаем вас на свадьбу",
+  heroSubtitle: "Летняя свадьба в садовом настроении",
   heroText:
     "Будем счастливы разделить с вами день, который станет началом нашей семейной истории.",
   weddingDate: "21 июля 2026",
@@ -40,6 +42,14 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   ],
   rsvpDescription:
     "Пожалуйста, заполните анкету до 1 июля 2026. Ответ можно указать отдельно для каждого гостя из приглашения.",
+  inviteLabel: "Приглашение",
+  inviteBodyText: "приглашаем вас разделить с нами день нашей свадьбы",
+  inviteChildrenPrefix: "Также будем очень рады видеть:",
+  inviteGuestCountTemplate: "{{count}} приглашенных в этой ссылке",
+  invitePrimaryButtonLabel: "Перейти к основной странице",
+  inviteRsvpButtonLabel: "Перейти сразу к анкете",
+  inviteMissingBackgroundText:
+    "Персональный фон появится здесь после генерации.",
   footerText: "С любовью",
   uploadLinkEnabled: false,
   uploadLinkLabel: "Загрузить фото и видео",

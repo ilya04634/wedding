@@ -133,12 +133,16 @@ export async function updateSiteSettingsAction(formData: FormData) {
     coupleNames: getRequiredString(formData, "coupleNames") || defaults.coupleNames,
     siteTitle: getRequiredString(formData, "siteTitle") || defaults.siteTitle,
     navTitle: getRequiredString(formData, "navTitle") || defaults.navTitle,
+    heroFamilyName:
+      getRequiredString(formData, "heroFamilyName") || defaults.heroFamilyName,
     heroDefaultEyebrow:
       getRequiredString(formData, "heroDefaultEyebrow") ||
       defaults.heroDefaultEyebrow,
     heroPersonalEyebrowTemplate:
       getRequiredString(formData, "heroPersonalEyebrowTemplate") ||
       defaults.heroPersonalEyebrowTemplate,
+    heroSubtitle:
+      getRequiredString(formData, "heroSubtitle") || defaults.heroSubtitle,
     heroText: getRequiredString(formData, "heroText") || defaults.heroText,
     weddingDate: getRequiredString(formData, "weddingDate") || defaults.weddingDate,
     weddingTime: getRequiredString(formData, "weddingTime") || defaults.weddingTime,
@@ -159,6 +163,25 @@ export async function updateSiteSettingsAction(formData: FormData) {
     rsvpDescription:
       getRequiredString(formData, "rsvpDescription") ||
       defaults.rsvpDescription,
+    inviteLabel:
+      getRequiredString(formData, "inviteLabel") || defaults.inviteLabel,
+    inviteBodyText:
+      getRequiredString(formData, "inviteBodyText") || defaults.inviteBodyText,
+    inviteChildrenPrefix:
+      getRequiredString(formData, "inviteChildrenPrefix") ||
+      defaults.inviteChildrenPrefix,
+    inviteGuestCountTemplate:
+      getRequiredString(formData, "inviteGuestCountTemplate") ||
+      defaults.inviteGuestCountTemplate,
+    invitePrimaryButtonLabel:
+      getRequiredString(formData, "invitePrimaryButtonLabel") ||
+      defaults.invitePrimaryButtonLabel,
+    inviteRsvpButtonLabel:
+      getRequiredString(formData, "inviteRsvpButtonLabel") ||
+      defaults.inviteRsvpButtonLabel,
+    inviteMissingBackgroundText:
+      getRequiredString(formData, "inviteMissingBackgroundText") ||
+      defaults.inviteMissingBackgroundText,
     footerText: getRequiredString(formData, "footerText") || defaults.footerText,
     uploadLinkEnabled: formData.get("uploadLinkEnabled") ? "true" : "false",
     uploadLinkLabel:
