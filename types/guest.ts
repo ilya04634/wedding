@@ -7,6 +7,7 @@ export interface GuestPerson {
   personType: GuestPersonType;
   childAge: string | null;
   bgUrl: string | null;
+  inviteUrl: string | null;
   status: string | null;
   sheetRow: number;
 }
@@ -16,5 +17,6 @@ export interface GuestInvite {
   inviteName: string;
   people: GuestPerson[];
   bgUrl: string | null;
+  inviteUrl: string | null;
   status: string | null;
 }

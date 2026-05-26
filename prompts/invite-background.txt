@@ -6,10 +6,11 @@ Create only a background image. Do not include text, letters, words, numbers,
 logos, monograms, people, faces, hands, or readable signs.
 
 Style: romantic, airy, refined, high-end wedding stationery, soft natural light,
-delicate floral bokeh, subtle fabric or paper texture, gentle depth, graceful
-composition for a vertical mobile screen.
+visible delicate floral bokeh around the edges, subtle fabric or paper texture,
+gentle depth, graceful composition for a vertical mobile screen.
 
 Palette: soft ivory, warm white, muted champagne gold, pale blush, sage accents.
 
-The background must leave comfortable empty space in the center for website text
-to be overlaid later with HTML/CSS.
+The background must be visibly decorative, not blank or plain white. Leave
+comfortable calm space in the center for website text to be overlaid later with
+HTML/CSS, but keep soft floral and light details visible around the frame.

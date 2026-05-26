@@ -236,7 +236,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                 </p>
                 {invite.bgUrl ? (
                   <Link
-                    href={`/i/${encodeURIComponent(invite.id)}`}
+                    href={invite.inviteUrl || `/i/${encodeURIComponent(invite.id)}`}
                     className="mt-1 inline-block text-sm text-neutral-900 underline underline-offset-4"
                     target="_blank"
                   >
@@ -339,6 +339,17 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                       id={`bgUrl-${person.sheetRow}`}
                       name="bgUrl"
                       defaultValue={person.bgUrl ?? ""}
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2 lg:col-span-8">
+                    <Label htmlFor={`inviteUrl-${person.sheetRow}`}>
+                      invite_url
+                    </Label>
+                    <Input
+                      id={`inviteUrl-${person.sheetRow}`}
+                      name="inviteUrl"
+                      defaultValue={person.inviteUrl ?? invite.inviteUrl ?? ""}
                     />
                   </div>
 

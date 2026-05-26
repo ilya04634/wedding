@@ -12,6 +12,7 @@ const GUEST_COLUMNS = [
   "child_age",
   "name",
   "bg_url",
+  "invite_url",
   "status",
 ] as const;
 
@@ -26,6 +27,7 @@ export interface GuestPersonUpdate {
   personType: GuestPersonType;
   childAge: string;
   bgUrl: string;
+  inviteUrl: string;
   status: string;
 }
 
@@ -81,6 +83,7 @@ function rowToGuestPerson(
     personType: normalizePersonType(getCell(row, columnIndex, "person_type")),
     childAge: getCell(row, columnIndex, "child_age") || null,
     bgUrl: getCell(row, columnIndex, "bg_url") || null,
+    inviteUrl: getCell(row, columnIndex, "invite_url") || null,
     status: getCell(row, columnIndex, "status") || null,
     sheetRow,
   };
@@ -164,6 +167,7 @@ function peopleToInvite(id: string, people: GuestPerson[]): GuestInvite | null {
     inviteName,
     people: invitePeople,
     bgUrl: invitePeople.find((person) => person.bgUrl)?.bgUrl ?? null,
+    inviteUrl: invitePeople.find((person) => person.inviteUrl)?.inviteUrl ?? null,
     status:
       invitePeople.find((person) => person.status === "done")?.status ??
       invitePeople.find((person) => person.status)?.status ??
@@ -224,6 +228,7 @@ export async function updateGuestPerson(update: GuestPersonUpdate): Promise<void
     ["person_type", update.personType],
     ["child_age", update.childAge],
     ["bg_url", update.bgUrl],
+    ["invite_url", update.inviteUrl],
     ["status", update.status],
   ];
 
@@ -231,7 +236,10 @@ export async function updateGuestPerson(update: GuestPersonUpdate): Promise<void
     spreadsheetId: getGoogleSpreadsheetId(),
     requestBody: {
       valueInputOption: "USER_ENTERED",
-      data: fields.map(([key, value]) => {
+      data: fields.flatMap(([key, value]) => {
+        const index = columnIndex[key];
+        if (index === undefined && key === "invite_url") return [];
+
         const column = columnLetter(requireColumn(columnIndex, key));
         return {
           range: `${sheetName}!${column}${update.sheetRow}`,
@@ -246,6 +254,7 @@ export async function updateInviteBackground(
   id: string,
   bgUrl: string,
   status: string,
+  inviteUrl?: string,
 ): Promise<void> {
   const sheets = getSheetsClient();
   const sheetName = getGuestsSheetName();
@@ -264,6 +273,10 @@ export async function updateInviteBackground(
 
   const bgUrlColumn = columnLetter(columnIndex.bg_url);
   const statusColumn = columnLetter(columnIndex.status);
+  const inviteUrlColumn =
+    columnIndex.invite_url === undefined
+      ? null
+      : columnLetter(columnIndex.invite_url);
 
   await Promise.all(
     matchingPeople.map((person) =>
@@ -280,6 +293,14 @@ export async function updateInviteBackground(
               range: `${sheetName}!${statusColumn}${person.sheetRow}`,
               values: [[status]],
             },
+            ...(inviteUrlColumn && inviteUrl !== undefined
+              ? [
+                  {
+                    range: `${sheetName}!${inviteUrlColumn}${person.sheetRow}`,
+                    values: [[inviteUrl]],
+                  },
+                ]
+              : []),
           ],
         },
       }),

@@ -55,6 +55,7 @@ export async function updateGuestPersonAction(formData: FormData) {
     personType: personType === "child" ? "child" : ("adult" as GuestPersonType),
     childAge: getRequiredString(formData, "childAge"),
     bgUrl: getRequiredString(formData, "bgUrl"),
+    inviteUrl: getRequiredString(formData, "inviteUrl"),
     status: getRequiredString(formData, "status"),
   };
 

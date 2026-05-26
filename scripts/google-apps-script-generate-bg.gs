@@ -9,7 +9,10 @@
  * 4. Reload the sheet. Use menu: Wedding -> Generate all pending backgrounds.
  *
  * Guests headers expected:
- * id | invite_name | person_name | person_type | child_age | bg_url | status
+ * id | invite_name | person_name | person_type | child_age | bg_url | invite_url | status
+ *
+ * bg_url is a technical Google Drive image URL.
+ * invite_url is the public site URL you send to guests.
  */
 
 const WEBHOOK_URL = "https://YOUR_DOMAIN.vercel.app/api/generate-invite-bg";
@@ -47,9 +50,11 @@ function getRequiredColumn(headerMap, name) {
   return headerMap[name];
 }
 
-function shouldGenerate(bgUrl, status) {
+function shouldCallWebhook(bgUrl, inviteUrl, status) {
   const normalizedStatus = String(status || "").trim().toLowerCase();
-  return !bgUrl && normalizedStatus !== "pending" && normalizedStatus !== "done";
+  if (normalizedStatus === "pending") return false;
+  if (!inviteUrl) return true;
+  return !bgUrl && normalizedStatus !== "done";
 }
 
 function getPendingInviteIds() {
@@ -59,6 +64,7 @@ function getPendingInviteIds() {
   const headerMap = getHeaderMap(sheet);
   const idColumn = getRequiredColumn(headerMap, "id");
   const bgUrlColumn = getRequiredColumn(headerMap, "bg_url");
+  const inviteUrlColumn = headerMap.invite_url || null;
   const statusColumn = getRequiredColumn(headerMap, "status");
   const lastRow = sheet.getLastRow();
 
@@ -71,9 +77,10 @@ function getPendingInviteIds() {
   values.forEach(function (row) {
     const id = String(row[idColumn - 1] || "").trim();
     const bgUrl = row[bgUrlColumn - 1];
+    const inviteUrl = inviteUrlColumn ? row[inviteUrlColumn - 1] : "";
     const status = row[statusColumn - 1];
 
-    if (id && !seen[id] && shouldGenerate(bgUrl, status)) {
+    if (id && !seen[id] && shouldCallWebhook(bgUrl, inviteUrl, status)) {
       seen[id] = true;
       ids.push(id);
     }
@@ -133,13 +140,15 @@ function onGuestsSheetEdit(e) {
   const headerMap = getHeaderMap(sheet);
   const idColumn = getRequiredColumn(headerMap, "id");
   const bgUrlColumn = getRequiredColumn(headerMap, "bg_url");
+  const inviteUrlColumn = headerMap.invite_url || null;
   const statusColumn = getRequiredColumn(headerMap, "status");
 
   const id = String(sheet.getRange(row, idColumn).getValue() || "").trim();
   const bgUrl = sheet.getRange(row, bgUrlColumn).getValue();
+  const inviteUrl = inviteUrlColumn ? sheet.getRange(row, inviteUrlColumn).getValue() : "";
   const status = sheet.getRange(row, statusColumn).getValue();
 
-  if (!id || !shouldGenerate(bgUrl, status)) return;
+  if (!id || !shouldCallWebhook(bgUrl, inviteUrl, status)) return;
   triggerBackgroundGeneration(id);
 }
 
@@ -154,4 +163,13 @@ function triggerBackgroundGeneration(guestId) {
 
   const response = UrlFetchApp.fetch(WEBHOOK_URL, options);
   Logger.log(response.getResponseCode() + " " + response.getContentText());
+
+  try {
+    const data = JSON.parse(response.getContentText());
+    if (data.inviteUrl) {
+      Logger.log("Guest invite URL: " + data.inviteUrl);
+    }
+  } catch (error) {
+    Logger.log("Could not parse webhook response JSON.");
+  }
 }

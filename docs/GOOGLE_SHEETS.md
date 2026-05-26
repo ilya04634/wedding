@@ -5,7 +5,7 @@
 Первая строка должна быть заголовками:
 
 ```text
-id | invite_name | person_name | person_type | child_age | bg_url | status
+id | invite_name | person_name | person_type | child_age | bg_url | invite_url | status
 ```
 
 Колонки:
@@ -118,3 +118,18 @@ uploadLinkEnabled | false
 ```text
 uploadLinkEnabled | true
 ```
+
+## Invite links
+
+`bg_url` is only the technical Google Drive image URL for the generated
+background. Do not send it to guests.
+
+`invite_url` is the public website URL for the finished invite, for example:
+
+```text
+https://your-domain.vercel.app/i/ivan-family
+```
+
+Send `invite_url` to guests. The site opens this page, reads the same `id`,
+uses `bg_url` as the background, and then passes the guest data into the RSVP
+form.

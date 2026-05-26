@@ -26,6 +26,10 @@ function isGptImageModel(model: string) {
   return model.startsWith("gpt-image-");
 }
 
+function supportsBackgroundParameter(model: string) {
+  return model === "gpt-image-1" || model === "gpt-image-1.5";
+}
+
 function buildImageRequestBody(model: string, prompt: string) {
   if (isGptImageModel(model)) {
     return {
@@ -34,6 +38,7 @@ function buildImageRequestBody(model: string, prompt: string) {
       n: 1,
       size: "1024x1536",
       quality: "medium",
+      ...(supportsBackgroundParameter(model) ? { background: "opaque" } : {}),
       output_format: "png",
     };
   }
@@ -94,7 +99,11 @@ export async function generateImageWithOpenAI(
   const image = json.data?.[0];
 
   if (image?.b64_json) {
-    return Buffer.from(image.b64_json, "base64");
+    const buffer = Buffer.from(image.b64_json, "base64");
+    if (buffer.length < 1024) {
+      throw new Error("OpenAI returned an unexpectedly small image");
+    }
+    return buffer;
   }
 
   if (!image?.url) {
@@ -107,7 +116,11 @@ export async function generateImageWithOpenAI(
   }
 
   const arrayBuffer = await imageRes.arrayBuffer();
-  return Buffer.from(arrayBuffer);
+  const buffer = Buffer.from(arrayBuffer);
+  if (buffer.length < 1024) {
+    throw new Error("OpenAI returned an unexpectedly small image");
+  }
+  return buffer;
 }
 
 export async function generateAndUploadInviteBackground(
