@@ -210,7 +210,7 @@ export function UploadZone() {
 
   return (
     <div className="space-y-5 sm:space-y-6">
-      <div className="space-y-4 rounded-2xl border border-neutral-200 bg-white p-4 sm:rounded-lg">
+      <div className="space-y-4 rounded-2xl border border-[#8a9a7a]/20 bg-white/70 p-4 shadow-sm backdrop-blur-sm sm:rounded-3xl">
         <div className="space-y-2">
           <Label htmlFor={uploaderNameId}>Ваше имя</Label>
           <Input
@@ -243,13 +243,13 @@ export function UploadZone() {
         onDrop={onDrop}
         onClick={() => inputRef.current?.click()}
         className={cn(
-          "flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-4 py-9 text-center transition-colors sm:rounded-xl sm:px-6 sm:py-12",
+          "flex cursor-pointer flex-col items-center justify-center rounded-3xl border-2 border-dashed px-4 py-9 text-center transition-colors sm:px-6 sm:py-12",
           isDragging
-            ? "border-neutral-900 bg-neutral-50"
-            : "border-neutral-300 bg-neutral-50/50 hover:border-neutral-400 hover:bg-neutral-50",
+            ? "border-[#8a9a7a] bg-white/75"
+            : "border-[#8a9a7a]/35 bg-white/45 hover:border-[#8a9a7a]/60 hover:bg-white/65",
         )}
       >
-        <ImagePlus className="mb-3 h-10 w-10 text-neutral-400" aria-hidden />
+        <ImagePlus className="mb-3 h-10 w-10 text-[#e79796]" aria-hidden />
         <p className="text-sm font-medium text-neutral-800">
           Перетащите файлы сюда
         </p>

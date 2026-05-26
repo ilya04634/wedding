@@ -25,9 +25,14 @@ export function HeroSection({ guestName, settings }: HeroSectionProps) {
         <p className="max-w-full rounded-full border border-[#8a9a7a]/25 bg-white/55 px-3 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#8a9a7a] sm:px-4 sm:text-xs sm:tracking-[0.22em]">
           {eyebrow}
         </p>
-        <h1 className="font-script mt-7 max-w-full text-balance text-[4.5rem] leading-[0.86] text-[#34312d] sm:mt-8 sm:text-8xl lg:text-9xl">
-          {settings.coupleNames}
-        </h1>
+        <div className="mt-7 max-w-full sm:mt-8">
+          <p className="font-display text-4xl font-semibold uppercase tracking-[0.22em] text-[#34312d] sm:text-6xl sm:tracking-[0.28em]">
+            Коваль
+          </p>
+          <h1 className="font-script mt-1 text-balance text-[4.4rem] leading-[0.86] text-[#e79796] sm:text-8xl lg:text-9xl">
+            Илья и Даша
+          </h1>
+        </div>
         <p className="font-display mx-auto mt-5 max-w-2xl text-balance text-2xl leading-tight text-[#34312d] sm:text-4xl lg:text-5xl">
           Летняя свадьба в садовом настроении
         </p>

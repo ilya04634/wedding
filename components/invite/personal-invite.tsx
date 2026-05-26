@@ -33,7 +33,7 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
   const rsvpUrl = `${detailsUrl}#rsvp`;
 
   return (
-    <main className="relative min-h-[100dvh] w-full overflow-hidden bg-neutral-950 text-white">
+    <main className="relative min-h-[100dvh] w-full overflow-hidden bg-[#34312d] text-white">
       {hasBackground ? (
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -48,8 +48,10 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
         />
       )}
 
-      <div className="absolute inset-0 bg-gradient-to-b from-black/28 via-black/14 to-black/38" aria-hidden />
-      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/45 to-transparent" aria-hidden />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/26 via-black/12 to-black/34" aria-hidden />
+      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/48 via-black/18 to-transparent" aria-hidden />
+      <div className="absolute -right-24 top-10 h-72 w-72 rounded-full bg-[radial-gradient(circle,_rgba(231,151,150,0.24),_rgba(231,151,150,0)_70%)]" aria-hidden />
+      <div className="absolute -left-24 bottom-20 h-72 w-72 rounded-full bg-[radial-gradient(circle,_rgba(138,154,122,0.22),_rgba(138,154,122,0)_70%)]" aria-hidden />
 
       <section className="relative z-10 mx-auto flex min-h-[100dvh] max-w-4xl flex-col justify-between px-4 py-6 text-center sm:px-8 sm:py-10">
         <header className="flex items-center justify-center text-[0.68rem] uppercase tracking-[0.16em] text-white/75 sm:justify-between sm:text-xs">
@@ -58,7 +60,7 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
         </header>
 
         <div className="mx-auto flex max-w-2xl flex-1 flex-col items-center justify-center py-8 drop-shadow-[0_2px_18px_rgba(0,0,0,0.5)] sm:py-12">
-          <p className="text-xs uppercase tracking-[0.2em] text-white/85 sm:text-sm sm:tracking-[0.22em]">Приглашение</p>
+          <p className="rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white/90 backdrop-blur-sm sm:text-sm sm:tracking-[0.22em]">Приглашение</p>
           <h1 className="font-display mt-4 text-balance text-3xl leading-tight sm:mt-5 sm:text-6xl">
             {invite.inviteName}
           </h1>
@@ -92,14 +94,14 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
         <footer className="mx-auto flex w-full max-w-lg flex-col gap-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:gap-3 sm:pb-2">
           <Link
             href={detailsUrl}
-            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-medium text-neutral-950 transition-colors hover:bg-white/90 sm:px-6"
+            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#fdfbf7] px-5 py-3 text-sm font-semibold text-[#34312d] shadow-[0_16px_35px_rgba(253,251,247,0.22)] transition-colors hover:bg-white sm:px-6"
           >
             Перейти к основной странице
             <ArrowRight className="h-4 w-4" aria-hidden />
           </Link>
           <Link
             href={rsvpUrl}
-            className="inline-flex min-h-12 items-center justify-center rounded-lg border border-white/35 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-white/10 sm:px-6"
+            className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/35 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/15 sm:px-6"
           >
             Перейти сразу к анкете
           </Link>

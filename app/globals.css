@@ -8,6 +8,12 @@
   --sage: #8a9a7a;
   --peony: #e79796;
   --lemon: #f4d03f;
+  color-scheme: light;
+}
+
+html {
+  background: var(--background);
+  color-scheme: light;
 }
 
 body {
