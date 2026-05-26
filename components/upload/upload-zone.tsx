@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { UploadFileItem } from "@/components/upload/upload-file-item";
 import { cn } from "@/lib/utils";
-import { Camera, ImagePlus, Upload } from "lucide-react";
+import { Camera, ImagePlus, Images } from "lucide-react";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 
 export type UploadFileStatus = "pending" | "uploading" | "done" | "error";
@@ -122,11 +122,9 @@ function uploadFileToDrive(
 
 export function UploadZone() {
   const inputId = useId();
-  const cameraPhotoInputId = useId();
-  const cameraVideoInputId = useId();
+  const cameraInputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
-  const cameraPhotoInputRef = useRef<HTMLInputElement>(null);
-  const cameraVideoInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
   const autoUploadRef = useRef(false);
   const [files, setFiles] = useState<UploadFileState[]>([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -204,9 +202,6 @@ export function UploadZone() {
     }
   }, [files, updateFile]);
 
-  const hasUploadable = files.some(
-    (file) => file.status === "pending" || file.status === "error",
-  );
   const isUploading = files.some((file) => file.status === "uploading");
 
   useEffect(() => {
@@ -267,10 +262,10 @@ export function UploadZone() {
       />
 
       <input
-        ref={cameraPhotoInputRef}
-        id={cameraPhotoInputId}
+        ref={cameraInputRef}
+        id={cameraInputId}
         type="file"
-        accept="image/*"
+        accept={ACCEPT}
         capture="environment"
         className="sr-only"
         onChange={(event) => {
@@ -279,50 +274,22 @@ export function UploadZone() {
         }}
       />
 
-      <input
-        ref={cameraVideoInputRef}
-        id={cameraVideoInputId}
-        type="file"
-        accept="video/*"
-        capture="environment"
-        className="sr-only"
-        onChange={(event) => {
-          if (event.target.files) addFiles(event.target.files);
-          event.target.value = "";
-        }}
-      />
-
-      <div className="grid gap-3 sm:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2">
         <Button
           type="button"
           variant="secondary"
-          onClick={() => cameraPhotoInputRef.current?.click()}
+          onClick={() => cameraInputRef.current?.click()}
         >
           <Camera className="mr-2 h-4 w-4" aria-hidden />
-          Фото
-        </Button>
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={() => cameraVideoInputRef.current?.click()}
-        >
-          <Camera className="mr-2 h-4 w-4" aria-hidden />
-          Видео
+          Снять на камеру
         </Button>
         <Button
           type="button"
           variant="secondary"
           onClick={() => inputRef.current?.click()}
         >
-          Выбрать
-        </Button>
-        <Button
-          type="button"
-          disabled={!hasUploadable || isUploading}
-          onClick={startUpload}
-        >
-          <Upload className="mr-2 h-4 w-4" aria-hidden />
-          {isUploading ? "Загрузка..." : "Загрузить"}
+          <Images className="mr-2 h-4 w-4" aria-hidden />
+          Выбрать из галереи
         </Button>
       </div>
 
