@@ -1,5 +1,6 @@
 import { PersonalInvite } from "@/components/invite/personal-invite";
 import { getInviteById } from "@/lib/google/guests";
+import { getSiteSettings } from "@/lib/google/settings";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -20,11 +21,14 @@ export async function generateMetadata({
 }
 
 export default async function InvitePage({ params }: InvitePageProps) {
-  const invite = await getInviteById(params.id);
+  const [invite, settings] = await Promise.all([
+    getInviteById(params.id),
+    getSiteSettings(),
+  ]);
 
   if (!invite) {
     notFound();
   }
 
-  return <PersonalInvite invite={invite} />;
+  return <PersonalInvite invite={invite} settings={settings} />;
 }
