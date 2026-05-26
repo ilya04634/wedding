@@ -1,6 +1,6 @@
 /** Тексты сайта */
 
-export const COUPLE_NAMES = "Илья & Дарья";
+export const COUPLE_NAMES = "Илья и Дарья";
 export const WEDDING_DATE = "21 июля 2026";
 export const WEDDING_TIME = "13:00";
 export const WEDDING_VENUE = "Jannat Regency";
