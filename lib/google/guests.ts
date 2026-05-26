@@ -62,6 +62,60 @@ function normalizePersonType(value: string | undefined): GuestPersonType {
   return value?.trim().toLowerCase() === "child" ? "child" : "adult";
 }
 
+function transliterateForSlug(value: string) {
+  const map: Record<string, string> = {
+    а: "a",
+    б: "b",
+    в: "v",
+    г: "g",
+    д: "d",
+    е: "e",
+    ё: "e",
+    ж: "zh",
+    з: "z",
+    и: "i",
+    й: "y",
+    к: "k",
+    л: "l",
+    м: "m",
+    н: "n",
+    о: "o",
+    п: "p",
+    р: "r",
+    с: "s",
+    т: "t",
+    у: "u",
+    ф: "f",
+    х: "h",
+    ц: "ts",
+    ч: "ch",
+    ш: "sh",
+    щ: "sch",
+    ъ: "",
+    ы: "y",
+    ь: "",
+    э: "e",
+    ю: "yu",
+    я: "ya",
+  };
+
+  return value
+    .toLowerCase()
+    .split("")
+    .map((char) => map[char] ?? char)
+    .join("");
+}
+
+function slugifyInviteId(value: string) {
+  const slug = transliterateForSlug(value)
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 60);
+
+  return slug || "invite";
+}
+
 function getCell(row: string[], columnIndex: ColumnIndex, key: GuestColumn) {
   const index = columnIndex[key];
   return index === undefined ? "" : row[index]?.trim() ?? "";
@@ -218,6 +272,78 @@ export const getGuestById = getInviteById;
 export async function listInvites(): Promise<GuestInvite[]> {
   const { people } = await fetchGuestRows();
   return groupPeopleByInvite(people);
+}
+
+export async function fillMissingGuestIds(): Promise<number> {
+  const sheets = getSheetsClient();
+  const sheetName = getGuestsSheetName();
+
+  const response = await sheets.spreadsheets.values.get({
+    spreadsheetId: getGoogleSpreadsheetId(),
+    range: `${sheetName}!A:Z`,
+  });
+
+  const rows = response.data.values;
+  if (!rows?.length) return 0;
+
+  const [headerRow, ...dataRows] = rows;
+  const columnIndex = buildColumnIndex(headerRow);
+  const idIndex = requireColumn(columnIndex, "id");
+  const idColumn = columnLetter(idIndex);
+  const usedIds = new Set<string>();
+  const groupIds = new Map<string, string>();
+
+  dataRows.forEach((row) => {
+    const id = String(row[idIndex] ?? "").trim();
+    if (id) usedIds.add(id.toLowerCase());
+  });
+
+  const updates = dataRows.flatMap((row, index) => {
+    const values = row.map(String);
+    const currentId = getCell(values, columnIndex, "id");
+    if (currentId) return [];
+
+    const inviteName = getCell(values, columnIndex, "invite_name");
+    const personName =
+      getCell(values, columnIndex, "person_name") ||
+      getCell(values, columnIndex, "name");
+    const groupKey = (inviteName || personName).trim().toLowerCase();
+    if (!groupKey) return [];
+
+    let nextId = groupIds.get(groupKey);
+    if (!nextId) {
+      const baseId = slugifyInviteId(inviteName || personName);
+      nextId = baseId;
+      let suffix = 2;
+
+      while (usedIds.has(nextId.toLowerCase())) {
+        nextId = `${baseId}-${suffix}`;
+        suffix += 1;
+      }
+
+      usedIds.add(nextId.toLowerCase());
+      groupIds.set(groupKey, nextId);
+    }
+
+    return [
+      {
+        range: `${sheetName}!${idColumn}${index + 2}`,
+        values: [[nextId]],
+      },
+    ];
+  });
+
+  if (!updates.length) return 0;
+
+  await sheets.spreadsheets.values.batchUpdate({
+    spreadsheetId: getGoogleSpreadsheetId(),
+    requestBody: {
+      valueInputOption: "USER_ENTERED",
+      data: updates,
+    },
+  });
+
+  return updates.length;
 }
 
 export async function updateGuestPerson(update: GuestPersonUpdate): Promise<void> {

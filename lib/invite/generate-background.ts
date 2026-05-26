@@ -54,24 +54,27 @@ function buildImageRequestBody(model: string, prompt: string) {
 }
 
 function getInviteBackgroundPrompt(guestName: string, customPrompt?: string | null) {
-  let template = customPrompt?.trim() || DEFAULT_PROMPT;
+  let template = DEFAULT_PROMPT;
 
-  if (!customPrompt?.trim()) {
-    try {
-      const filePrompt = readFileSync(PROMPT_FILE_PATH, "utf8").trim();
-      if (filePrompt) {
-        template = filePrompt;
-      }
-    } catch (error) {
-      console.warn("[generate-invite-bg] prompt file fallback", error);
+  try {
+    const filePrompt = readFileSync(PROMPT_FILE_PATH, "utf8").trim();
+    if (filePrompt) {
+      template = filePrompt;
     }
+  } catch (error) {
+    console.warn("[generate-invite-bg] prompt file fallback", error);
   }
 
-  if (template.includes("{{guestName}}")) {
-    return template.replaceAll("{{guestName}}", guestName);
-  }
+  const basePrompt = template.includes("{{guestName}}")
+    ? template.replaceAll("{{guestName}}", guestName)
+    : `${template}. Subtle celebratory mood inspired by welcoming ${guestName}, keep it abstract only.`;
 
-  return `${template}. Subtle celebratory mood inspired by welcoming ${guestName}, keep it abstract only.`;
+  const promptAddon = customPrompt?.trim();
+  if (!promptAddon) return basePrompt;
+
+  return `${basePrompt}
+
+Additional guest-specific preferences. Treat these as accents only and keep the same overall wedding style: ${promptAddon}`;
 }
 
 export async function generateImageWithOpenAI(

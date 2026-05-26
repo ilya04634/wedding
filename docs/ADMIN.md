@@ -82,5 +82,11 @@ Google Apps Script can remain as a fallback, but it is no longer the main path
 for generation.
 
 Each guest row can also have a `prompt` value. If it is empty, generation uses
-the default prompt file. If it is filled, the custom prompt is used for this
-invite/group.
+the default prompt file. If it is filled, the custom prompt is added to the
+default prompt as a small preference, not used as a full replacement.
+
+Use `Заполнить пустые id` when helpers filled `invite_name` and guest names but
+left `id` empty. Rows with the same `invite_name` receive the same generated id.
+
+RSVP answers update existing rows by `Invite_Id + Person_Name`, so repeat
+submissions do not create duplicates.

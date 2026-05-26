@@ -6,6 +6,7 @@ import {
   setAdminSession,
 } from "@/lib/admin/auth";
 import {
+  fillMissingGuestIds,
   getInviteById,
   updateGuestPerson,
   updateInviteBackground,
@@ -77,6 +78,13 @@ export async function clearInviteBackgroundAction(formData: FormData) {
   revalidatePath("/admin");
   revalidatePath(`/i/${id}`);
   revalidatePath(`/?guestId=${id}`);
+}
+
+export async function fillMissingGuestIdsAction() {
+  assertAdminAuthenticated();
+
+  await fillMissingGuestIds();
+  revalidatePath("/admin");
 }
 
 export async function generateInviteBackgroundAction(formData: FormData) {

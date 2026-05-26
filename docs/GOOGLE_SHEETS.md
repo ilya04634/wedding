@@ -169,5 +169,29 @@ id | invite_name | person_name | person_type | child_age | prompt | bg_url | inv
 ```
 
 If `prompt` is empty, the invite background uses the default prompt from
-`prompts/invite-background.txt`. If `prompt` is filled, it is used only for that
-invite/group. You can use `{{guestName}}` inside the prompt.
+`prompts/invite-background.txt`. If `prompt` is filled, it is used as an
+addition to the default prompt, not as a replacement. Use it for small
+preferences like colors, flowers, or mood accents. You can use `{{guestName}}`
+inside it.
+
+## Auto-fill invite ids
+
+For easier data entry, helpers can fill only:
+
+```text
+invite_name | person_name | person_type | child_age | prompt
+```
+
+Then open `/admin` and click `Заполнить пустые id`. The site will generate ids
+from `invite_name`. Rows with the same `invite_name` receive the same id.
+
+## RSVP updates
+
+RSVP rows are saved by key:
+
+```text
+Invite_Id + Person_Name
+```
+
+If a guest submits the form again, the existing row is updated instead of adding
+a duplicate.

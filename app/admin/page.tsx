@@ -1,5 +1,6 @@
 import {
   clearInviteBackgroundAction,
+  fillMissingGuestIdsAction,
   generateInviteBackgroundAction,
   loginAdmin,
   logoutAdmin,
@@ -106,6 +107,11 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           Если фон уже готов, кнопка генерации только дозапишет `invite_url` и не
           потратит OpenAI-кредиты.
         </p>
+        <form action={fillMissingGuestIdsAction} className="mt-4">
+          <Button type="submit" variant="secondary">
+            Заполнить пустые id
+          </Button>
+        </form>
       </section>
 
       <section className="mt-8 rounded-lg border border-neutral-200 bg-white">

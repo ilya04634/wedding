@@ -1,6 +1,6 @@
 "use server";
 
-import { appendRsvpRows } from "@/lib/google/sheets";
+import { upsertRsvpRows } from "@/lib/google/sheets";
 import { rsvpFormSchema } from "@/lib/validations/rsvp";
 import type { RsvpFormData } from "@/types/rsvp";
 
@@ -21,7 +21,7 @@ export async function submitRsvp(
   }
 
   try {
-    await appendRsvpRows({
+    await upsertRsvpRows({
       guestId: parsed.data.guestId,
       people: parsed.data.people.map((person) => ({
         ...person,
