@@ -10,6 +10,12 @@ import {
   updateInviteBackground,
   type GuestPersonUpdate,
 } from "@/lib/google/guests";
+import {
+  settingsToFormData,
+  updateSiteSettings,
+  type SiteSettingsFormData,
+} from "@/lib/google/settings";
+import { DEFAULT_SITE_SETTINGS } from "@/lib/settings/defaults";
 import type { GuestPersonType } from "@/types/guest";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -62,4 +68,50 @@ export async function clearInviteBackgroundAction(formData: FormData) {
   revalidatePath("/admin");
   revalidatePath(`/i/${id}`);
   revalidatePath(`/?guestId=${id}`);
+}
+
+export async function updateSiteSettingsAction(formData: FormData) {
+  assertAdminAuthenticated();
+
+  const defaults = settingsToFormData(DEFAULT_SITE_SETTINGS);
+  const data: SiteSettingsFormData = {
+    coupleNames: getRequiredString(formData, "coupleNames") || defaults.coupleNames,
+    siteTitle: getRequiredString(formData, "siteTitle") || defaults.siteTitle,
+    navTitle: getRequiredString(formData, "navTitle") || defaults.navTitle,
+    heroDefaultEyebrow:
+      getRequiredString(formData, "heroDefaultEyebrow") ||
+      defaults.heroDefaultEyebrow,
+    heroPersonalEyebrowTemplate:
+      getRequiredString(formData, "heroPersonalEyebrowTemplate") ||
+      defaults.heroPersonalEyebrowTemplate,
+    heroText: getRequiredString(formData, "heroText") || defaults.heroText,
+    weddingDate: getRequiredString(formData, "weddingDate") || defaults.weddingDate,
+    weddingTime: getRequiredString(formData, "weddingTime") || defaults.weddingTime,
+    weddingVenue:
+      getRequiredString(formData, "weddingVenue") || defaults.weddingVenue,
+    weddingAddressLine:
+      getRequiredString(formData, "weddingAddressLine") ||
+      defaults.weddingAddressLine,
+    weddingMapUrl:
+      getRequiredString(formData, "weddingMapUrl") || defaults.weddingMapUrl,
+    programTitle:
+      getRequiredString(formData, "programTitle") || defaults.programTitle,
+    programDescription:
+      getRequiredString(formData, "programDescription") ||
+      defaults.programDescription,
+    programItemsJson:
+      getRequiredString(formData, "programItemsJson") || defaults.programItemsJson,
+    rsvpDescription:
+      getRequiredString(formData, "rsvpDescription") ||
+      defaults.rsvpDescription,
+    footerText: getRequiredString(formData, "footerText") || defaults.footerText,
+    uploadLinkEnabled: formData.get("uploadLinkEnabled") ? "true" : "false",
+    uploadLinkLabel:
+      getRequiredString(formData, "uploadLinkLabel") ||
+      defaults.uploadLinkLabel,
+  };
+
+  await updateSiteSettings(data);
+  revalidatePath("/");
+  revalidatePath("/admin");
 }

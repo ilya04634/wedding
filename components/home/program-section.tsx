@@ -1,18 +1,22 @@
-import { PROGRAM_ITEMS } from "@/lib/constants/wedding";
 import { Section } from "@/components/ui/section";
+import type { SiteSettings } from "@/types/settings";
 import { Clock } from "lucide-react";
 
-export function ProgramSection() {
+interface ProgramSectionProps {
+  settings: SiteSettings;
+}
+
+export function ProgramSection({ settings }: ProgramSectionProps) {
   return (
     <Section
       id="program"
-      title="Программа дня"
-      description="Основные моменты дня. Если детали изменятся, мы сообщим гостям заранее."
+      title={settings.programTitle}
+      description={settings.programDescription}
     >
       <ol className="space-y-0">
-        {PROGRAM_ITEMS.map((item) => (
+        {settings.programItems.map((item) => (
           <li
-            key={item.time}
+            key={`${item.time}-${item.title}`}
             className="relative flex gap-4 border-l border-neutral-200 pb-8 pl-6 last:pb-0"
           >
             <span

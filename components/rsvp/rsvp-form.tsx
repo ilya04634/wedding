@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Section } from "@/components/ui/section";
 import { Textarea } from "@/components/ui/textarea";
-import { RSVP_SECTION_DESCRIPTION } from "@/lib/constants/wedding";
 import { rsvpFormSchema, type RsvpFormValues } from "@/lib/validations/rsvp";
 import { cn } from "@/lib/utils";
 import type { GuestPerson } from "@/types/guest";
@@ -38,6 +37,7 @@ interface RsvpFormProps {
   guestId?: string;
   initialName?: string;
   people?: GuestPerson[];
+  description: string;
 }
 
 function getDefaultPeople(
@@ -65,7 +65,12 @@ function getDefaultPeople(
   ];
 }
 
-export function RsvpForm({ guestId, initialName, people }: RsvpFormProps) {
+export function RsvpForm({
+  guestId,
+  initialName,
+  people,
+  description,
+}: RsvpFormProps) {
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -137,7 +142,7 @@ export function RsvpForm({ guestId, initialName, people }: RsvpFormProps) {
     <Section
       id="rsvp"
       title="Подтверждение присутствия"
-      description={RSVP_SECTION_DESCRIPTION ?? undefined}
+      description={description}
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
