@@ -50,7 +50,17 @@ export async function POST(request: NextRequest) {
   }
 
   const auth = getDriveAuthClient();
-  const authHeaders = await auth.getRequestHeaders();
+  const accessToken = await auth.getAccessToken();
+  const token =
+    typeof accessToken === "string" ? accessToken : accessToken?.token;
+
+  if (!token) {
+    return NextResponse.json(
+      { error: "Failed to get Google Drive access token" },
+      { status: 502 },
+    );
+  }
+
   const datedName = `${new Date().toISOString().replace(/[:.]/g, "-")} ${fileName}`;
 
   const response = await fetch(
@@ -58,9 +68,7 @@ export async function POST(request: NextRequest) {
     {
       method: "POST",
       headers: {
-        ...Object.fromEntries(
-          Object.entries(authHeaders).map(([key, value]) => [key, String(value)]),
-        ),
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json; charset=UTF-8",
         "X-Upload-Content-Type": mimeType,
         "X-Upload-Content-Length": String(fileSize),

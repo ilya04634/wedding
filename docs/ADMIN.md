@@ -102,7 +102,7 @@ The `/upload` page is controlled by `uploadLinkEnabled` in `/admin`.
 
 - If disabled, direct visits to `/upload` show a closed message.
 - If enabled, guests can upload photos/videos from the gallery or open the phone
-  camera with the `Снять` button.
+  camera with the `Фото` or `Видео` buttons.
 - Files upload directly to Google Drive through a resumable upload session, so
   large videos do not go through Vercel as request bodies.
 

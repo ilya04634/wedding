@@ -53,9 +53,12 @@ function uploadFileToDrive(
         return;
       }
 
+      onProgress(1);
+
       const xhr = new XMLHttpRequest();
       xhr.open("PUT", session.uploadUrl);
       xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
+      xhr.timeout = 30 * 60 * 1000;
 
       xhr.upload.onprogress = (event) => {
         if (!event.lengthComputable) return;
@@ -73,6 +76,8 @@ function uploadFileToDrive(
       };
 
       xhr.onerror = () => reject(new Error("Сеть прервала загрузку"));
+      xhr.ontimeout = () =>
+        reject(new Error("Загрузка заняла слишком много времени"));
       xhr.send(file);
     } catch (error) {
       reject(error);
@@ -82,9 +87,11 @@ function uploadFileToDrive(
 
 export function UploadZone() {
   const inputId = useId();
-  const cameraInputId = useId();
+  const cameraPhotoInputId = useId();
+  const cameraVideoInputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
-  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const cameraPhotoInputRef = useRef<HTMLInputElement>(null);
+  const cameraVideoInputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<UploadFileState[]>([]);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -210,10 +217,10 @@ export function UploadZone() {
       />
 
       <input
-        ref={cameraInputRef}
-        id={cameraInputId}
+        ref={cameraPhotoInputRef}
+        id={cameraPhotoInputId}
         type="file"
-        accept={ACCEPT}
+        accept="image/*"
         capture="environment"
         className="sr-only"
         onChange={(event) => {
@@ -222,14 +229,35 @@ export function UploadZone() {
         }}
       />
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <input
+        ref={cameraVideoInputRef}
+        id={cameraVideoInputId}
+        type="file"
+        accept="video/*"
+        capture="environment"
+        className="sr-only"
+        onChange={(event) => {
+          if (event.target.files) addFiles(event.target.files);
+          event.target.value = "";
+        }}
+      />
+
+      <div className="grid gap-3 sm:grid-cols-4">
         <Button
           type="button"
           variant="secondary"
-          onClick={() => cameraInputRef.current?.click()}
+          onClick={() => cameraPhotoInputRef.current?.click()}
         >
           <Camera className="mr-2 h-4 w-4" aria-hidden />
-          Снять
+          Фото
+        </Button>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => cameraVideoInputRef.current?.click()}
+        >
+          <Camera className="mr-2 h-4 w-4" aria-hidden />
+          Видео
         </Button>
         <Button
           type="button"
