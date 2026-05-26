@@ -18,6 +18,17 @@ const GUEST_COLUMNS = [
 type GuestColumn = (typeof GUEST_COLUMNS)[number];
 type ColumnIndex = Partial<Record<GuestColumn, number>>;
 
+export interface GuestPersonUpdate {
+  sheetRow: number;
+  id: string;
+  inviteName: string;
+  personName: string;
+  personType: GuestPersonType;
+  childAge: string;
+  bgUrl: string;
+  status: string;
+}
+
 function normalizeHeader(value: string): string {
   return value.trim().toLowerCase().replace(/\s+/g, "_");
 }
@@ -160,6 +171,32 @@ function peopleToInvite(id: string, people: GuestPerson[]): GuestInvite | null {
   };
 }
 
+function groupPeopleByInvite(people: GuestPerson[]): GuestInvite[] {
+  const ids: string[] = [];
+  const seen = new Set<string>();
+
+  people.forEach((person) => {
+    const normalized = person.id.toLowerCase();
+    if (!seen.has(normalized)) {
+      seen.add(normalized);
+      ids.push(normalized);
+    }
+  });
+
+  return ids
+    .map((id) => peopleToInvite(id, people))
+    .filter((invite): invite is GuestInvite => invite !== null);
+}
+
+function requireColumn(columnIndex: ColumnIndex, key: GuestColumn): number {
+  const index = columnIndex[key];
+  if (index === undefined) {
+    throw new Error(`Guests sheet must contain ${key} column`);
+  }
+
+  return index;
+}
+
 export async function getInviteById(id: string): Promise<GuestInvite | null> {
   const normalized = id.trim().toLowerCase();
   if (!normalized) return null;
@@ -169,6 +206,41 @@ export async function getInviteById(id: string): Promise<GuestInvite | null> {
 }
 
 export const getGuestById = getInviteById;
+
+export async function listInvites(): Promise<GuestInvite[]> {
+  const { people } = await fetchGuestRows();
+  return groupPeopleByInvite(people);
+}
+
+export async function updateGuestPerson(update: GuestPersonUpdate): Promise<void> {
+  const sheets = getSheetsClient();
+  const sheetName = getGuestsSheetName();
+  const { columnIndex } = await fetchGuestRows();
+
+  const fields: [GuestColumn, string][] = [
+    ["id", update.id],
+    ["invite_name", update.inviteName],
+    ["person_name", update.personName],
+    ["person_type", update.personType],
+    ["child_age", update.childAge],
+    ["bg_url", update.bgUrl],
+    ["status", update.status],
+  ];
+
+  await sheets.spreadsheets.values.batchUpdate({
+    spreadsheetId: getGoogleSpreadsheetId(),
+    requestBody: {
+      valueInputOption: "USER_ENTERED",
+      data: fields.map(([key, value]) => {
+        const column = columnLetter(requireColumn(columnIndex, key));
+        return {
+          range: `${sheetName}!${column}${update.sheetRow}`,
+          values: [[value]],
+        };
+      }),
+    },
+  });
+}
 
 export async function updateInviteBackground(
   id: string,
