@@ -1,9 +1,13 @@
 import "server-only";
 
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { uploadPublicImage } from "@/lib/google/drive";
 
 const DEFAULT_PROMPT =
   "Abstract elegant wedding invitation background, soft cream ivory and muted gold palette, delicate floral bokeh and gentle light leaks, romantic atmosphere, vertical mobile composition, absolutely no text no letters no people no faces, high-end stationery style";
+
+const PROMPT_FILE_PATH = join(process.cwd(), "prompts", "invite-background.txt");
 
 type OpenAIImage = {
   b64_json?: string;
@@ -44,12 +48,31 @@ function buildImageRequestBody(model: string, prompt: string) {
   };
 }
 
+function getInviteBackgroundPrompt(guestName: string) {
+  let template = DEFAULT_PROMPT;
+
+  try {
+    const filePrompt = readFileSync(PROMPT_FILE_PATH, "utf8").trim();
+    if (filePrompt) {
+      template = filePrompt;
+    }
+  } catch (error) {
+    console.warn("[generate-invite-bg] prompt file fallback", error);
+  }
+
+  if (template.includes("{{guestName}}")) {
+    return template.replaceAll("{{guestName}}", guestName);
+  }
+
+  return `${template}. Subtle celebratory mood inspired by welcoming ${guestName}, keep it abstract only.`;
+}
+
 export async function generateImageWithOpenAI(
   apiKey: string,
   guestName: string,
 ): Promise<Buffer> {
   const model = getImageModel();
-  const prompt = `${DEFAULT_PROMPT}. Subtle celebratory mood inspired by welcoming ${guestName}, keep it abstract only.`;
+  const prompt = getInviteBackgroundPrompt(guestName);
 
   const response = await fetch("https://api.openai.com/v1/images/generations", {
     method: "POST",
