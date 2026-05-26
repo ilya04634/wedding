@@ -5,7 +5,7 @@ import { getGoogleClientEmail, getGooglePrivateKey } from "./auth";
 
 const DRIVE_SCOPES = ["https://www.googleapis.com/auth/drive"];
 
-export function getDriveClient() {
+export function getDriveAuthClient() {
   const oauthClientId = process.env.GOOGLE_DRIVE_CLIENT_ID?.trim();
   const oauthClientSecret = process.env.GOOGLE_DRIVE_CLIENT_SECRET?.trim();
   const oauthRefreshToken = process.env.GOOGLE_DRIVE_REFRESH_TOKEN?.trim();
@@ -14,14 +14,17 @@ export function getDriveClient() {
     const auth = new google.auth.OAuth2(oauthClientId, oauthClientSecret);
     auth.setCredentials({ refresh_token: oauthRefreshToken });
 
-    return google.drive({ version: "v3", auth });
+    return auth;
   }
 
-  const auth = new google.auth.JWT({
+  return new google.auth.JWT({
     email: getGoogleClientEmail(),
     key: getGooglePrivateKey(),
     scopes: DRIVE_SCOPES,
   });
+}
 
+export function getDriveClient() {
+  const auth = getDriveAuthClient();
   return google.drive({ version: "v3", auth });
 }

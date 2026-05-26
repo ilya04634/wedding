@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { UploadFileItem } from "@/components/upload/upload-file-item";
 import { cn } from "@/lib/utils";
-import { ImagePlus, Upload } from "lucide-react";
+import { Camera, ImagePlus, Upload } from "lucide-react";
 import { useCallback, useId, useRef, useState } from "react";
 
 export type UploadFileStatus = "pending" | "uploading" | "done" | "error";
@@ -22,19 +22,79 @@ function createFileId(file: File): string {
   return `${file.name}-${file.size}-${file.lastModified}`;
 }
 
+function uploadFileToDrive(
+  file: File,
+  onProgress: (progress: number) => void,
+): Promise<void> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const sessionResponse = await fetch("/api/upload/session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fileName: file.name,
+          mimeType: file.type || "application/octet-stream",
+          fileSize: file.size,
+        }),
+      });
+
+      const session = (await sessionResponse.json().catch(() => null)) as
+        | { uploadUrl?: string; error?: string; message?: string }
+        | null;
+
+      if (!sessionResponse.ok || !session?.uploadUrl) {
+        reject(
+          new Error(
+            session?.error ||
+              session?.message ||
+              "Не удалось подготовить загрузку",
+          ),
+        );
+        return;
+      }
+
+      const xhr = new XMLHttpRequest();
+      xhr.open("PUT", session.uploadUrl);
+      xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
+
+      xhr.upload.onprogress = (event) => {
+        if (!event.lengthComputable) return;
+        onProgress(Math.round((event.loaded / event.total) * 100));
+      };
+
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          onProgress(100);
+          resolve();
+          return;
+        }
+
+        reject(new Error(`Google Drive вернул ошибку ${xhr.status}`));
+      };
+
+      xhr.onerror = () => reject(new Error("Сеть прервала загрузку"));
+      xhr.send(file);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
 export function UploadZone() {
   const inputId = useId();
+  const cameraInputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<UploadFileState[]>([]);
   const [isDragging, setIsDragging] = useState(false);
 
   const addFiles = useCallback((incoming: FileList | File[]) => {
     const list = Array.from(incoming).filter(
-      (f) => f.type.startsWith("image/") || f.type.startsWith("video/"),
+      (file) => file.type.startsWith("image/") || file.type.startsWith("video/"),
     );
 
     setFiles((prev) => {
-      const existing = new Set(prev.map((p) => p.id));
+      const existing = new Set(prev.map((item) => item.id));
       const next = [...prev];
       for (const file of list) {
         const id = createFileId(file);
@@ -47,67 +107,74 @@ export function UploadZone() {
   }, []);
 
   const removeFile = useCallback((id: string) => {
-    setFiles((prev) => prev.filter((f) => f.id !== id));
+    setFiles((prev) => prev.filter((file) => file.id !== id));
+  }, []);
+
+  const updateFile = useCallback((id: string, patch: Partial<UploadFileState>) => {
+    setFiles((prev) =>
+      prev.map((file) => (file.id === id ? { ...file, ...patch } : file)),
+    );
   }, []);
 
   const onDrop = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
+    (event: React.DragEvent) => {
+      event.preventDefault();
       setIsDragging(false);
-      if (e.dataTransfer.files.length) {
-        addFiles(e.dataTransfer.files);
+      if (event.dataTransfer.files.length) {
+        addFiles(event.dataTransfer.files);
       }
     },
     [addFiles],
   );
 
-  /** Демо-прогресс на Шаге 2; на Шаге 4 — реальная загрузка в Google Drive */
-  const startDemoUpload = useCallback(async () => {
-    const pending = files.filter((f) => f.status === "pending");
+  const startUpload = useCallback(async () => {
+    const pending = files.filter(
+      (file) => file.status === "pending" || file.status === "error",
+    );
     if (!pending.length) return;
 
-    await Promise.all(
-      pending.map(async (item) => {
-        setFiles((prev) =>
-          prev.map((f) =>
-            f.id === item.id ? { ...f, status: "uploading", progress: 0 } : f,
-          ),
+    for (const item of pending) {
+      updateFile(item.id, {
+        status: "uploading",
+        progress: 0,
+        error: undefined,
+      });
+
+      try {
+        await uploadFileToDrive(item.file, (progress) =>
+          updateFile(item.id, { progress }),
         );
+        updateFile(item.id, { status: "done", progress: 100 });
+      } catch (error) {
+        updateFile(item.id, {
+          status: "error",
+          error:
+            error instanceof Error
+              ? error.message
+              : "Не удалось загрузить файл",
+        });
+      }
+    }
+  }, [files, updateFile]);
 
-        for (let p = 0; p <= 100; p += 10) {
-          await new Promise((r) => setTimeout(r, 120));
-          setFiles((prev) =>
-            prev.map((f) =>
-              f.id === item.id ? { ...f, progress: p } : f,
-            ),
-          );
-        }
-
-        setFiles((prev) =>
-          prev.map((f) =>
-            f.id === item.id ? { ...f, status: "done", progress: 100 } : f,
-          ),
-        );
-      }),
-    );
-  }, [files]);
-
-  const hasPending = files.some((f) => f.status === "pending");
-  const isUploading = files.some((f) => f.status === "uploading");
+  const hasUploadable = files.some(
+    (file) => file.status === "pending" || file.status === "error",
+  );
+  const isUploading = files.some((file) => file.status === "uploading");
 
   return (
     <div className="space-y-6">
       <div
         role="button"
         tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
             inputRef.current?.click();
           }
         }}
-        onDragOver={(e) => {
-          e.preventDefault();
+        onDragOver={(event) => {
+          event.preventDefault();
           setIsDragging(true);
         }}
         onDragLeave={() => setIsDragging(false)}
@@ -125,10 +192,7 @@ export function UploadZone() {
           Перетащите файлы сюда
         </p>
         <p className="mt-1 text-xs text-neutral-500">
-          или нажмите, чтобы выбрать фото и видео
-        </p>
-        <p className="mt-3 text-xs text-neutral-400">
-          На телефоне откроется галерея или камера
+          или выберите фото и видео из галереи
         </p>
       </div>
 
@@ -139,29 +203,48 @@ export function UploadZone() {
         accept={ACCEPT}
         multiple
         className="sr-only"
-        onChange={(e) => {
-          if (e.target.files) addFiles(e.target.files);
-          e.target.value = "";
+        onChange={(event) => {
+          if (event.target.files) addFiles(event.target.files);
+          event.target.value = "";
         }}
       />
 
-      <div className="flex flex-col gap-3 sm:flex-row">
+      <input
+        ref={cameraInputRef}
+        id={cameraInputId}
+        type="file"
+        accept={ACCEPT}
+        capture="environment"
+        className="sr-only"
+        onChange={(event) => {
+          if (event.target.files) addFiles(event.target.files);
+          event.target.value = "";
+        }}
+      />
+
+      <div className="grid gap-3 sm:grid-cols-3">
         <Button
           type="button"
           variant="secondary"
-          className="sm:flex-1"
-          onClick={() => inputRef.current?.click()}
+          onClick={() => cameraInputRef.current?.click()}
         >
-          Выбрать файлы
+          <Camera className="mr-2 h-4 w-4" aria-hidden />
+          Снять
         </Button>
         <Button
           type="button"
-          className="sm:flex-1"
-          disabled={!hasPending || isUploading}
-          onClick={startDemoUpload}
+          variant="secondary"
+          onClick={() => inputRef.current?.click()}
+        >
+          Выбрать
+        </Button>
+        <Button
+          type="button"
+          disabled={!hasUploadable || isUploading}
+          onClick={startUpload}
         >
           <Upload className="mr-2 h-4 w-4" aria-hidden />
-          {isUploading ? "Загрузка…" : "Загрузить (демо)"}
+          {isUploading ? "Загрузка..." : "Загрузить"}
         </Button>
       </div>
 
@@ -178,8 +261,8 @@ export function UploadZone() {
       ) : null}
 
       <p className="text-center text-xs text-neutral-500">
-        На Шаге 4 файлы будут загружаться напрямую в Google Drive (resumable
-        upload), без лимита Vercel 4.5 MB.
+        Файлы загружаются напрямую в Google Drive. Большие видео могут
+        загружаться несколько минут.
       </p>
     </div>
   );

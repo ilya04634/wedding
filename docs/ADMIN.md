@@ -95,3 +95,15 @@ guest lists are easier to navigate.
 
 RSVP answers update existing rows by `Invite_Id + Person_Name`, so repeat
 submissions do not create duplicates.
+
+## Media upload
+
+The `/upload` page is controlled by `uploadLinkEnabled` in `/admin`.
+
+- If disabled, direct visits to `/upload` show a closed message.
+- If enabled, guests can upload photos/videos from the gallery or open the phone
+  camera with the `Снять` button.
+- Files upload directly to Google Drive through a resumable upload session, so
+  large videos do not go through Vercel as request bodies.
+
+Uploaded media is stored in the Drive folder from `FOLDER_ID`.
