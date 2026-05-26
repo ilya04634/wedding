@@ -3,8 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fdfbf7;
+  --foreground: #34312d;
+  --sage: #8a9a7a;
+  --peony: #e79796;
+  --lemon: #f4d03f;
 }
 
 body {
@@ -15,5 +18,33 @@ body {
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .font-display {
+    font-family: var(--font-playfair), serif;
+  }
+
+  .font-script {
+    font-family: var(--font-caveat), cursive;
+  }
+
+  .garden-fade {
+    animation: garden-fade 0.8s ease both;
+  }
+
+  .garden-fade-delay {
+    animation: garden-fade 0.9s ease 0.12s both;
+  }
+}
+
+@keyframes garden-fade {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

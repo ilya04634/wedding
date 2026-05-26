@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Caveat, Montserrat, Playfair_Display } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -11,6 +12,21 @@ const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
   weight: "100 900",
+});
+const playfair = Playfair_Display({
+  subsets: ["cyrillic", "latin"],
+  variable: "--font-playfair",
+  display: "swap",
+});
+const caveat = Caveat({
+  subsets: ["cyrillic", "latin"],
+  variable: "--font-caveat",
+  display: "swap",
+});
+const montserrat = Montserrat({
+  subsets: ["cyrillic", "latin"],
+  variable: "--font-montserrat",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -26,7 +42,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-white font-[family-name:var(--font-geist-sans)] text-neutral-900 antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${caveat.variable} ${montserrat.variable} min-h-screen bg-[#fdfbf7] font-[family-name:var(--font-montserrat)] text-[#34312d] antialiased`}
       >
         {children}
       </body>

@@ -287,7 +287,11 @@ export function RsvpForm({
           </p>
         ) : null}
 
-        <Button type="submit" className="w-full sm:w-auto" disabled={isSubmitting}>
+        <Button
+          type="submit"
+          className="w-full bg-[#e79796] text-white shadow-[0_14px_30px_rgba(231,151,150,0.28)] hover:bg-[#d98584] sm:w-auto"
+          disabled={isSubmitting}
+        >
           {isSubmitting ? "Отправка..." : "Отправить ответ"}
         </Button>
       </form>

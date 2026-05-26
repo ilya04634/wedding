@@ -17,13 +17,15 @@ export function Section({
   className,
 }: SectionProps) {
   return (
-    <section id={id} className={cn("scroll-mt-20", className)}>
-      <header className="mb-6 border-b border-neutral-200 pb-4">
-        <h2 className="text-xl font-semibold tracking-tight text-neutral-900 sm:text-2xl">
+    <section id={id} className={cn("scroll-mt-24", className)}>
+      <header className="mb-7 text-center">
+        <h2 className="font-display text-4xl text-[#34312d] sm:text-5xl">
           {title}
         </h2>
         {description ? (
-          <p className="mt-2 text-sm text-neutral-600">{description}</p>
+          <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-[#746f66]">
+            {description}
+          </p>
         ) : null}
       </header>
       {children}
