@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { UploadFileItem } from "@/components/upload/upload-file-item";
 import { cn } from "@/lib/utils";
 import { Camera, ImagePlus, Upload } from "lucide-react";
-import { useCallback, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 
 export type UploadFileStatus = "pending" | "uploading" | "done" | "error";
 
@@ -14,6 +14,7 @@ export interface UploadFileState {
   progress: number;
   status: UploadFileStatus;
   error?: string;
+  stage?: string;
 }
 
 const ACCEPT = "image/*,video/*";
@@ -41,9 +42,11 @@ function parseGoogleUploadError(xhr: XMLHttpRequest) {
 function uploadFileToDrive(
   file: File,
   onProgress: (progress: number) => void,
+  onStage: (stage: string) => void,
 ): Promise<void> {
   return new Promise(async (resolve, reject) => {
     try {
+      onStage("Готовим загрузку");
       const sessionResponse = await fetch("/api/upload/session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -69,6 +72,7 @@ function uploadFileToDrive(
         return;
       }
 
+      onStage("Отправляем в Google Drive");
       onProgress(1);
 
       const xhr = new XMLHttpRequest();
@@ -83,6 +87,7 @@ function uploadFileToDrive(
 
       xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 300) {
+          onStage("Загружено");
           onProgress(100);
           resolve();
           return;
@@ -108,6 +113,7 @@ export function UploadZone() {
   const inputRef = useRef<HTMLInputElement>(null);
   const cameraPhotoInputRef = useRef<HTMLInputElement>(null);
   const cameraVideoInputRef = useRef<HTMLInputElement>(null);
+  const autoUploadRef = useRef(false);
   const [files, setFiles] = useState<UploadFileState[]>([]);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -161,16 +167,20 @@ export function UploadZone() {
         status: "uploading",
         progress: 0,
         error: undefined,
+        stage: "В очереди",
       });
 
       try {
-        await uploadFileToDrive(item.file, (progress) =>
-          updateFile(item.id, { progress }),
+        await uploadFileToDrive(
+          item.file,
+          (progress) => updateFile(item.id, { progress }),
+          (stage) => updateFile(item.id, { stage }),
         );
         updateFile(item.id, { status: "done", progress: 100 });
       } catch (error) {
         updateFile(item.id, {
           status: "error",
+          stage: "Ошибка",
           error:
             error instanceof Error
               ? error.message
@@ -184,6 +194,16 @@ export function UploadZone() {
     (file) => file.status === "pending" || file.status === "error",
   );
   const isUploading = files.some((file) => file.status === "uploading");
+
+  useEffect(() => {
+    const hasPending = files.some((file) => file.status === "pending");
+    if (!hasPending || isUploading || autoUploadRef.current) return;
+
+    autoUploadRef.current = true;
+    startUpload().finally(() => {
+      autoUploadRef.current = false;
+    });
+  }, [files, isUploading, startUpload]);
 
   return (
     <div className="space-y-6">
@@ -305,8 +325,8 @@ export function UploadZone() {
       ) : null}
 
       <p className="text-center text-xs text-neutral-500">
-        Файлы загружаются напрямую в Google Drive. Большие видео могут
-        загружаться несколько минут.
+        После выбора или съемки загрузка начнется автоматически. Большие видео
+        могут загружаться несколько минут.
       </p>
     </div>
   );

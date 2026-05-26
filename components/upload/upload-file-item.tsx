@@ -36,6 +36,9 @@ export function UploadFileItem({ file, onRemove }: UploadFileItemProps) {
               <p className="text-xs text-neutral-500">
                 {formatFileSize(file.file.size)} · {statusLabel}
               </p>
+              {file.stage ? (
+                <p className="mt-1 text-xs text-neutral-500">{file.stage}</p>
+              ) : null}
             </div>
             {file.status === "pending" || file.status === "error" ? (
               <button
