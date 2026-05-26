@@ -7,9 +7,9 @@ interface FinalRingsProps {
 
 export function FinalRings({ settings }: FinalRingsProps) {
   return (
-    <footer className="px-4 pb-14 pt-4 text-center sm:px-8">
-      <RingsLineArt className="mx-auto h-24 w-full max-w-72 text-[#e79796]" />
-      <p className="font-script mt-2 text-4xl text-[#34312d]">
+    <footer className="px-4 pb-12 pt-2 text-center sm:px-8 sm:pb-14">
+      <RingsLineArt className="mx-auto h-20 w-full max-w-60 text-[#e79796] sm:h-24 sm:max-w-72" />
+      <p className="font-script mt-2 text-3xl text-[#34312d] sm:text-4xl">
         {settings.coupleNames}
       </p>
       <p className="mt-2 text-sm text-[#746f66]">{settings.footerText}</p>

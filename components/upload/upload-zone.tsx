@@ -209,8 +209,8 @@ export function UploadZone() {
   const isUploading = files.some((file) => file.status === "uploading");
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-4 rounded-lg border border-neutral-200 bg-white p-4">
+    <div className="space-y-5 sm:space-y-6">
+      <div className="space-y-4 rounded-2xl border border-neutral-200 bg-white p-4 sm:rounded-lg">
         <div className="space-y-2">
           <Label htmlFor={uploaderNameId}>Ваше имя</Label>
           <Input
@@ -243,7 +243,7 @@ export function UploadZone() {
         onDrop={onDrop}
         onClick={() => inputRef.current?.click()}
         className={cn(
-          "flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-6 py-12 text-center transition-colors",
+          "flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-4 py-9 text-center transition-colors sm:rounded-xl sm:px-6 sm:py-12",
           isDragging
             ? "border-neutral-900 bg-neutral-50"
             : "border-neutral-300 bg-neutral-50/50 hover:border-neutral-400 hover:bg-neutral-50",
@@ -275,6 +275,7 @@ export function UploadZone() {
         <Button
           type="button"
           variant="secondary"
+          className="w-full sm:w-auto"
           onClick={() => inputRef.current?.click()}
         >
           <Images className="mr-2 h-4 w-4" aria-hidden />

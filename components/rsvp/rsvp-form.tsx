@@ -129,6 +129,7 @@ export function RsvpForm({
           <Button
             type="button"
             variant="secondary"
+            className="w-full sm:w-auto"
             onClick={() => setSubmitted(false)}
           >
             Изменить ответ
@@ -146,12 +147,12 @@ export function RsvpForm({
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-6 rounded-xl border border-neutral-200 bg-neutral-50/50 p-6 sm:p-8"
+        className="space-y-5 rounded-2xl border border-neutral-200 bg-neutral-50/50 p-4 sm:space-y-6 sm:p-8"
         noValidate
       >
         <input type="hidden" {...register("guestId")} />
         {guestId ? (
-          <p className="rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs text-neutral-600">
+          <p className="break-words rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs leading-5 text-neutral-600">
             Персональная ссылка · ID: {guestId}
           </p>
         ) : null}
@@ -164,7 +165,7 @@ export function RsvpForm({
             return (
               <section
                 key={`${person.personName}-${index}`}
-                className="space-y-4 rounded-lg border border-neutral-200 bg-white p-4"
+                className="space-y-4 rounded-2xl border border-neutral-200 bg-white p-4"
               >
                 <input
                   type="hidden"
@@ -176,7 +177,7 @@ export function RsvpForm({
                 />
 
                 <div>
-                  <p className="text-base font-medium text-neutral-900">
+                  <p className="break-words text-base font-medium text-neutral-900">
                     {person.personName}
                   </p>
                   <p className="text-xs text-neutral-500">
@@ -193,7 +194,7 @@ export function RsvpForm({
                       <label
                         key={opt.value}
                         className={cn(
-                          "flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-colors",
+                          "flex min-h-12 cursor-pointer items-center gap-2 rounded-lg border px-3 py-3 text-sm transition-colors sm:py-2.5",
                           "has-[:checked]:border-neutral-900 has-[:checked]:bg-neutral-50",
                           "border-neutral-300 bg-white hover:border-neutral-400",
                         )}
@@ -237,7 +238,7 @@ export function RsvpForm({
                         <label
                           key={opt.value}
                           className={cn(
-                            "flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-colors",
+                            "flex min-h-12 cursor-pointer items-center gap-2 rounded-lg border px-3 py-3 text-sm transition-colors sm:py-2.5",
                             "has-[:checked]:border-neutral-900 has-[:checked]:bg-neutral-50",
                             "border-neutral-300 bg-white hover:border-neutral-400",
                           )}

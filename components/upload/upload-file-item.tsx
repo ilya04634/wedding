@@ -29,7 +29,7 @@ export function UploadFileItem({
           : "Ошибка";
 
   return (
-    <li className="rounded-lg border border-neutral-200 bg-white p-4">
+    <li className="rounded-2xl border border-neutral-200 bg-white p-3 sm:rounded-lg sm:p-4">
       <div className="flex items-start gap-3">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-neutral-100 text-neutral-600">
           <Icon className="h-5 w-5" aria-hidden />

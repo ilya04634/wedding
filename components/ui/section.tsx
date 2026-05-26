@@ -18,8 +18,8 @@ export function Section({
 }: SectionProps) {
   return (
     <section id={id} className={cn("scroll-mt-24", className)}>
-      <header className="mb-7 text-center">
-        <h2 className="font-display text-4xl text-[#34312d] sm:text-5xl">
+      <header className="mb-6 text-center sm:mb-7">
+        <h2 className="font-display text-3xl leading-tight text-[#34312d] sm:text-5xl">
           {title}
         </h2>
         {description ? (

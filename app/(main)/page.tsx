@@ -26,8 +26,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <ProgramSection settings={settings} />
       <DressCodeSection />
       <WishWallSection />
-      <section className="px-4 py-20 sm:px-8">
-        <div className="mx-auto max-w-3xl rounded-[2rem] border border-[#8a9a7a]/15 bg-white/70 p-5 shadow-[0_24px_80px_rgba(52,49,45,0.08)] backdrop-blur-sm sm:p-8">
+      <section className="px-3 py-14 sm:px-8 sm:py-20">
+        <div className="mx-auto max-w-3xl rounded-3xl border border-[#8a9a7a]/15 bg-white/70 p-3 shadow-[0_18px_55px_rgba(52,49,45,0.07)] backdrop-blur-sm sm:rounded-[2rem] sm:p-8 sm:shadow-[0_24px_80px_rgba(52,49,45,0.08)]">
           <RsvpForm
             guestId={invite?.id ?? guestId}
             initialName={invite?.inviteName}
