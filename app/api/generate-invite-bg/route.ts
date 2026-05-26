@@ -7,7 +7,7 @@
  */
 
 import { getInviteById, updateInviteBackground } from "@/lib/google/guests";
-import { generateAndUploadInviteBackground } from "@/lib/invite/generate-background";
+import { resolveInviteBackground } from "@/lib/invite/background-service";
 import { buildPublicInviteUrl } from "@/lib/invite/url";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -78,14 +78,12 @@ export async function POST(request: NextRequest) {
     console.log("[generate-invite-bg] stage", stage, { guestId: invite.id });
     await updateInviteBackground(invite.id, "", "pending");
 
-    stage = "openai-generate-and-drive-upload";
+    stage = invite.prompt?.trim()
+      ? "openai-generate-and-drive-upload"
+      : "pool-or-openai-generate-and-drive-upload";
     console.log("[generate-invite-bg] stage", stage, { guestId: invite.id });
-    const bgUrl = await generateAndUploadInviteBackground(
-      invite.id,
-      invite.inviteName,
-      openaiKey,
-      invite.prompt ?? undefined,
-    );
+    const background = await resolveInviteBackground(invite, openaiKey);
+    const bgUrl = background.bgUrl;
 
     stage = "sheet-update-done";
     console.log("[generate-invite-bg] stage", stage, { guestId: invite.id });
@@ -97,6 +95,8 @@ export async function POST(request: NextRequest) {
       bgUrl,
       inviteUrl,
       people: invite.people.length,
+      reusedFromPool: background.reusedFromPool,
+      poolBgId: background.poolBgId,
     });
   } catch (error) {
     console.error("[generate-invite-bg]", { stage, error });

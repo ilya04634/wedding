@@ -12,7 +12,7 @@ import {
   updateInviteBackground,
   type GuestPersonUpdate,
 } from "@/lib/google/guests";
-import { generateAndUploadInviteBackground } from "@/lib/invite/generate-background";
+import { resolveInviteBackground } from "@/lib/invite/background-service";
 import { buildPublicInviteUrl } from "@/lib/invite/url";
 import {
   settingsToFormData,
@@ -112,12 +112,7 @@ export async function generateInviteBackgroundAction(formData: FormData) {
   }
 
   await updateInviteBackground(invite.id, "", "pending");
-  const bgUrl = await generateAndUploadInviteBackground(
-    invite.id,
-    invite.inviteName,
-    openaiKey,
-    invite.prompt ?? undefined,
-  );
+  const { bgUrl } = await resolveInviteBackground(invite, openaiKey);
   await updateInviteBackground(invite.id, bgUrl, "done", inviteUrl);
 
   revalidatePath("/admin");
