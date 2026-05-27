@@ -1,3 +1,4 @@
+import { WishWall } from "@/components/wishes/wish-wall";
 import { MessageCircleHeart } from "lucide-react";
 
 export function WishWallSection() {
@@ -14,9 +15,10 @@ export function WishWallSection() {
           Стена пожеланий
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-[#746f66]">
-          Здесь позже появится формат пожеланий от гостей. Обсудим с ведущим и
-          включим механику ближе к празднику.
+          Оставьте пару теплых слов для Даши и Ильи. Пожелания появятся на
+          общей доске как маленькие открытки.
         </p>
+        <WishWall />
       </div>
     </section>
   );
