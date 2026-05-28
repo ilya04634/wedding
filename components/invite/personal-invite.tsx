@@ -37,57 +37,59 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
   const rsvpUrl = `${detailsUrl}#rsvp`;
 
   return (
-    <main className="relative min-h-[100dvh] w-full overflow-hidden bg-neutral-950 text-white">
+    <main className="relative min-h-[100dvh] w-full overflow-hidden bg-[#f5f0e6] text-[#11100e]">
       {hasBackground ? (
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-80"
           style={{ backgroundImage: `url(${backgroundUrl})` }}
           role="img"
           aria-label="Персональный фон приглашения"
         />
       ) : (
         <div
-          className="absolute inset-0 bg-[radial-gradient(circle_at_top,_#f5efe7,_#9a8f83_45%,_#2d2926)]"
+          className="absolute inset-0 bg-[radial-gradient(circle_at_top,_#fff8ea,_#f5f0e6_55%,_#e6ddcf)]"
           aria-hidden
         />
       )}
 
-      <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/70" aria-hidden />
-      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/70 to-transparent" aria-hidden />
+      <div className="absolute inset-0 bg-[#f5f0e6]/38" aria-hidden />
+      <div className="absolute inset-x-0 bottom-0 h-[44%] bg-gradient-to-t from-[#f5f0e6] via-[#f5f0e6]/92 to-transparent" aria-hidden />
 
-      <section className="relative z-10 mx-auto flex min-h-[100dvh] max-w-4xl flex-col justify-between px-4 py-6 text-center sm:px-8 sm:py-10">
-        <header className="flex items-center justify-center text-[0.68rem] uppercase tracking-[0.16em] text-white/75 sm:justify-between sm:text-xs">
+      <section className="relative z-10 mx-auto flex min-h-[100dvh] max-w-3xl flex-col justify-between px-4 py-6 text-center sm:px-8 sm:py-10">
+        <header className="flex items-center justify-center text-[0.68rem] uppercase tracking-[0.2em] text-[#11100e]/70 sm:justify-between sm:text-xs">
           <span>{settings.weddingDate}</span>
           <span className="hidden sm:inline">{settings.coupleNames}</span>
         </header>
 
         <div className="mx-auto flex max-w-2xl flex-1 flex-col items-center justify-center py-8 sm:py-12">
-          <p className="rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white/90 backdrop-blur-sm sm:text-sm sm:tracking-[0.22em]">{settings.inviteLabel}</p>
-          <h1 className="font-display mt-4 text-balance text-3xl leading-tight sm:mt-5 sm:text-6xl">
+          <p className="font-display text-xs uppercase tracking-[0.24em] text-[#11100e]/75 sm:text-sm">
+            {settings.inviteLabel}
+          </p>
+          <h1 className="font-script mt-4 text-balance text-6xl leading-[0.82] text-[#11100e] sm:mt-5 sm:text-8xl">
             {invite.inviteName}
           </h1>
-          <p className="mt-5 max-w-xl text-balance text-lg font-light leading-7 text-white/95 sm:mt-6 sm:text-2xl sm:leading-8">
+          <p className="mt-6 max-w-md text-balance font-display text-xl uppercase leading-7 tracking-[0.04em] text-[#11100e] sm:text-2xl">
             {settings.inviteBodyText}
           </p>
 
           {childrenLine ? (
-            <p className="mt-4 max-w-lg text-balance text-sm leading-6 text-white/85 sm:mt-5 sm:text-base sm:leading-7">
+            <p className="mt-4 max-w-lg text-balance text-sm leading-6 text-[#11100e]/75 sm:mt-5 sm:text-base sm:leading-7">
               {childrenLine}
             </p>
           ) : null}
 
-          <div className="mt-7 grid w-full max-w-lg gap-2 text-sm text-white/90 sm:mt-9 sm:grid-cols-3 sm:gap-3">
-            <p className="flex min-h-12 items-center justify-center gap-2 rounded-md border border-white/20 bg-black/20 px-3 py-3 backdrop-blur-sm">
-              <Calendar className="h-4 w-4 shrink-0" aria-hidden />
+          <div className="mt-8 grid w-full max-w-lg gap-2 text-sm text-[#11100e] sm:mt-10 sm:grid-cols-3 sm:gap-3">
+            <p className="flex min-h-12 items-center justify-center gap-2 border-y border-[#11100e]/30 px-3 py-3">
+              <Calendar className="h-4 w-4 shrink-0 text-[#bd7e8b]" aria-hidden />
               <span>{settings.weddingTime}</span>
             </p>
-            <p className="flex min-h-12 items-center justify-center gap-2 rounded-md border border-white/20 bg-black/20 px-3 py-3 backdrop-blur-sm sm:col-span-2">
-              <MapPin className="h-4 w-4 shrink-0" aria-hidden />
+            <p className="flex min-h-12 items-center justify-center gap-2 border-y border-[#11100e]/30 px-3 py-3 sm:col-span-2">
+              <MapPin className="h-4 w-4 shrink-0 text-[#bd7e8b]" aria-hidden />
               <span>{settings.weddingVenue}</span>
             </p>
           </div>
 
-          <div className="mt-5 flex items-center justify-center gap-2 text-xs leading-5 text-white/80 sm:mt-7 sm:text-sm">
+          <div className="mt-5 flex items-center justify-center gap-2 text-xs leading-5 text-[#11100e]/70 sm:mt-7 sm:text-sm">
             <Users className="h-4 w-4 shrink-0" aria-hidden />
             <span>
               {formatCountTemplate(
@@ -101,19 +103,19 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
         <footer className="mx-auto flex w-full max-w-lg flex-col gap-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:gap-3 sm:pb-2">
           <Link
             href={detailsUrl}
-            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#fdfbf7] px-5 py-3 text-sm font-semibold text-[#34312d] shadow-[0_16px_35px_rgba(253,251,247,0.22)] transition-colors hover:bg-white sm:px-6"
+            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#11100e] px-5 py-3 text-sm font-semibold text-[#f5f0e6] shadow-[0_16px_35px_rgba(17,16,14,0.18)] transition-colors hover:bg-[#34312d] sm:px-6"
           >
             {settings.invitePrimaryButtonLabel}
             <ArrowRight className="h-4 w-4" aria-hidden />
           </Link>
           <Link
             href={rsvpUrl}
-            className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/35 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/15 sm:px-6"
+            className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#11100e]/35 bg-[#f5f0e6]/75 px-5 py-3 text-sm font-semibold text-[#11100e] backdrop-blur-sm transition-colors hover:bg-white/80 sm:px-6"
           >
             {settings.inviteRsvpButtonLabel}
           </Link>
           {!hasBackground ? (
-            <p className="pt-2 text-xs text-white/65">
+            <p className="pt-2 text-xs text-[#11100e]/60">
               {settings.inviteMissingBackgroundText}
             </p>
           ) : null}

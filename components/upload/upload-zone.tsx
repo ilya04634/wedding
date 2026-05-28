@@ -210,7 +210,7 @@ export function UploadZone() {
 
   return (
     <div className="space-y-5 sm:space-y-6">
-      <div className="space-y-4 rounded-2xl border border-[#8a9a7a]/20 bg-white/70 p-4 shadow-sm backdrop-blur-sm sm:rounded-3xl">
+      <div className="space-y-4 border-y border-[#11100e]/20 bg-transparent py-5">
         <div className="space-y-2">
           <Label htmlFor={uploaderNameId}>Ваше имя</Label>
           <Input
@@ -243,10 +243,10 @@ export function UploadZone() {
         onDrop={onDrop}
         onClick={() => inputRef.current?.click()}
         className={cn(
-          "flex cursor-pointer flex-col items-center justify-center rounded-3xl border-2 border-dashed px-4 py-9 text-center transition-colors sm:px-6 sm:py-12",
+          "flex cursor-pointer flex-col items-center justify-center border border-dashed px-4 py-9 text-center transition-colors sm:px-6 sm:py-12",
           isDragging
-            ? "border-[#8a9a7a] bg-white/75"
-            : "border-[#8a9a7a]/35 bg-white/45 hover:border-[#8a9a7a]/60 hover:bg-white/65",
+            ? "border-[#11100e] bg-white/55"
+            : "border-[#11100e]/35 bg-white/20 hover:border-[#11100e]/60 hover:bg-white/40",
         )}
       >
         <ImagePlus className="mb-3 h-10 w-10 text-[#e79796]" aria-hidden />
@@ -275,7 +275,7 @@ export function UploadZone() {
         <Button
           type="button"
           variant="secondary"
-          className="w-full sm:w-auto"
+          className="w-full rounded-full border-[#11100e]/30 bg-transparent text-[#11100e] hover:bg-white/45 sm:w-auto"
           onClick={() => inputRef.current?.click()}
         >
           <Images className="mr-2 h-4 w-4" aria-hidden />
@@ -297,7 +297,7 @@ export function UploadZone() {
           </ul>
           <Button
             type="button"
-            className="w-full"
+            className="w-full rounded-full bg-[#11100e] text-[#f5f0e6] hover:bg-[#34312d]"
             disabled={!hasUploadable || isUploading}
             onClick={startUpload}
           >

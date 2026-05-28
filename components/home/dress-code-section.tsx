@@ -1,26 +1,50 @@
-import { FlowerLineArt } from "@/components/home/line-art";
+function MiniFlower({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 120 34" fill="none" aria-hidden>
+      <path
+        d="M14 28 C22 17 33 17 42 28 C50 18 62 18 70 28 C78 17 90 17 98 28"
+        stroke="currentColor"
+        strokeWidth="1"
+        strokeLinecap="round"
+      />
+      {[20, 42, 64, 86].map((x) => (
+        <path
+          key={x}
+          d={`M${x} 19 C${x - 6} 10 ${x + 6} 10 ${x} 19 Z M${x} 19 C${x - 7} 24 ${x - 8} 14 ${x} 19 Z M${x} 19 C${x + 7} 24 ${x + 8} 14 ${x} 19 Z`}
+          stroke="currentColor"
+          strokeWidth="0.9"
+        />
+      ))}
+    </svg>
+  );
+}
 
 export function DressCodeSection() {
   return (
-    <section className="relative isolate overflow-hidden px-4 py-14 sm:px-8 sm:py-20">
-      <div className="absolute left-1/2 top-1/2 -z-10 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,_rgba(231,151,150,0.22),_rgba(231,151,150,0)_72%)]" />
-      <div className="mx-auto grid max-w-5xl items-center gap-7 rounded-3xl border border-[#8a9a7a]/15 bg-white/55 px-5 py-8 shadow-[0_18px_55px_rgba(52,49,45,0.06)] backdrop-blur-sm sm:gap-10 sm:rounded-[2rem] sm:px-10 sm:py-10 md:grid-cols-[0.9fr_1.1fr]">
-        <div className="flex justify-center">
-          <FlowerLineArt className="h-40 w-full max-w-56 text-[#8a9a7a] sm:h-56 sm:max-w-72" />
-        </div>
-        <div className="text-center md:text-left">
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.2em] text-[#e79796] sm:text-xs sm:tracking-[0.24em]">
-            Dress code
-          </p>
-          <h2 className="font-display mt-3 text-3xl leading-tight text-[#34312d] sm:text-5xl">
-            Без строгих цветов
+    <section className="relative isolate overflow-hidden bg-[#f5f0e6] px-4 py-16 sm:px-8 sm:py-24">
+      <div className="mx-auto max-w-md text-[#11100e]">
+        <div className="text-center">
+          <h2 className="font-display text-4xl uppercase tracking-[0.08em] sm:text-5xl">
+            Дресс-код
           </h2>
-          <p className="mt-5 text-balance text-xl leading-snug text-[#34312d] sm:text-3xl">
-            Приходите красивые и счастливые 🤗
+          <div className="mt-2 flex items-center justify-center gap-2 text-[#bd7e8b]">
+            <span className="h-px w-12 bg-[#11100e]/50" />
+            <span className="font-script text-4xl leading-none sm:text-5xl">
+              dress-code
+            </span>
+          </div>
+        </div>
+
+        <div className="mx-auto mt-9 max-w-[18rem] text-left">
+          <p className="font-display text-lg uppercase leading-5 tracking-[0.04em]">
+            Без строгих цветов приходите красивые и счастливые
           </p>
-          <p className="mt-4 max-w-xl text-base leading-7 text-[#746f66]">
+          <p className="mt-5 text-xl leading-7 text-[#bd7e8b]">
             Главное настроение дня - легкость, улыбки и ощущение летнего сада.
           </p>
+          <div className="mt-4 flex justify-center text-[#11100e]">
+            <MiniFlower className="h-9 w-32" />
+          </div>
         </div>
       </div>
     </section>

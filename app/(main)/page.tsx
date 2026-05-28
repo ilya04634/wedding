@@ -52,7 +52,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   ];
 
   return (
-    <div className="overflow-hidden bg-[#fdfbf7]">
+    <div className="overflow-hidden bg-[#f5f0e6]">
       <HeroSection guestName={invite?.inviteName} settings={settings} />
       {sectionOrder.map((key) => {
         if (rendered.has(key) || !(key in sections)) return null;
