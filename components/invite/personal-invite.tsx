@@ -35,6 +35,7 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
   const backgroundUrl = `/api/invite-bg/${encodeURIComponent(invite.id)}`;
   const detailsUrl = `/?guestId=${encodeURIComponent(invite.id)}`;
   const rsvpUrl = `${detailsUrl}#rsvp`;
+  const inviteBodyText = invite.inviteText || settings.inviteBodyText;
 
   return (
     <main className="relative min-h-[100dvh] w-full overflow-hidden bg-[#fbf3d9] text-[#4f5609]">
@@ -69,7 +70,7 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
             {invite.inviteName}
           </h1>
           <p className="mt-6 max-w-md text-balance font-display text-xl uppercase leading-7 tracking-[0.04em] text-[#4f5609] sm:text-2xl">
-            {settings.inviteBodyText}
+            {inviteBodyText}
           </p>
 
           {childrenLine ? (

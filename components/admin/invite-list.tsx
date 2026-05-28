@@ -3,6 +3,7 @@
 import {
   clearInviteBackgroundAction,
   generateInviteBackgroundAction,
+  updateInviteTextAction,
   updateGuestPersonAction,
 } from "@/actions/admin";
 import { Button } from "@/components/ui/button";
@@ -118,6 +119,34 @@ export function AdminInviteList({ invites }: AdminInviteListProps) {
               </summary>
 
               <div className="divide-y divide-neutral-200">
+                <form
+                  action={updateInviteTextAction}
+                  className="grid gap-3 p-4 sm:grid-cols-2"
+                >
+                  <input type="hidden" name="id" value={invite.id} />
+                  <div className="sm:col-span-2">
+                    <Label htmlFor={`inviteText-${inviteKey}`}>
+                      Индивидуальный текст приглашения
+                    </Label>
+                    <textarea
+                      id={`inviteText-${inviteKey}`}
+                      name="inviteText"
+                      defaultValue={invite.inviteText ?? ""}
+                      placeholder="Если пусто, будет использован общий текст из настроек сайта"
+                      className="min-h-24 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+                    />
+                    <p className="mt-1 text-xs text-neutral-500">
+                      Сохраняется в колонку invite_text во все строки этого
+                      приглашения.
+                    </p>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <Button type="submit" disabled={!hasId}>
+                      Сохранить текст приглашения
+                    </Button>
+                  </div>
+                </form>
+
                 {invite.people.map((person) => (
                   <form
                     key={person.sheetRow}
@@ -128,6 +157,11 @@ export function AdminInviteList({ invites }: AdminInviteListProps) {
                       type="hidden"
                       name="sheetRow"
                       value={person.sheetRow}
+                    />
+                    <input
+                      type="hidden"
+                      name="inviteText"
+                      value={person.inviteText ?? invite.inviteText ?? ""}
                     />
 
                     <div>

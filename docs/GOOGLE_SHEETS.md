@@ -5,7 +5,7 @@
 Первая строка должна быть заголовками:
 
 ```text
-id | invite_name | person_name | person_type | child_age | prompt | bg_url | invite_url | status
+id | invite_name | person_name | person_type | child_age | prompt | invite_text | bg_url | invite_url | status
 ```
 
 Колонки:
@@ -17,6 +17,8 @@ id | invite_name | person_name | person_type | child_age | prompt | bg_url | inv
 | `person_name` | Имя конкретного человека для RSVP. |
 | `person_type` | `adult` для взрослых, `child` для детей. |
 | `child_age` | Возраст ребенка, можно оставить пустым. |
+| `prompt` | Дополнение к промту генерации фона. Можно оставить пустым. |
+| `invite_text` | Индивидуальный текст на персональном приглашении. Если пусто, используется общий текст из Settings. |
 | `bg_url` | Оставить пустым. Заполнится после генерации. |
 | `status` | Оставить пустым. Заполнится `pending`, `done` или `error`. |
 
@@ -274,7 +276,7 @@ storage.
 The `Guests` sheet can include an optional `prompt` column:
 
 ```text
-id | invite_name | person_name | person_type | child_age | prompt | bg_url | invite_url | status
+id | invite_name | person_name | person_type | child_age | prompt | invite_text | bg_url | invite_url | status
 ```
 
 If `prompt` is empty, the invite background uses the default prompt from
@@ -282,6 +284,11 @@ If `prompt` is empty, the invite background uses the default prompt from
 addition to the default prompt, not as a replacement. Use it for small
 preferences like colors, flowers, or mood accents. You can use `{{guestName}}`
 inside it.
+
+The optional `invite_text` column overrides the default invitation phrase for
+one invite. If it is empty, the site uses `inviteBodyText` from Settings. In
+`/admin`, the per-invite text editor saves this value to every row with the same
+`id`.
 
 In addition, the site automatically derives a stable visual variant from each
 invite `id`: flower type, accent palette, composition, light, and texture. This

@@ -11,6 +11,7 @@ const GUEST_COLUMNS = [
   "person_type",
   "child_age",
   "prompt",
+  "invite_text",
   "name",
   "bg_url",
   "invite_url",
@@ -28,6 +29,7 @@ export interface GuestPersonUpdate {
   personType: GuestPersonType;
   childAge: string;
   prompt: string;
+  inviteText: string;
   bgUrl: string;
   inviteUrl: string;
   status: string;
@@ -139,6 +141,7 @@ function rowToGuestPerson(
     personType: normalizePersonType(getCell(row, columnIndex, "person_type")),
     childAge: getCell(row, columnIndex, "child_age") || null,
     prompt: getCell(row, columnIndex, "prompt") || null,
+    inviteText: getCell(row, columnIndex, "invite_text") || null,
     bgUrl: getCell(row, columnIndex, "bg_url") || null,
     inviteUrl: getCell(row, columnIndex, "invite_url") || null,
     status: getCell(row, columnIndex, "status") || null,
@@ -182,6 +185,7 @@ function buildColumnIndex(headerRow: unknown[]): ColumnIndex {
 async function fetchGuestRows(): Promise<{
   people: GuestPerson[];
   columnIndex: ColumnIndex;
+  headerCount: number;
 }> {
   const sheets = getSheetsClient();
   const sheetName = getGuestsSheetName();
@@ -192,7 +196,7 @@ async function fetchGuestRows(): Promise<{
   });
 
   const rows = response.data.values;
-  if (!rows?.length) return { people: [], columnIndex: {} };
+  if (!rows?.length) return { people: [], columnIndex: {}, headerCount: 0 };
 
   const [headerRow, ...dataRows] = rows;
   const columnIndex = buildColumnIndex(headerRow);
@@ -203,7 +207,7 @@ async function fetchGuestRows(): Promise<{
     )
     .filter((person): person is GuestPerson => person !== null);
 
-  return { people, columnIndex };
+  return { people, columnIndex, headerCount: headerRow.length };
 }
 
 function peopleToInvite(id: string, people: GuestPerson[]): GuestInvite | null {
@@ -230,6 +234,8 @@ function peopleGroupToInvite(id: string, invitePeople: GuestPerson[]): GuestInvi
     inviteName,
     people: invitePeople,
     prompt: invitePeople.find((person) => person.prompt)?.prompt ?? null,
+    inviteText:
+      invitePeople.find((person) => person.inviteText)?.inviteText ?? null,
     bgUrl: invitePeople.find((person) => person.bgUrl)?.bgUrl ?? null,
     inviteUrl: invitePeople.find((person) => person.inviteUrl)?.inviteUrl ?? null,
     status:
@@ -261,6 +267,29 @@ function requireColumn(columnIndex: ColumnIndex, key: GuestColumn): number {
   }
 
   return index;
+}
+
+async function ensureGuestColumn(
+  sheetName: string,
+  columnIndex: ColumnIndex,
+  headerCount: number,
+  key: GuestColumn,
+): Promise<number> {
+  const existingIndex = columnIndex[key];
+  if (existingIndex !== undefined) return existingIndex;
+
+  const nextIndex = headerCount;
+  const sheets = getSheetsClient();
+
+  await sheets.spreadsheets.values.update({
+    spreadsheetId: getGoogleSpreadsheetId(),
+    range: `${sheetName}!${columnLetter(nextIndex)}1`,
+    valueInputOption: "USER_ENTERED",
+    requestBody: { values: [[key]] },
+  });
+
+  columnIndex[key] = nextIndex;
+  return nextIndex;
 }
 
 export async function getInviteById(id: string): Promise<GuestInvite | null> {
@@ -353,7 +382,7 @@ export async function fillMissingGuestIds(): Promise<number> {
 export async function updateGuestPerson(update: GuestPersonUpdate): Promise<void> {
   const sheets = getSheetsClient();
   const sheetName = getGuestsSheetName();
-  const { columnIndex } = await fetchGuestRows();
+  const { columnIndex, headerCount } = await fetchGuestRows();
 
   const fields: [GuestColumn, string][] = [
     ["id", update.id],
@@ -362,27 +391,66 @@ export async function updateGuestPerson(update: GuestPersonUpdate): Promise<void
     ["person_type", update.personType],
     ["child_age", update.childAge],
     ["prompt", update.prompt],
+    ["invite_text", update.inviteText],
     ["bg_url", update.bgUrl],
     ["invite_url", update.inviteUrl],
     ["status", update.status],
   ];
+
+  let nextHeaderCount = headerCount;
+  for (const key of ["prompt", "invite_text", "invite_url"] as const) {
+    const index = await ensureGuestColumn(
+      sheetName,
+      columnIndex,
+      nextHeaderCount,
+      key,
+    );
+    nextHeaderCount = Math.max(nextHeaderCount, index + 1);
+  }
 
   await sheets.spreadsheets.values.batchUpdate({
     spreadsheetId: getGoogleSpreadsheetId(),
     requestBody: {
       valueInputOption: "USER_ENTERED",
       data: fields.flatMap(([key, value]) => {
-        const index = columnIndex[key];
-        if (index === undefined && (key === "invite_url" || key === "prompt")) {
-          return [];
-        }
-
         const column = columnLetter(requireColumn(columnIndex, key));
         return {
           range: `${sheetName}!${column}${update.sheetRow}`,
           values: [[value]],
         };
       }),
+    },
+  });
+}
+
+export async function updateInviteText(id: string, inviteText: string): Promise<void> {
+  const sheets = getSheetsClient();
+  const sheetName = getGuestsSheetName();
+  const { people, columnIndex, headerCount } = await fetchGuestRows();
+  const matchingPeople = people.filter(
+    (person) => person.id.toLowerCase() === id.toLowerCase(),
+  );
+
+  if (!matchingPeople.length) {
+    throw new Error(`Invite not found: ${id}`);
+  }
+
+  const inviteTextIndex = await ensureGuestColumn(
+    sheetName,
+    columnIndex,
+    headerCount,
+    "invite_text",
+  );
+  const inviteTextColumn = columnLetter(inviteTextIndex);
+
+  await sheets.spreadsheets.values.batchUpdate({
+    spreadsheetId: getGoogleSpreadsheetId(),
+    requestBody: {
+      valueInputOption: "USER_ENTERED",
+      data: matchingPeople.map((person) => ({
+        range: `${sheetName}!${inviteTextColumn}${person.sheetRow}`,
+        values: [[inviteText]],
+      })),
     },
   });
 }

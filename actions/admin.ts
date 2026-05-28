@@ -8,6 +8,7 @@ import {
 import {
   fillMissingGuestIds,
   getInviteById,
+  updateInviteText,
   updateGuestPerson,
   updateInviteBackground,
   type GuestPersonUpdate,
@@ -59,6 +60,7 @@ export async function updateGuestPersonAction(formData: FormData) {
     personType: personType === "child" ? "child" : ("adult" as GuestPersonType),
     childAge: getRequiredString(formData, "childAge"),
     prompt: getRequiredString(formData, "prompt"),
+    inviteText: getRequiredString(formData, "inviteText"),
     bgUrl: getRequiredString(formData, "bgUrl"),
     inviteUrl: getRequiredString(formData, "inviteUrl"),
     status: getRequiredString(formData, "status"),
@@ -68,6 +70,18 @@ export async function updateGuestPersonAction(formData: FormData) {
   revalidatePath("/admin");
   revalidatePath(`/i/${update.id}`);
   revalidatePath(`/?guestId=${update.id}`);
+}
+
+export async function updateInviteTextAction(formData: FormData) {
+  assertAdminAuthenticated();
+
+  const id = getRequiredString(formData, "id");
+  const inviteText = getRequiredString(formData, "inviteText");
+
+  await updateInviteText(id, inviteText);
+  revalidatePath("/admin");
+  revalidatePath(`/i/${id}`);
+  revalidatePath(`/?guestId=${id}`);
 }
 
 export async function clearInviteBackgroundAction(formData: FormData) {

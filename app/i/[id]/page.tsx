@@ -15,8 +15,21 @@ export async function generateMetadata({
 }: InvitePageProps): Promise<Metadata> {
   const invite = await getInviteById(params.id);
   if (!invite) return { title: "Приглашение" };
+  const title = `Приглашение для ${invite.inviteName}`;
+
   return {
-    title: `Приглашение для ${invite.inviteName}`,
+    title,
+    description: title,
+    openGraph: {
+      title,
+      description: title,
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description: title,
+    },
   };
 }
 
