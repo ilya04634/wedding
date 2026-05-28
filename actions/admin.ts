@@ -29,6 +29,18 @@ function getRequiredString(formData: FormData, key: string) {
   return String(formData.get(key) ?? "").trim();
 }
 
+function getEnabledSectionsString(formData: FormData, fallback: string) {
+  if (formData.get("enabledSectionsMode") !== "checkboxes") {
+    return getRequiredString(formData, "enabledSections") || fallback;
+  }
+
+  return formData
+    .getAll("enabledSections")
+    .map((value) => String(value).trim())
+    .filter(Boolean)
+    .join("\n");
+}
+
 export async function loginAdmin(formData: FormData) {
   const password = getRequiredString(formData, "password");
   try {
@@ -198,9 +210,7 @@ export async function updateSiteSettingsAction(formData: FormData) {
       defaults.uploadLinkLabel,
     sectionOrder:
       getRequiredString(formData, "sectionOrder") || defaults.sectionOrder,
-    enabledSections:
-      getRequiredString(formData, "enabledSections") ||
-      defaults.enabledSections,
+    enabledSections: getEnabledSectionsString(formData, defaults.enabledSections),
     wishWallLayout:
       getRequiredString(formData, "wishWallLayout") || defaults.wishWallLayout,
     wishWallDensity:

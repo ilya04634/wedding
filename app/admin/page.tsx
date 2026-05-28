@@ -23,6 +23,15 @@ interface AdminPageProps {
   searchParams: { error?: string };
 }
 
+const SECTION_OPTIONS = [
+  { key: "countdown", label: "Обратный отсчет" },
+  { key: "program", label: "Программа дня" },
+  { key: "dressCode", label: "Дресс-код" },
+  { key: "wishWall", label: "Стена пожеланий" },
+  { key: "rsvp", label: "Анкета RSVP" },
+  { key: "final", label: "Финальный блок" },
+];
+
 function SettingsGroup({
   children,
   defaultOpen = false,
@@ -105,6 +114,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
     getSiteSettings(),
   ]);
   const settingsForm = settingsToFormData(settings);
+  const enabledSectionSet = new Set(settings.enabledSections);
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8">
@@ -184,16 +194,28 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             Показывать ссылку на загрузку фото и видео
           </label>
           <div className="sm:col-span-2">
-            <Label htmlFor="enabledSections">Включенные блоки главной</Label>
-            <textarea
-              id="enabledSections"
-              name="enabledSections"
-              defaultValue={settingsForm.enabledSections}
-              className="min-h-28 w-full rounded-md border border-neutral-300 px-3 py-2 font-mono text-xs"
-            />
+            <Label>Включенные блоки главной</Label>
+            <input type="hidden" name="enabledSectionsMode" value="checkboxes" />
+            <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              {SECTION_OPTIONS.map((section) => (
+                <label
+                  key={section.key}
+                  className="flex items-center gap-2 rounded-md border border-neutral-200 px-3 py-2 text-sm"
+                >
+                  <input
+                    type="checkbox"
+                    name="enabledSections"
+                    value={section.key}
+                    defaultChecked={enabledSectionSet.has(section.key)}
+                    className="h-4 w-4 accent-neutral-900"
+                  />
+                  {section.label}
+                </label>
+              ))}
+            </div>
             <p className="mt-1 text-xs text-neutral-500">
-              Удалите ключ из списка, чтобы скрыть блок. Доступно: countdown,
-              program, dressCode, wishWall, rsvp, final.
+              Снимите галочку, чтобы скрыть блок на главной. Hero всегда
+              остается первым экраном.
             </p>
           </div>
           <div className="sm:col-span-2">
