@@ -7,15 +7,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import type { WeddingWish } from "@/types/wish";
 import { Loader2, Send, Sparkles } from "lucide-react";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
 type WishCardStyle = {
   backgroundColor: string;
+  height: number;
   rotate: number;
-  shiftX: number;
-  shiftY: number;
-  align: "start" | "center" | "end";
-  order: number;
+  width: number;
+  x: number;
+  y: number;
 };
 
 const NOTE_COLORS = [
@@ -36,17 +36,119 @@ function hashText(value: string): number {
   return hash >>> 0;
 }
 
-function getCardStyle(wish: WeddingWish, index: number): WishCardStyle {
-  const hash = hashText(`${wish.id}-${wish.guestName}-${wish.wishText}`);
-  const alignments: WishCardStyle["align"][] = ["start", "center", "end"];
+function randomUnit(seed: number): number {
+  let value = seed + 0x6d2b79f5;
+  value = Math.imul(value ^ (value >>> 15), value | 1);
+  value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+  return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+}
 
+function estimateCardHeight(wishText: string, width: number) {
+  const charsPerLine = Math.max(12, Math.floor(width / 13));
+  const lineCount = Math.ceil(wishText.length / charsPerLine);
+  return Math.min(256, Math.max(128, 72 + lineCount * 31));
+}
+
+function overlapsTooMuch(
+  candidate: { x: number; y: number; width: number; height: number },
+  placed: Array<{ x: number; y: number; width: number; height: number }>,
+) {
+  return placed.some((card) => {
+    const overlapX =
+      Math.min(candidate.x + candidate.width, card.x + card.width) -
+      Math.max(candidate.x, card.x);
+    const overlapY =
+      Math.min(candidate.y + candidate.height, card.y + card.height) -
+      Math.max(candidate.y, card.y);
+
+    if (overlapX <= 0 || overlapY <= 0) return false;
+
+    const allowedX = Math.min(candidate.width, card.width) * 0.22;
+    const allowedY = Math.min(candidate.height, card.height) * 0.18;
+
+    return overlapX > allowedX && overlapY > allowedY;
+  });
+}
+
+function getCardStyles(wishes: WeddingWish[], boardWidth: number) {
+  const safeBoardWidth = Math.max(280, boardWidth || 560);
+  const isCompact = safeBoardWidth < 520;
+  const cardWidth = isCompact
+    ? Math.min(170, Math.max(136, safeBoardWidth * 0.46))
+    : Math.min(214, Math.max(178, safeBoardWidth * 0.29));
+  const padding = isCompact ? 14 : 20;
+  const minBoardHeight = isCompact ? 544 : 640;
+  const placed: WishCardStyle[] = [];
+
+  wishes.forEach((wish, index) => {
+    const hash = hashText(`${wish.id}-${wish.guestName}-${wish.wishText}`);
+    const height = estimateCardHeight(wish.wishText, cardWidth);
+    const maxX = Math.max(padding, safeBoardWidth - cardWidth - padding);
+    let searchHeight = minBoardHeight;
+    let selected: WishCardStyle | null = null;
+
+    for (let attempt = 0; attempt < 180; attempt += 1) {
+      if (attempt > 0 && attempt % 45 === 0) {
+        searchHeight += isCompact ? 150 : 130;
+      }
+
+      const x = padding + randomUnit(hash + attempt * 97) * (maxX - padding);
+      const y =
+        padding +
+        randomUnit(hash + attempt * 193 + index * 31) *
+          Math.max(1, searchHeight - height - padding);
+      const candidate = {
+        backgroundColor: NOTE_COLORS[hash % NOTE_COLORS.length],
+        height,
+        rotate: ((hash >> 12) % 13) - 6,
+        width: cardWidth,
+        x,
+        y,
+      };
+
+      if (!overlapsTooMuch(candidate, placed)) {
+        selected = candidate;
+        break;
+      }
+    }
+
+    if (!selected) {
+      const row = Math.floor(index / (isCompact ? 2 : 3));
+      selected = {
+        backgroundColor: NOTE_COLORS[hash % NOTE_COLORS.length],
+        height,
+        rotate: ((hash >> 12) % 13) - 6,
+        width: cardWidth,
+        x:
+          padding +
+          (index % (isCompact ? 2 : 3)) *
+            ((safeBoardWidth - cardWidth - padding * 2) /
+              Math.max(1, (isCompact ? 2 : 3) - 1)),
+        y: padding + row * (height - 22),
+      };
+    }
+
+    placed.push(selected);
+  });
+
+  return placed;
+}
+
+function getBoardHeight(cardStyles: WishCardStyle[], boardWidth: number) {
+  const minBoardHeight = boardWidth < 520 ? 544 : 640;
+  const maxBottom = cardStyles.reduce(
+    (max, card) => Math.max(max, card.y + card.height),
+    0,
+  );
+
+  return Math.max(minBoardHeight, Math.ceil(maxBottom + 36));
+}
+
+function getCardBaseStyle(wish: WeddingWish): Pick<WishCardStyle, "backgroundColor" | "rotate"> {
+  const hash = hashText(`${wish.id}-${wish.guestName}-${wish.wishText}`);
   return {
     backgroundColor: NOTE_COLORS[hash % NOTE_COLORS.length],
     rotate: ((hash >> 12) % 13) - 6,
-    shiftX: ((hash >> 3) % 17) - 8,
-    shiftY: ((hash >> 7) % 17) - 8,
-    align: alignments[(hash >> 10) % alignments.length],
-    order: (hash % 1000) + index,
   };
 }
 
@@ -55,6 +157,8 @@ interface WishWallProps {
 }
 
 export function WishWall({ initialGuestName }: WishWallProps) {
+  const boardRef = useRef<HTMLDivElement | null>(null);
+  const [boardWidth, setBoardWidth] = useState(0);
   const [wishes, setWishes] = useState<WeddingWish[]>([]);
   const [guestName, setGuestName] = useState(initialGuestName ?? "");
   const [wishText, setWishText] = useState("");
@@ -111,10 +215,26 @@ export function WishWall({ initialGuestName }: WishWallProps) {
     }
   }, [guestName, initialGuestName]);
 
+  useEffect(() => {
+    const board = boardRef.current;
+    if (!board) return;
+
+    function syncWidth() {
+      setBoardWidth(board?.clientWidth ?? 0);
+    }
+
+    syncWidth();
+    const observer = new ResizeObserver(syncWidth);
+    observer.observe(board);
+
+    return () => observer.disconnect();
+  }, []);
+
   const cardStyles = useMemo(
-    () => wishes.map((wish, index) => getCardStyle(wish, index)),
-    [wishes],
+    () => getCardStyles(wishes, boardWidth),
+    [boardWidth, wishes],
   );
+  const boardHeight = getBoardHeight(cardStyles, boardWidth);
 
   function liftCard(id: string) {
     setActiveId(id);
@@ -240,8 +360,10 @@ export function WishWall({ initialGuestName }: WishWallProps) {
       </form>
 
       <div
+        ref={boardRef}
         className="relative min-h-[34rem] overflow-hidden rounded-[1.75rem] border border-[#8a9a7a]/18 bg-[#f3ecdf] p-4 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.42),0_24px_70px_rgba(52,49,45,0.08)] sm:min-h-[40rem] sm:p-6"
         style={{
+          minHeight: boardHeight,
           backgroundImage:
             "radial-gradient(circle at 18% 12%, rgba(244,208,63,0.16), transparent 24%), radial-gradient(circle at 82% 22%, rgba(231,151,150,0.14), transparent 28%), radial-gradient(circle at 28% 88%, rgba(138,154,122,0.13), transparent 30%), linear-gradient(135deg, rgba(255,255,255,0.48), rgba(253,251,247,0.18))",
         }}
@@ -261,9 +383,15 @@ export function WishWall({ initialGuestName }: WishWallProps) {
           </div>
         ) : null}
 
-        <div className="relative z-10 grid auto-rows-min grid-cols-2 gap-x-2 gap-y-4 pb-4 sm:grid-cols-3 sm:gap-x-4 sm:gap-y-5">
+        <div className="relative z-10">
           {wishes.map((wish, index) => {
-            const style = cardStyles[index];
+            const style = cardStyles[index] ?? {
+              ...getCardBaseStyle(wish),
+              height: 150,
+              width: 168,
+              x: 20,
+              y: 20 + index * 120,
+            };
             const zIndex = liftedZ[wish.id] ?? 10 + index;
             const isActive = activeId === wish.id;
 
@@ -274,22 +402,21 @@ export function WishWall({ initialGuestName }: WishWallProps) {
                 onClick={() => liftCard(wish.id)}
                 onFocus={() => liftCard(wish.id)}
                 className={cn(
-                  "min-h-36 rounded-xl text-left outline-none transition duration-200 ease-out sm:min-h-40",
-                  style.align === "start" && "justify-self-start",
-                  style.align === "center" && "justify-self-center",
-                  style.align === "end" && "justify-self-end",
+                  "absolute rounded-xl text-left outline-none transition duration-200 ease-out",
                   "hover:scale-105 focus-visible:scale-105 focus-visible:ring-2 focus-visible:ring-[#e79796]/45 active:scale-105",
                   isActive && "scale-105",
                 )}
                 style={{
-                  order: style.order,
-                  transform: `translate(${style.shiftX}px, ${style.shiftY}px)`,
+                  height: style.height,
+                  left: style.x,
+                  top: style.y,
+                  width: style.width,
                   zIndex,
                 }}
               >
                 <span
                   className={cn(
-                    "block max-h-64 w-full max-w-[10.5rem] overflow-y-auto rounded-xl border p-3 text-left shadow-md transition-all duration-200 sm:max-w-52 sm:p-4",
+                    "block h-full overflow-y-auto rounded-xl border p-3 text-left shadow-md transition-all duration-200 sm:p-4",
                     isActive
                       ? "border-[#34312d]/35 bg-white/85 shadow-2xl ring-2 ring-white/80"
                       : "border-white/55 hover:shadow-xl",
