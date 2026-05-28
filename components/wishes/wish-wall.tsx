@@ -281,11 +281,19 @@ export function WishWall({
   }, [guestName, initialGuestName]);
 
   useEffect(() => {
+    if (layout !== "random") {
+      setBoardWidth(0);
+      return;
+    }
+
     const board = boardRef.current;
     if (!board) return;
 
     function syncWidth() {
-      setBoardWidth(board?.clientWidth ?? 0);
+      const nextWidth = board?.clientWidth ?? 0;
+      setBoardWidth((currentWidth) =>
+        Math.abs(currentWidth - nextWidth) > 2 ? nextWidth : currentWidth,
+      );
     }
 
     syncWidth();
@@ -293,13 +301,17 @@ export function WishWall({
     observer.observe(board);
 
     return () => observer.disconnect();
-  }, []);
+  }, [layout]);
 
   const cardStyles = useMemo(
-    () => getCardStyles(wishes, boardWidth, { density, maxTilt, overlap }),
-    [boardWidth, density, maxTilt, overlap, wishes],
+    () =>
+      layout === "random"
+        ? getCardStyles(wishes, boardWidth, { density, maxTilt, overlap })
+        : [],
+    [boardWidth, density, layout, maxTilt, overlap, wishes],
   );
-  const boardHeight = getBoardHeight(cardStyles, boardWidth);
+  const boardHeight =
+    layout === "random" ? getBoardHeight(cardStyles, boardWidth) : undefined;
 
   function liftCard(id: string) {
     setActiveId(id);
@@ -378,9 +390,9 @@ export function WishWall({
         onClick={() => liftCard(wish.id)}
         onFocus={() => liftCard(wish.id)}
         className={cn(
-          "relative rounded-xl text-left outline-none transition duration-200 ease-out",
-          "hover:scale-105 focus-visible:scale-105 focus-visible:ring-2 focus-visible:ring-[#6c7411]/45 active:scale-105",
-          isActive && "scale-105",
+          "relative rounded-xl text-left outline-none transition-transform duration-150 ease-out",
+          "motion-safe:hover:scale-[1.02] focus-visible:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[#6c7411]/45 active:scale-[1.02]",
+          isActive && "scale-[1.02]",
           options.className,
         )}
         style={{
@@ -390,11 +402,11 @@ export function WishWall({
       >
         <span
           className={cn(
-            "relative block overflow-y-auto rounded-xl border p-3 text-left shadow-md transition-all duration-200 sm:p-4",
+            "relative block overflow-y-auto rounded-xl border p-3 text-left shadow-sm transition-colors duration-150 sm:p-4",
             options.isFeatured ? "min-h-44" : "max-h-64 min-h-32",
             isActive
-              ? "border-[#4f5609]/35 bg-white/85 shadow-2xl ring-2 ring-white/80"
-              : "border-white/55 hover:shadow-xl",
+              ? "border-[#4f5609]/35 bg-white/85 shadow-lg ring-2 ring-white/80"
+              : "border-white/55",
           )}
           style={{
             backgroundColor: isActive
@@ -440,7 +452,7 @@ export function WishWall({
       return (
         <div className="relative z-10 space-y-5">
           {activeWish ? (
-            <div className="rounded-[1.5rem] border border-white/60 bg-white/42 p-3 shadow-inner backdrop-blur-sm">
+            <div className="rounded-[1.5rem] border border-white/60 bg-white/42 p-3 shadow-inner">
               {renderNote(activeWish, wishes.indexOf(activeWish), {
                 className: "mx-auto w-full max-w-lg",
                 isFeatured: true,
@@ -525,7 +537,7 @@ export function WishWall({
     <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:items-start">
       <form
         onSubmit={handleSubmit}
-        className="rounded-3xl border border-[#8a9a7a]/18 bg-white/72 p-5 text-left shadow-[0_18px_55px_rgba(52,49,45,0.07)] backdrop-blur-md sm:p-6"
+        className="rounded-3xl border border-[#8a9a7a]/18 bg-white/80 p-5 text-left shadow-[0_14px_36px_rgba(52,49,45,0.06)] sm:p-6"
       >
         <div className="flex items-center gap-3 text-[#8a9a7a]">
           <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#fff9db] shadow-sm">
@@ -595,7 +607,7 @@ export function WishWall({
         ref={boardRef}
         className="relative min-h-[34rem] overflow-hidden rounded-[1.75rem] border border-[#8a9a7a]/18 bg-[#f3ecdf] p-4 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.42),0_24px_70px_rgba(52,49,45,0.08)] sm:min-h-[40rem] sm:p-6"
         style={{
-          minHeight: layout === "random" ? boardHeight : undefined,
+          minHeight: boardHeight,
           backgroundImage:
             "radial-gradient(circle at 18% 12%, rgba(244,208,63,0.16), transparent 24%), radial-gradient(circle at 82% 22%, rgba(231,151,150,0.14), transparent 28%), radial-gradient(circle at 28% 88%, rgba(138,154,122,0.13), transparent 30%), linear-gradient(135deg, rgba(255,255,255,0.48), rgba(253,251,247,0.18))",
         }}
