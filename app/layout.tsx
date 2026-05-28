@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Caveat, Montserrat, Playfair_Display } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -34,6 +34,11 @@ export const metadata: Metadata = {
   description: "Сайт-приглашение: программа, RSVP и загрузка фото",
 };
 
+export const viewport: Viewport = {
+  colorScheme: "light",
+  themeColor: "#fbf3d9",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -49,4 +54,3 @@ export default function RootLayout({
     </html>
   );
 }
-

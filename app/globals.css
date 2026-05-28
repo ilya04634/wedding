@@ -16,9 +16,22 @@ html {
   color-scheme: light;
 }
 
+*,
+*::before,
+*::after {
+  color-scheme: light;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
+}
+
+input,
+textarea,
+select,
+button {
+  color-scheme: light;
 }
 
 @layer utilities {
