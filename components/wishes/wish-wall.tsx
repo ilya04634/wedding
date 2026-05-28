@@ -430,7 +430,7 @@ export function WishWall({
           </span>
           <span
             className={cn(
-              "font-script mt-2 block text-2xl leading-[0.98] text-[#4f5609] sm:text-3xl",
+              "font-script mt-2 block text-2xl leading-[0.98] text-[#4f5609] [overflow-wrap:anywhere] [word-break:break-word] sm:text-3xl",
               options.isFeatured && "text-4xl sm:text-5xl",
               isActive &&
                 "[text-shadow:0_1px_0_rgba(255,255,255,0.9),0_0_5px_rgba(255,255,255,0.9)]",
