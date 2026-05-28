@@ -63,8 +63,8 @@ function overlapsTooMuch(
 
     if (overlapX <= 0 || overlapY <= 0) return false;
 
-    const allowedX = Math.min(18, Math.min(candidate.width, card.width) * 0.1);
-    const allowedY = Math.min(14, Math.min(candidate.height, card.height) * 0.08);
+    const allowedX = Math.min(24, Math.min(candidate.width, card.width) * 0.14);
+    const allowedY = Math.min(18, Math.min(candidate.height, card.height) * 0.1);
 
     return overlapX > allowedX && overlapY > allowedY;
   });
@@ -84,7 +84,7 @@ function getCardStyles(wishes: WeddingWish[], boardWidth: number) {
   );
   const initialSearchHeight = Math.max(
     minBoardHeight,
-    Math.ceil(estimatedArea / (safeBoardWidth * 0.42)),
+    Math.ceil(estimatedArea / (safeBoardWidth * 0.62)),
   );
   const placed: WishCardStyle[] = [];
 
@@ -97,7 +97,7 @@ function getCardStyles(wishes: WeddingWish[], boardWidth: number) {
 
     for (let attempt = 0; attempt < 260; attempt += 1) {
       if (attempt > 0 && attempt % 45 === 0) {
-        searchHeight += isCompact ? 170 : 150;
+        searchHeight += isCompact ? 130 : 115;
       }
 
       const x = padding + randomUnit(hash + attempt * 97) * (maxX - padding);
