@@ -63,8 +63,8 @@ function overlapsTooMuch(
 
     if (overlapX <= 0 || overlapY <= 0) return false;
 
-    const allowedX = Math.min(candidate.width, card.width) * 0.22;
-    const allowedY = Math.min(candidate.height, card.height) * 0.18;
+    const allowedX = Math.min(18, Math.min(candidate.width, card.width) * 0.1);
+    const allowedY = Math.min(14, Math.min(candidate.height, card.height) * 0.08);
 
     return overlapX > allowedX && overlapY > allowedY;
   });
@@ -78,18 +78,26 @@ function getCardStyles(wishes: WeddingWish[], boardWidth: number) {
     : Math.min(214, Math.max(178, safeBoardWidth * 0.29));
   const padding = isCompact ? 14 : 20;
   const minBoardHeight = isCompact ? 544 : 640;
+  const estimatedArea = wishes.reduce(
+    (total, wish) => total + cardWidth * estimateCardHeight(wish.wishText, cardWidth),
+    0,
+  );
+  const initialSearchHeight = Math.max(
+    minBoardHeight,
+    Math.ceil(estimatedArea / (safeBoardWidth * 0.42)),
+  );
   const placed: WishCardStyle[] = [];
 
   wishes.forEach((wish, index) => {
     const hash = hashText(`${wish.id}-${wish.guestName}-${wish.wishText}`);
     const height = estimateCardHeight(wish.wishText, cardWidth);
     const maxX = Math.max(padding, safeBoardWidth - cardWidth - padding);
-    let searchHeight = minBoardHeight;
+    let searchHeight = initialSearchHeight;
     let selected: WishCardStyle | null = null;
 
-    for (let attempt = 0; attempt < 180; attempt += 1) {
+    for (let attempt = 0; attempt < 260; attempt += 1) {
       if (attempt > 0 && attempt % 45 === 0) {
-        searchHeight += isCompact ? 150 : 130;
+        searchHeight += isCompact ? 170 : 150;
       }
 
       const x = padding + randomUnit(hash + attempt * 97) * (maxX - padding);
