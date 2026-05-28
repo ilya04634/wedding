@@ -32,7 +32,10 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       />
     ),
     rsvp: (
-      <section id="rsvp" className="scroll-mt-24 px-3 py-14 sm:px-8 sm:py-20">
+      <section
+        id="rsvp"
+        className="scroll-reveal scroll-mt-24 px-3 py-14 sm:px-8 sm:py-20"
+      >
         <div className="mx-auto max-w-3xl rounded-3xl border border-[#8a9a7a]/15 bg-white/70 p-3 shadow-[0_18px_55px_rgba(52,49,45,0.07)] backdrop-blur-sm sm:rounded-[2rem] sm:p-8 sm:shadow-[0_24px_80px_rgba(52,49,45,0.08)]">
           <RsvpForm
             guestId={invite?.id ?? guestId}
@@ -64,7 +67,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           return null;
         }
         rendered.add(key);
-        return <div key={key}>{sections[key as keyof typeof sections]}</div>;
+        return (
+          <div key={key} className="scroll-reveal-wrap">
+            {sections[key as keyof typeof sections]}
+          </div>
+        );
       })}
     </div>
   );

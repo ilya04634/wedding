@@ -34,6 +34,115 @@ button {
   color-scheme: only light;
 }
 
+.invitation-envelope-gate {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.envelope-shell {
+  position: relative;
+  display: block;
+  width: min(18rem, 82vw);
+  aspect-ratio: 1.42;
+  perspective: 900px;
+  filter: drop-shadow(0 24px 32px rgba(67, 60, 42, 0.18));
+}
+
+.envelope-back,
+.envelope-front,
+.envelope-flap,
+.envelope-paper {
+  position: absolute;
+  inset: 0;
+  border-radius: 0.55rem;
+}
+
+.envelope-back {
+  background: linear-gradient(145deg, #fff8e7, #eadfbe);
+  border: 1px solid rgba(79, 86, 9, 0.2);
+}
+
+.envelope-front {
+  overflow: hidden;
+  background:
+    linear-gradient(32deg, transparent 49.6%, rgba(79, 86, 9, 0.22) 50%, transparent 50.4%),
+    linear-gradient(-32deg, transparent 49.6%, rgba(79, 86, 9, 0.22) 50%, transparent 50.4%),
+    linear-gradient(145deg, #fbf3d9, #efe2bf);
+  clip-path: polygon(0 36%, 50% 68%, 100% 36%, 100% 100%, 0 100%);
+  border: 1px solid rgba(79, 86, 9, 0.18);
+}
+
+.envelope-flap {
+  z-index: 2;
+  background: linear-gradient(170deg, #fff9e9, #e4d7b6);
+  clip-path: polygon(0 0, 100% 0, 50% 64%);
+  transform-origin: 50% 0;
+  transition: transform 0.72s cubic-bezier(0.2, 0.74, 0.17, 1);
+}
+
+.envelope-paper {
+  inset: 7% 8% auto;
+  z-index: 1;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at top left, rgba(138, 154, 122, 0.16), transparent 42%),
+    #fffaf0;
+  border: 1px solid rgba(79, 86, 9, 0.13);
+  transform: translateY(28%);
+  transition: transform 0.85s cubic-bezier(0.2, 0.74, 0.17, 1);
+}
+
+.envelope-seal {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  top: 51%;
+  transform: translate(-50%, -50%) scale(0.72);
+  transition:
+    opacity 0.35s ease,
+    transform 0.55s ease;
+}
+
+.envelope-shell.is-opening .envelope-flap {
+  transform: rotateX(176deg);
+}
+
+.envelope-shell.is-opening .envelope-paper {
+  transform: translateY(-34%);
+}
+
+.envelope-shell.is-opening .envelope-seal {
+  opacity: 0;
+  transform: translate(-50%, -42%) scale(0.48);
+}
+
+.scroll-reveal {
+  animation: garden-fade 0.8s ease both;
+}
+
+.timeline-draw-path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+@supports (animation-timeline: view()) {
+  .scroll-reveal {
+    animation: scroll-reveal both ease-out;
+    animation-timeline: view();
+    animation-range: entry 8% cover 30%;
+  }
+
+  .timeline-draw-path {
+    stroke-dashoffset: 1;
+    animation: timeline-draw both linear;
+    animation-timeline: view();
+    animation-range: entry 10% cover 74%;
+  }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -53,6 +162,24 @@ button {
 
   .garden-fade-delay {
     animation: garden-fade 0.9s ease 0.12s both;
+  }
+}
+
+@keyframes scroll-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes timeline-draw {
+  to {
+    stroke-dashoffset: 0;
   }
 }
 

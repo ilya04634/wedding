@@ -1,7 +1,10 @@
-﻿import type { GuestInvite } from "@/types/guest";
+"use client";
+
+import type { GuestInvite } from "@/types/guest";
 import type { SiteSettings } from "@/types/settings";
 import { ArrowRight, Calendar, MapPin, Users } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 interface PersonalInviteProps {
   invite: GuestInvite;
@@ -29,6 +32,92 @@ function formatCountTemplate(template: string, count: number) {
   return template.replaceAll("{{count}}", String(count));
 }
 
+function EnvelopeSeal() {
+  return (
+    <svg viewBox="0 0 96 96" className="h-20 w-20" aria-hidden>
+      <circle cx="48" cy="48" r="31" fill="#6c7411" opacity="0.96" />
+      <circle
+        cx="48"
+        cy="48"
+        r="27"
+        fill="none"
+        stroke="#fbf3d9"
+        strokeWidth="1"
+        opacity="0.55"
+      />
+      <path
+        d="M35 58 C39 43 50 36 62 39 C54 44 49 51 47 61 M39 53 C45 54 53 52 59 46"
+        fill="none"
+        stroke="#fbf3d9"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+      />
+      <path
+        d="M32 35 C38 31 45 31 49 36 C53 30 61 30 66 35"
+        fill="none"
+        stroke="#fbf3d9"
+        strokeLinecap="round"
+        strokeWidth="1.4"
+        opacity="0.75"
+      />
+    </svg>
+  );
+}
+
+function EnvelopeGate({
+  inviteName,
+  isOpening,
+  onOpen,
+}: {
+  inviteName: string;
+  isOpening: boolean;
+  onOpen: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      disabled={isOpening}
+      className={`invitation-envelope-gate fixed inset-0 z-50 flex min-h-[100dvh] items-center justify-center overflow-hidden bg-[#fbf3d9] px-6 text-center text-[#4f5609] transition-opacity duration-700 ${
+        isOpening ? "pointer-events-none opacity-0 delay-700" : "opacity-100"
+      }`}
+      aria-label="Открыть приглашение"
+    >
+      <span className="pointer-events-none absolute left-1/2 top-1/2 h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,_rgba(138,154,122,0.18),_rgba(251,243,217,0)_67%)]" />
+      <span className="relative flex w-full max-w-sm flex-col items-center">
+        <span className="font-display text-xs uppercase tracking-[0.28em] text-[#4f5609]/65">
+          личное письмо
+        </span>
+
+        <span className={`envelope-shell mt-8 ${isOpening ? "is-opening" : ""}`}>
+          <span className="envelope-back" />
+          <span className="envelope-paper">
+            <span className="font-script block text-4xl leading-none text-[#6c7411]">
+              {inviteName}
+            </span>
+            <span className="mt-2 block font-display text-[0.62rem] uppercase tracking-[0.18em] text-[#4f5609]/55">
+              приглашение
+            </span>
+          </span>
+          <span className="envelope-flap" />
+          <span className="envelope-front" />
+          <span className="envelope-seal">
+            <EnvelopeSeal />
+          </span>
+        </span>
+
+        <span className="font-script mt-8 text-4xl leading-none text-[#6c7411]">
+          Нажмите, чтобы открыть
+        </span>
+        <span className="mt-3 max-w-xs text-sm leading-6 text-[#4f5609]/70">
+          После открытия появится ваше персональное приглашение.
+        </span>
+      </span>
+    </button>
+  );
+}
+
 export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
   const hasBackground = Boolean(invite.bgUrl);
   const childrenLine = getChildrenLine(invite, settings);
@@ -36,9 +125,29 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
   const detailsUrl = `/?guestId=${encodeURIComponent(invite.id)}`;
   const rsvpUrl = `${detailsUrl}#rsvp`;
   const inviteBodyText = invite.inviteText || settings.inviteBodyText;
+  const [isOpened, setIsOpened] = useState(false);
+  const [isOpening, setIsOpening] = useState(false);
+
+  useEffect(() => {
+    if (!isOpening) return;
+
+    const timeout = window.setTimeout(() => {
+      setIsOpened(true);
+    }, 1250);
+
+    return () => window.clearTimeout(timeout);
+  }, [isOpening]);
 
   return (
     <main className="relative min-h-[100dvh] w-full overflow-hidden bg-[#fbf3d9] text-[#4f5609]">
+      {!isOpened ? (
+        <EnvelopeGate
+          inviteName={invite.inviteName}
+          isOpening={isOpening}
+          onOpen={() => setIsOpening(true)}
+        />
+      ) : null}
+
       {hasBackground ? (
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-80"
@@ -56,7 +165,14 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
       <div className="absolute inset-0 bg-[#fbf3d9]/38" aria-hidden />
       <div className="absolute inset-x-0 bottom-0 h-[44%] bg-gradient-to-t from-[#fbf3d9] via-[#fbf3d9]/92 to-transparent" aria-hidden />
 
-      <section className="relative z-10 mx-auto flex min-h-[100dvh] max-w-3xl flex-col justify-between px-4 py-6 text-center sm:px-8 sm:py-10">
+      <section
+        className={`relative z-10 mx-auto flex min-h-[100dvh] max-w-3xl flex-col justify-between px-4 py-6 text-center transition duration-700 sm:px-8 sm:py-10 ${
+          isOpened
+            ? "visible translate-y-0 opacity-100"
+            : "invisible translate-y-3 opacity-0"
+        }`}
+        aria-hidden={!isOpened}
+      >
         <header className="flex items-center justify-center text-[0.68rem] uppercase tracking-[0.2em] text-[#4f5609]/70 sm:justify-between sm:text-xs">
           <span>{settings.weddingDate}</span>
           <span className="hidden sm:inline">{settings.coupleNames}</span>
@@ -125,4 +241,3 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
     </main>
   );
 }
-
