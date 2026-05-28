@@ -25,7 +25,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     countdown: <CountdownSection />,
     program: <ProgramSection settings={settings} />,
     dressCode: <DressCodeSection />,
-    wishWall: <WishWallSection guestName={invite?.inviteName} />,
+    wishWall: (
+      <WishWallSection
+        guestName={invite?.inviteName}
+        settings={settings}
+      />
+    ),
     rsvp: (
       <section id="rsvp" className="scroll-mt-24 px-3 py-14 sm:px-8 sm:py-20">
         <div className="mx-auto max-w-3xl rounded-3xl border border-[#8a9a7a]/15 bg-white/70 p-3 shadow-[0_18px_55px_rgba(52,49,45,0.07)] backdrop-blur-sm sm:rounded-[2rem] sm:p-8 sm:shadow-[0_24px_80px_rgba(52,49,45,0.08)]">

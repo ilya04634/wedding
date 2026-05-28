@@ -4,6 +4,16 @@ export interface ProgramItem {
   description: string;
 }
 
+export type WishWallLayout =
+  | "masonry"
+  | "staggered"
+  | "garland"
+  | "featured"
+  | "ribbon"
+  | "random";
+
+export type WishWallDensity = "airy" | "balanced" | "compact";
+
 export interface SiteSettings {
   coupleNames: string;
   siteTitle: string;
@@ -33,4 +43,8 @@ export interface SiteSettings {
   uploadLinkEnabled: boolean;
   uploadLinkLabel: string;
   sectionOrder: string[];
+  wishWallLayout: WishWallLayout;
+  wishWallDensity: WishWallDensity;
+  wishWallMaxTilt: number;
+  wishWallOverlap: number;
 }

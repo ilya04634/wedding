@@ -200,6 +200,25 @@ final
 
 `hero` всегда остается первым экраном приглашения.
 
+Стена пожеланий управляется ключами:
+
+```text
+wishWallLayout
+wishWallDensity
+wishWallMaxTilt
+wishWallOverlap
+```
+
+`wishWallLayout` поддерживает варианты:
+
+```text
+masonry | staggered | garland | featured | ribbon | random
+```
+
+`wishWallDensity`: `airy`, `balanced`, `compact`.
+`wishWallMaxTilt`: максимальный наклон карточек в градусах.
+`wishWallOverlap`: допустимое мягкое наложение карточек в пикселях.
+
 ## Invite links
 
 `bg_url` is only the technical Google Drive image URL for the generated

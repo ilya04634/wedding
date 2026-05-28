@@ -5,9 +5,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import type { WishWallDensity, WishWallLayout } from "@/types/settings";
 import type { WeddingWish } from "@/types/wish";
 import { Loader2, Send, Sparkles } from "lucide-react";
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import {
+  CSSProperties,
+  FormEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 type WishCardStyle = {
   backgroundColor: string;
@@ -16,6 +24,12 @@ type WishCardStyle = {
   width: number;
   x: number;
   y: number;
+};
+
+type WishWallTuning = {
+  density: WishWallDensity;
+  maxTilt: number;
+  overlap: number;
 };
 
 const NOTE_COLORS = [
@@ -43,6 +57,22 @@ function randomUnit(seed: number): number {
   return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
 }
 
+function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function getDensityRatio(density: WishWallDensity) {
+  if (density === "airy") return 0.48;
+  if (density === "compact") return 0.74;
+  return 0.62;
+}
+
+function getSpacingClass(density: WishWallDensity) {
+  if (density === "airy") return "gap-5";
+  if (density === "compact") return "gap-2";
+  return "gap-3";
+}
+
 function estimateCardHeight(wishText: string, width: number) {
   const charsPerLine = Math.max(12, Math.floor(width / 13));
   const lineCount = Math.ceil(wishText.length / charsPerLine);
@@ -52,6 +82,7 @@ function estimateCardHeight(wishText: string, width: number) {
 function overlapsTooMuch(
   candidate: { x: number; y: number; width: number; height: number },
   placed: Array<{ x: number; y: number; width: number; height: number }>,
+  maxOverlap: number,
 ) {
   return placed.some((card) => {
     const overlapX =
@@ -63,14 +94,24 @@ function overlapsTooMuch(
 
     if (overlapX <= 0 || overlapY <= 0) return false;
 
-    const allowedX = Math.min(24, Math.min(candidate.width, card.width) * 0.14);
-    const allowedY = Math.min(18, Math.min(candidate.height, card.height) * 0.1);
+    const allowedX = Math.min(
+      maxOverlap * 1.4,
+      Math.min(candidate.width, card.width) * (0.05 + maxOverlap / 180),
+    );
+    const allowedY = Math.min(
+      maxOverlap,
+      Math.min(candidate.height, card.height) * (0.04 + maxOverlap / 220),
+    );
 
     return overlapX > allowedX && overlapY > allowedY;
   });
 }
 
-function getCardStyles(wishes: WeddingWish[], boardWidth: number) {
+function getCardStyles(
+  wishes: WeddingWish[],
+  boardWidth: number,
+  tuning: WishWallTuning,
+) {
   const safeBoardWidth = Math.max(280, boardWidth || 560);
   const isCompact = safeBoardWidth < 520;
   const cardWidth = isCompact
@@ -78,13 +119,16 @@ function getCardStyles(wishes: WeddingWish[], boardWidth: number) {
     : Math.min(214, Math.max(178, safeBoardWidth * 0.29));
   const padding = isCompact ? 14 : 20;
   const minBoardHeight = isCompact ? 544 : 640;
+  const densityRatio = getDensityRatio(tuning.density);
+  const maxOverlap = clamp(tuning.overlap, 0, 36);
+  const maxTilt = clamp(tuning.maxTilt, 0, 10);
   const estimatedArea = wishes.reduce(
     (total, wish) => total + cardWidth * estimateCardHeight(wish.wishText, cardWidth),
     0,
   );
   const initialSearchHeight = Math.max(
     minBoardHeight,
-    Math.ceil(estimatedArea / (safeBoardWidth * 0.62)),
+    Math.ceil(estimatedArea / (safeBoardWidth * densityRatio)),
   );
   const placed: WishCardStyle[] = [];
 
@@ -108,13 +152,13 @@ function getCardStyles(wishes: WeddingWish[], boardWidth: number) {
       const candidate = {
         backgroundColor: NOTE_COLORS[hash % NOTE_COLORS.length],
         height,
-        rotate: ((hash >> 12) % 13) - 6,
+        rotate: Math.round((randomUnit(hash + 811) * 2 - 1) * maxTilt),
         width: cardWidth,
         x,
         y,
       };
 
-      if (!overlapsTooMuch(candidate, placed)) {
+      if (!overlapsTooMuch(candidate, placed, maxOverlap)) {
         selected = candidate;
         break;
       }
@@ -125,7 +169,7 @@ function getCardStyles(wishes: WeddingWish[], boardWidth: number) {
       selected = {
         backgroundColor: NOTE_COLORS[hash % NOTE_COLORS.length],
         height,
-        rotate: ((hash >> 12) % 13) - 6,
+        rotate: Math.round((randomUnit(hash + 811) * 2 - 1) * maxTilt),
         width: cardWidth,
         x:
           padding +
@@ -152,19 +196,32 @@ function getBoardHeight(cardStyles: WishCardStyle[], boardWidth: number) {
   return Math.max(minBoardHeight, Math.ceil(maxBottom + 36));
 }
 
-function getCardBaseStyle(wish: WeddingWish): Pick<WishCardStyle, "backgroundColor" | "rotate"> {
+function getCardBaseStyle(
+  wish: WeddingWish,
+  maxTilt = 5,
+): Pick<WishCardStyle, "backgroundColor" | "rotate"> {
   const hash = hashText(`${wish.id}-${wish.guestName}-${wish.wishText}`);
   return {
     backgroundColor: NOTE_COLORS[hash % NOTE_COLORS.length],
-    rotate: ((hash >> 12) % 13) - 6,
+    rotate: Math.round((randomUnit(hash + 811) * 2 - 1) * clamp(maxTilt, 0, 10)),
   };
 }
 
 interface WishWallProps {
+  density: WishWallDensity;
   initialGuestName?: string;
+  layout: WishWallLayout;
+  maxTilt: number;
+  overlap: number;
 }
 
-export function WishWall({ initialGuestName }: WishWallProps) {
+export function WishWall({
+  density,
+  initialGuestName,
+  layout,
+  maxTilt,
+  overlap,
+}: WishWallProps) {
   const boardRef = useRef<HTMLDivElement | null>(null);
   const [boardWidth, setBoardWidth] = useState(0);
   const [wishes, setWishes] = useState<WeddingWish[]>([]);
@@ -239,8 +296,8 @@ export function WishWall({ initialGuestName }: WishWallProps) {
   }, []);
 
   const cardStyles = useMemo(
-    () => getCardStyles(wishes, boardWidth),
-    [boardWidth, wishes],
+    () => getCardStyles(wishes, boardWidth, { density, maxTilt, overlap }),
+    [boardWidth, density, maxTilt, overlap, wishes],
   );
   const boardHeight = getBoardHeight(cardStyles, boardWidth);
 
@@ -295,6 +352,173 @@ export function WishWall({ initialGuestName }: WishWallProps) {
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  function renderNote(
+    wish: WeddingWish,
+    index: number,
+    options: {
+      className?: string;
+      isFeatured?: boolean;
+      style?: CSSProperties;
+      tape?: boolean;
+    } = {},
+  ) {
+    const base = getCardBaseStyle(wish, maxTilt);
+    const zIndex = liftedZ[wish.id] ?? 10 + index;
+    const isActive = activeId === wish.id;
+    const hash = hashText(`${wish.id}-${wish.guestName}-${wish.wishText}`);
+    const translateX = Math.round((randomUnit(hash + 41) - 0.5) * overlap);
+    const translateY = Math.round((randomUnit(hash + 89) - 0.5) * overlap);
+
+    return (
+      <button
+        key={wish.id}
+        type="button"
+        onClick={() => liftCard(wish.id)}
+        onFocus={() => liftCard(wish.id)}
+        className={cn(
+          "relative rounded-xl text-left outline-none transition duration-200 ease-out",
+          "hover:scale-105 focus-visible:scale-105 focus-visible:ring-2 focus-visible:ring-[#e79796]/45 active:scale-105",
+          isActive && "scale-105",
+          options.className,
+        )}
+        style={{
+          zIndex,
+          ...options.style,
+        }}
+      >
+        <span
+          className={cn(
+            "relative block overflow-y-auto rounded-xl border p-3 text-left shadow-md transition-all duration-200 sm:p-4",
+            options.isFeatured ? "min-h-44" : "max-h-64 min-h-32",
+            isActive
+              ? "border-[#34312d]/35 bg-white/85 shadow-2xl ring-2 ring-white/80"
+              : "border-white/55 hover:shadow-xl",
+          )}
+          style={{
+            backgroundColor: isActive
+              ? "rgba(255, 255, 255, 0.9)"
+              : base.backgroundColor,
+            transform: options.isFeatured
+              ? "none"
+              : `translate(${translateX}px, ${translateY}px) rotate(${base.rotate}deg)`,
+          }}
+        >
+          {options.tape ? (
+            <span className="absolute left-1/2 top-0 h-5 w-16 -translate-x-1/2 -translate-y-1/2 rotate-[-3deg] rounded-sm bg-white/55 shadow-sm" />
+          ) : null}
+          <span
+            className={cn(
+              "block text-[0.62rem] font-bold uppercase tracking-[0.16em] text-[#5f6e53] sm:text-[0.68rem]",
+              isActive && "text-[#34312d]",
+            )}
+          >
+            {wish.guestName}
+          </span>
+          <span
+            className={cn(
+              "font-script mt-2 block text-2xl leading-[0.98] text-[#34312d] sm:text-3xl",
+              options.isFeatured && "text-4xl sm:text-5xl",
+              isActive &&
+                "[text-shadow:0_1px_0_rgba(255,255,255,0.9),0_0_5px_rgba(255,255,255,0.9)]",
+            )}
+          >
+            {wish.wishText}
+          </span>
+        </span>
+      </button>
+    );
+  }
+
+  function renderStructuredBoard() {
+    const gapClass = getSpacingClass(density);
+    const activeWish =
+      wishes.find((wish) => wish.id === activeId) ?? wishes[wishes.length - 1];
+
+    if (layout === "featured") {
+      return (
+        <div className="relative z-10 space-y-5">
+          {activeWish ? (
+            <div className="rounded-[1.5rem] border border-white/60 bg-white/42 p-3 shadow-inner backdrop-blur-sm">
+              {renderNote(activeWish, wishes.indexOf(activeWish), {
+                className: "mx-auto w-full max-w-lg",
+                isFeatured: true,
+              })}
+            </div>
+          ) : null}
+          <div className={cn("columns-2 sm:columns-3", gapClass)}>
+            {wishes.map((wish, index) => (
+              <div key={wish.id} className={cn("break-inside-avoid", gapClass === "gap-2" ? "mb-2" : gapClass === "gap-5" ? "mb-5" : "mb-3")}>
+                {renderNote(wish, index, { className: "w-full" })}
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    if (layout === "staggered") {
+      return (
+        <div className={cn("relative z-10 grid grid-cols-2 sm:grid-cols-3", gapClass)}>
+          {wishes.map((wish, index) =>
+            renderNote(wish, index, {
+              className: cn(
+                "w-full",
+                index % 2 === 1 && "mt-8",
+                index % 3 === 2 && "sm:mt-12",
+              ),
+            }),
+          )}
+        </div>
+      );
+    }
+
+    if (layout === "garland") {
+      return (
+        <div className={cn("relative z-10 grid grid-cols-2 pt-4 sm:grid-cols-3", gapClass)}>
+          <div className="pointer-events-none absolute left-2 right-2 top-5 h-px bg-[#8a9a7a]/35" />
+          {wishes.map((wish, index) =>
+            renderNote(wish, index, {
+              className: cn("w-full", index % 2 === 0 ? "mt-2" : "mt-8"),
+              tape: true,
+            }),
+          )}
+        </div>
+      );
+    }
+
+    if (layout === "ribbon") {
+      return (
+        <div className="relative z-10 mx-auto flex max-w-xl flex-col gap-3 sm:gap-4">
+          <div className="pointer-events-none absolute bottom-4 left-1/2 top-4 w-px -translate-x-1/2 bg-[#8a9a7a]/24" />
+          {wishes.map((wish, index) =>
+            renderNote(wish, index, {
+              className: cn(
+                "w-[82%] sm:w-[72%]",
+                index % 2 === 0 ? "mr-auto" : "ml-auto",
+              ),
+            }),
+          )}
+        </div>
+      );
+    }
+
+    return (
+      <div className={cn("relative z-10 columns-2 sm:columns-3", gapClass)}>
+        {wishes.map((wish, index) => (
+          <div
+            key={wish.id}
+            className={cn(
+              "break-inside-avoid",
+              density === "airy" ? "mb-5" : density === "compact" ? "mb-2" : "mb-3",
+            )}
+          >
+            {renderNote(wish, index, { className: "w-full" })}
+          </div>
+        ))}
+      </div>
+    );
   }
 
   return (
@@ -371,7 +595,7 @@ export function WishWall({ initialGuestName }: WishWallProps) {
         ref={boardRef}
         className="relative min-h-[34rem] overflow-hidden rounded-[1.75rem] border border-[#8a9a7a]/18 bg-[#f3ecdf] p-4 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.42),0_24px_70px_rgba(52,49,45,0.08)] sm:min-h-[40rem] sm:p-6"
         style={{
-          minHeight: boardHeight,
+          minHeight: layout === "random" ? boardHeight : undefined,
           backgroundImage:
             "radial-gradient(circle at 18% 12%, rgba(244,208,63,0.16), transparent 24%), radial-gradient(circle at 82% 22%, rgba(231,151,150,0.14), transparent 28%), radial-gradient(circle at 28% 88%, rgba(138,154,122,0.13), transparent 30%), linear-gradient(135deg, rgba(255,255,255,0.48), rgba(253,251,247,0.18))",
         }}
@@ -391,73 +615,31 @@ export function WishWall({ initialGuestName }: WishWallProps) {
           </div>
         ) : null}
 
-        <div className="relative z-10">
-          {wishes.map((wish, index) => {
-            const style = cardStyles[index] ?? {
-              ...getCardBaseStyle(wish),
-              height: 150,
-              width: 168,
-              x: 20,
-              y: 20 + index * 120,
-            };
-            const zIndex = liftedZ[wish.id] ?? 10 + index;
-            const isActive = activeId === wish.id;
+        {layout === "random" ? (
+          <div className="relative z-10">
+            {wishes.map((wish, index) => {
+              const style = cardStyles[index] ?? {
+                ...getCardBaseStyle(wish, maxTilt),
+                height: 150,
+                width: 168,
+                x: 20,
+                y: 20 + index * 120,
+              };
 
-            return (
-              <button
-                key={wish.id}
-                type="button"
-                onClick={() => liftCard(wish.id)}
-                onFocus={() => liftCard(wish.id)}
-                className={cn(
-                  "absolute rounded-xl text-left outline-none transition duration-200 ease-out",
-                  "hover:scale-105 focus-visible:scale-105 focus-visible:ring-2 focus-visible:ring-[#e79796]/45 active:scale-105",
-                  isActive && "scale-105",
-                )}
-                style={{
+              return renderNote(wish, index, {
+                className: "absolute",
+                style: {
                   height: style.height,
                   left: style.x,
                   top: style.y,
                   width: style.width,
-                  zIndex,
-                }}
-              >
-                <span
-                  className={cn(
-                    "block h-full overflow-y-auto rounded-xl border p-3 text-left shadow-md transition-all duration-200 sm:p-4",
-                    isActive
-                      ? "border-[#34312d]/35 bg-white/85 shadow-2xl ring-2 ring-white/80"
-                      : "border-white/55 hover:shadow-xl",
-                  )}
-                  style={{
-                    backgroundColor: isActive
-                      ? "rgba(255, 255, 255, 0.9)"
-                      : style.backgroundColor,
-                    transform: `rotate(${style.rotate}deg)`,
-                  }}
-                >
-                  <span
-                    className={cn(
-                      "block text-[0.62rem] font-bold uppercase tracking-[0.16em] text-[#5f6e53] sm:text-[0.68rem]",
-                      isActive && "text-[#34312d]",
-                    )}
-                  >
-                    {wish.guestName}
-                  </span>
-                  <span
-                    className={cn(
-                      "font-script mt-2 block text-2xl leading-[0.98] text-[#34312d] sm:text-3xl",
-                      isActive &&
-                        "[text-shadow:0_1px_0_rgba(255,255,255,0.9),0_0_5px_rgba(255,255,255,0.9)]",
-                    )}
-                  >
-                    {wish.wishText}
-                  </span>
-                </span>
-              </button>
-            );
-          })}
-        </div>
+                },
+              });
+            })}
+          </div>
+        ) : (
+          renderStructuredBoard()
+        )}
       </div>
     </div>
   );

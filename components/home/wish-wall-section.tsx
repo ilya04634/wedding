@@ -1,11 +1,13 @@
 import { WishWall } from "@/components/wishes/wish-wall";
+import type { SiteSettings } from "@/types/settings";
 import { MessageCircleHeart } from "lucide-react";
 
 interface WishWallSectionProps {
   guestName?: string;
+  settings: SiteSettings;
 }
 
-export function WishWallSection({ guestName }: WishWallSectionProps) {
+export function WishWallSection({ guestName, settings }: WishWallSectionProps) {
   return (
     <section className="px-4 py-12 sm:px-8 sm:py-16">
       <div className="mx-auto max-w-5xl rounded-3xl border border-[#f4d03f]/35 bg-[#fff9db]/55 p-6 text-center shadow-[0_18px_55px_rgba(52,49,45,0.05)] backdrop-blur-sm sm:rounded-[2rem] sm:p-10">
@@ -22,7 +24,13 @@ export function WishWallSection({ guestName }: WishWallSectionProps) {
           Оставьте пару теплых слов для Даши и Ильи. Пожелания появятся на
           общей доске как маленькие открытки.
         </p>
-        <WishWall initialGuestName={guestName} />
+        <WishWall
+          density={settings.wishWallDensity}
+          initialGuestName={guestName}
+          layout={settings.wishWallLayout}
+          maxTilt={settings.wishWallMaxTilt}
+          overlap={settings.wishWallOverlap}
+        />
       </div>
     </section>
   );

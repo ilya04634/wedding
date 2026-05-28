@@ -61,6 +61,10 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
     "rsvp",
     "final",
   ],
+  wishWallLayout: "masonry",
+  wishWallDensity: "balanced",
+  wishWallMaxTilt: 5,
+  wishWallOverlap: 12,
 };
 
 export function serializeProgramItems(settings: SiteSettings) {

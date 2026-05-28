@@ -164,6 +164,63 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               rsvp, final.
             </p>
           </div>
+          <div className="sm:col-span-2">
+            <Label htmlFor="wishWallLayout">Вид стены пожеланий</Label>
+            <select
+              id="wishWallLayout"
+              name="wishWallLayout"
+              defaultValue={settingsForm.wishWallLayout}
+              className="flex h-11 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+            >
+              <option value="masonry">Masonry: Pinterest-стикеры</option>
+              <option value="staggered">Шахматка: ровно, но живо</option>
+              <option value="garland">Открытки со скотчем</option>
+              <option value="featured">Крупная выбранная карточка + доска</option>
+              <option value="ribbon">Вертикальная лента</option>
+              <option value="random">Рандом по холсту</option>
+            </select>
+          </div>
+          <div>
+            <Label htmlFor="wishWallDensity">Плотность стены пожеланий</Label>
+            <select
+              id="wishWallDensity"
+              name="wishWallDensity"
+              defaultValue={settingsForm.wishWallDensity}
+              className="flex h-11 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+            >
+              <option value="airy">Воздушно</option>
+              <option value="balanced">Сбалансировано</option>
+              <option value="compact">Плотно</option>
+            </select>
+          </div>
+          <div>
+            <Label htmlFor="wishWallMaxTilt">Макс. наклон карточек</Label>
+            <Input
+              id="wishWallMaxTilt"
+              name="wishWallMaxTilt"
+              type="number"
+              min="0"
+              max="10"
+              step="1"
+              defaultValue={settingsForm.wishWallMaxTilt}
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <Label htmlFor="wishWallOverlap">Допустимое наложение, px</Label>
+            <Input
+              id="wishWallOverlap"
+              name="wishWallOverlap"
+              type="number"
+              min="0"
+              max="36"
+              step="1"
+              defaultValue={settingsForm.wishWallOverlap}
+            />
+            <p className="mt-1 text-xs text-neutral-500">
+              0 = почти без наложения, 12-18 = легкий стикерный эффект, 24+ =
+              заметнее заезжают друг на друга.
+            </p>
+          </div>
           <div>
             <Label htmlFor="heroDefaultEyebrow">Верхний текст hero</Label>
             <Input id="heroDefaultEyebrow" name="heroDefaultEyebrow" defaultValue={settingsForm.heroDefaultEyebrow} />

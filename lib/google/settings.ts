@@ -1,6 +1,11 @@
 import "server-only";
 
-import type { ProgramItem, SiteSettings } from "@/types/settings";
+import type {
+  ProgramItem,
+  SiteSettings,
+  WishWallDensity,
+  WishWallLayout,
+} from "@/types/settings";
 import {
   DEFAULT_SITE_SETTINGS,
   serializeProgramItems,
@@ -39,6 +44,10 @@ const SETTING_KEYS = [
   "uploadLinkEnabled",
   "uploadLinkLabel",
   "sectionOrder",
+  "wishWallLayout",
+  "wishWallDensity",
+  "wishWallMaxTilt",
+  "wishWallOverlap",
 ] as const;
 
 export type SiteSettingKey = (typeof SETTING_KEYS)[number];
@@ -117,6 +126,37 @@ function parseSectionOrder(value: string | undefined): string[] {
     .filter(Boolean);
 }
 
+function parseWishWallLayout(value: string | undefined): WishWallLayout {
+  const layout = value?.trim();
+  const allowed: WishWallLayout[] = [
+    "masonry",
+    "staggered",
+    "garland",
+    "featured",
+    "ribbon",
+    "random",
+  ];
+
+  return allowed.includes(layout as WishWallLayout)
+    ? (layout as WishWallLayout)
+    : DEFAULT_SITE_SETTINGS.wishWallLayout;
+}
+
+function parseWishWallDensity(value: string | undefined): WishWallDensity {
+  const density = value?.trim();
+  const allowed: WishWallDensity[] = ["airy", "balanced", "compact"];
+
+  return allowed.includes(density as WishWallDensity)
+    ? (density as WishWallDensity)
+    : DEFAULT_SITE_SETTINGS.wishWallDensity;
+}
+
+function parseNumberSetting(value: string | undefined, fallback: number) {
+  if (!value?.trim()) return fallback;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
+
 function settingsFromMap(map: Map<string, string>): SiteSettings {
   return {
     coupleNames: map.get("coupleNames") || DEFAULT_SITE_SETTINGS.coupleNames,
@@ -170,6 +210,16 @@ function settingsFromMap(map: Map<string, string>): SiteSettings {
     uploadLinkLabel:
       map.get("uploadLinkLabel") || DEFAULT_SITE_SETTINGS.uploadLinkLabel,
     sectionOrder: parseSectionOrder(map.get("sectionOrder")),
+    wishWallLayout: parseWishWallLayout(map.get("wishWallLayout")),
+    wishWallDensity: parseWishWallDensity(map.get("wishWallDensity")),
+    wishWallMaxTilt: parseNumberSetting(
+      map.get("wishWallMaxTilt"),
+      DEFAULT_SITE_SETTINGS.wishWallMaxTilt,
+    ),
+    wishWallOverlap: parseNumberSetting(
+      map.get("wishWallOverlap"),
+      DEFAULT_SITE_SETTINGS.wishWallOverlap,
+    ),
   };
 }
 
@@ -230,6 +280,10 @@ export function settingsToFormData(settings: SiteSettings): SiteSettingsFormData
     uploadLinkEnabled: String(settings.uploadLinkEnabled),
     uploadLinkLabel: settings.uploadLinkLabel,
     sectionOrder: settings.sectionOrder.join("\n"),
+    wishWallLayout: settings.wishWallLayout,
+    wishWallDensity: settings.wishWallDensity,
+    wishWallMaxTilt: String(settings.wishWallMaxTilt),
+    wishWallOverlap: String(settings.wishWallOverlap),
   };
 }
 

@@ -184,6 +184,17 @@ export async function updateSiteSettingsAction(formData: FormData) {
       defaults.uploadLinkLabel,
     sectionOrder:
       getRequiredString(formData, "sectionOrder") || defaults.sectionOrder,
+    wishWallLayout:
+      getRequiredString(formData, "wishWallLayout") || defaults.wishWallLayout,
+    wishWallDensity:
+      getRequiredString(formData, "wishWallDensity") ||
+      defaults.wishWallDensity,
+    wishWallMaxTilt:
+      getRequiredString(formData, "wishWallMaxTilt") ||
+      defaults.wishWallMaxTilt,
+    wishWallOverlap:
+      getRequiredString(formData, "wishWallOverlap") ||
+      defaults.wishWallOverlap,
   };
 
   await updateSiteSettings(data);
