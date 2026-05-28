@@ -57,11 +57,13 @@ button {
 }
 
 .envelope-back {
+  z-index: 0;
   background: linear-gradient(145deg, #fff8e7, #eadfbe);
   border: 1px solid rgba(79, 86, 9, 0.2);
 }
 
 .envelope-front {
+  z-index: 3;
   overflow: hidden;
   background:
     linear-gradient(32deg, transparent 49.6%, rgba(79, 86, 9, 0.22) 50%, transparent 50.4%),
@@ -72,10 +74,12 @@ button {
 }
 
 .envelope-flap {
-  z-index: 2;
+  z-index: 4;
   background: linear-gradient(170deg, #fff9e9, #e4d7b6);
   clip-path: polygon(0 0, 100% 0, 50% 64%);
   transform-origin: 50% 0;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
   transition: transform 0.72s cubic-bezier(0.2, 0.74, 0.17, 1);
 }
 
@@ -91,13 +95,13 @@ button {
     radial-gradient(circle at top left, rgba(138, 154, 122, 0.16), transparent 42%),
     #fffaf0;
   border: 1px solid rgba(79, 86, 9, 0.13);
-  transform: translateY(28%);
-  transition: transform 0.85s cubic-bezier(0.2, 0.74, 0.17, 1);
+  transform: translateY(34%);
+  transition: transform 0.85s cubic-bezier(0.2, 0.74, 0.17, 1) 0.18s;
 }
 
 .envelope-seal {
   position: absolute;
-  z-index: 3;
+  z-index: 5;
   left: 50%;
   top: 51%;
   transform: translate(-50%, -50%) scale(0.72);
@@ -120,26 +124,24 @@ button {
 }
 
 .scroll-reveal {
-  animation: garden-fade 0.8s ease both;
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.85s ease,
+    transform 0.85s cubic-bezier(0.2, 0.74, 0.17, 1);
 }
 
-.timeline-draw-path {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 0;
+.scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-@supports (animation-timeline: view()) {
-  .scroll-reveal {
-    animation: scroll-reveal both ease-out;
-    animation-timeline: view();
-    animation-range: entry 8% cover 30%;
-  }
-
-  .timeline-draw-path {
-    stroke-dashoffset: 1;
-    animation: timeline-draw both linear;
-    animation-timeline: view();
-    animation-range: entry 10% cover 74%;
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal,
+  .scroll-reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
 
@@ -162,24 +164,6 @@ button {
 
   .garden-fade-delay {
     animation: garden-fade 0.9s ease 0.12s both;
-  }
-}
-
-@keyframes scroll-reveal {
-  from {
-    opacity: 0;
-    transform: translateY(26px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes timeline-draw {
-  to {
-    stroke-dashoffset: 0;
   }
 }
 

@@ -70,7 +70,7 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
   return (
     <section
       id="program"
-      className="scroll-reveal garden-fade-delay scroll-mt-24 bg-[#fbf3d9] px-4 py-16 sm:px-8 sm:py-24"
+      className="scroll-mt-24 bg-[#fbf3d9] px-4 py-16 sm:px-8 sm:py-24"
     >
       <div className="mx-auto max-w-md sm:max-w-2xl">
         <div className="text-center">
@@ -95,8 +95,6 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
             aria-hidden
           >
             <path
-              className="timeline-draw-path"
-              pathLength={1}
               d="M135 0 C118 86 205 122 237 176 C288 262 72 300 86 414 C100 528 263 494 235 606 C216 681 116 680 126 820"
               fill="none"
               stroke="currentColor"

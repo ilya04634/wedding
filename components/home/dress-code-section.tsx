@@ -21,7 +21,7 @@
 
 export function DressCodeSection() {
   return (
-    <section className="scroll-reveal relative isolate overflow-hidden bg-[#fbf3d9] px-4 py-16 sm:px-8 sm:py-24">
+    <section className="relative isolate overflow-hidden bg-[#fbf3d9] px-4 py-16 sm:px-8 sm:py-24">
       <div className="mx-auto max-w-md text-[#4f5609]">
         <div className="text-center">
           <h2 className="font-display text-4xl uppercase tracking-[0.08em] sm:text-5xl">

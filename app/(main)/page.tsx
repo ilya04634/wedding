@@ -5,6 +5,7 @@ import { HeroSection } from "@/components/home/hero-section";
 import { ProgramSection } from "@/components/home/program-section";
 import { WishWallSection } from "@/components/home/wish-wall-section";
 import { RsvpForm } from "@/components/rsvp/rsvp-form";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { getInviteById } from "@/lib/google/guests";
 import { getSiteSettings } from "@/lib/google/settings";
 
@@ -34,7 +35,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     rsvp: (
       <section
         id="rsvp"
-        className="scroll-reveal scroll-mt-24 px-3 py-14 sm:px-8 sm:py-20"
+        className="scroll-mt-24 px-3 py-14 sm:px-8 sm:py-20"
       >
         <div className="mx-auto max-w-3xl rounded-3xl border border-[#8a9a7a]/15 bg-white/70 p-3 shadow-[0_18px_55px_rgba(52,49,45,0.07)] backdrop-blur-sm sm:rounded-[2rem] sm:p-8 sm:shadow-[0_24px_80px_rgba(52,49,45,0.08)]">
           <RsvpForm
@@ -68,9 +69,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         }
         rendered.add(key);
         return (
-          <div key={key} className="scroll-reveal-wrap">
+          <ScrollReveal key={key}>
             {sections[key as keyof typeof sections]}
-          </div>
+          </ScrollReveal>
         );
       })}
     </div>

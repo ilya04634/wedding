@@ -9,7 +9,7 @@ interface WishWallSectionProps {
 
 export function WishWallSection({ guestName, settings }: WishWallSectionProps) {
   return (
-    <section className="scroll-reveal px-4 py-12 sm:px-8 sm:py-16">
+    <section className="px-4 py-12 sm:px-8 sm:py-16">
       <div className="mx-auto max-w-5xl rounded-3xl border border-[#f4d03f]/35 bg-[#fff9db]/55 p-6 text-center shadow-[0_18px_55px_rgba(52,49,45,0.05)] backdrop-blur-sm sm:rounded-[2rem] sm:p-10">
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/70 text-[#8a9a7a] shadow-sm">
           <MessageCircleHeart className="h-7 w-7" aria-hidden />

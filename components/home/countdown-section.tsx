@@ -33,7 +33,7 @@ export function CountdownSection() {
   }, []);
 
   return (
-    <section className="scroll-reveal px-4 py-12 sm:px-8 sm:py-16">
+    <section className="px-4 py-12 sm:px-8 sm:py-16">
       <div className="relative mx-auto max-w-5xl overflow-hidden bg-[#fbf3d9] px-3 py-10 text-center sm:px-10 sm:py-16">
         <div className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,_rgba(231,151,150,0.14),_rgba(231,151,150,0)_70%)]" />
 
