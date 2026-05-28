@@ -32,4 +32,5 @@ export interface SiteSettings {
   footerText: string;
   uploadLinkEnabled: boolean;
   uploadLinkLabel: string;
+  sectionOrder: string[];
 }

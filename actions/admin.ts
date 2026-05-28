@@ -182,6 +182,8 @@ export async function updateSiteSettingsAction(formData: FormData) {
     uploadLinkLabel:
       getRequiredString(formData, "uploadLinkLabel") ||
       defaults.uploadLinkLabel,
+    sectionOrder:
+      getRequiredString(formData, "sectionOrder") || defaults.sectionOrder,
   };
 
   await updateSiteSettings(data);

@@ -38,6 +38,7 @@ const SETTING_KEYS = [
   "footerText",
   "uploadLinkEnabled",
   "uploadLinkLabel",
+  "sectionOrder",
 ] as const;
 
 export type SiteSettingKey = (typeof SETTING_KEYS)[number];
@@ -96,6 +97,26 @@ function parseProgramItems(value: string | undefined): ProgramItem[] {
   }
 }
 
+function parseSectionOrder(value: string | undefined): string[] {
+  if (!value?.trim()) return DEFAULT_SITE_SETTINGS.sectionOrder;
+
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) {
+      return parsed
+        .map((item) => String(item ?? "").trim())
+        .filter(Boolean);
+    }
+  } catch {
+    // Fall back to comma/newline parsing below.
+  }
+
+  return value
+    .split(/[\n,]/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
 function settingsFromMap(map: Map<string, string>): SiteSettings {
   return {
     coupleNames: map.get("coupleNames") || DEFAULT_SITE_SETTINGS.coupleNames,
@@ -148,6 +169,7 @@ function settingsFromMap(map: Map<string, string>): SiteSettings {
     ),
     uploadLinkLabel:
       map.get("uploadLinkLabel") || DEFAULT_SITE_SETTINGS.uploadLinkLabel,
+    sectionOrder: parseSectionOrder(map.get("sectionOrder")),
   };
 }
 
@@ -207,6 +229,7 @@ export function settingsToFormData(settings: SiteSettings): SiteSettingsFormData
     footerText: settings.footerText,
     uploadLinkEnabled: String(settings.uploadLinkEnabled),
     uploadLinkLabel: settings.uploadLinkLabel,
+    sectionOrder: settings.sectionOrder.join("\n"),
   };
 }
 

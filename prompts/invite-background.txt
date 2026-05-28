@@ -1,11 +1,11 @@
-Abstract minimalist wedding invitation background for a vertical mobile screen.
+Soft translucent watercolor wedding invitation background for a vertical mobile screen.
 
 Guest name: {{guestName}}
 
 Create ONLY a background image. Do not include text, letters, words, numbers, logos, monograms, people, faces, hands, or readable signs.
 
-Style: minimalist continuous fine-line botanical art, elegant single black stroke sketches of summer garden flowers (peonies, roses, eucalyptus leaves). Combined with soft, semi-transparent watercolor wash spots placed subtly underneath the line art. Warm, joyful, airy, and modern aesthetic. Subtle paper texture.
+Style: pure, translucent watercolor painting (NO outlines or harsh edges). Soft, wet-on-wet technique creating delicate blooming effects and blending. Minimalist, airy, refined, and modern aesthetic. Subtle cream paper texture.
 
-Palette: soft ivory/cream background, delicate watercolor splashes in sage green, peony pink, and soft lemon sorbet yellow.
+Subject/Palette: An abundant, winding, climbing branch structure covered in delicate summer garden flowers (roses, wild peonies, sage foliage). Colors: soft Sage Green, pale Blush Pink, and faint Lemon Sorbet Yellow on a Cream background.
 
-Layout: The background must be visibly decorative, not blank or plain white. Leave a wide, comfortable calm space in the center for website text to be overlaid later with HTML/CSS, but keep soft floral and light watercolor details visible around the frame and outer edges to naturally border the image.
+Composition/Layout: The winding branch creates a detailed border that frames the absolute top and bottom edges of the screen, subtly continuing along one side. The background must be visibly decorative with abundant flowers, but extremely soft and pastel. Leave a wide, completely calm negative space in the center for website text to be overlaid later. Bright, natural lighting.

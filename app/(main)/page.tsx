@@ -1,3 +1,4 @@
+import { CountdownSection } from "@/components/home/countdown-section";
 import { DressCodeSection } from "@/components/home/dress-code-section";
 import { FinalRings } from "@/components/home/final-rings";
 import { HeroSection } from "@/components/home/hero-section";
@@ -20,13 +21,13 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     guestId ? getInviteById(guestId) : Promise.resolve(null),
   ]);
 
-  return (
-    <div className="overflow-hidden bg-[#fdfbf7]">
-      <HeroSection guestName={invite?.inviteName} settings={settings} />
-      <ProgramSection settings={settings} />
-      <DressCodeSection />
-      <WishWallSection />
-      <section className="px-3 py-14 sm:px-8 sm:py-20">
+  const sections = {
+    countdown: <CountdownSection />,
+    program: <ProgramSection settings={settings} />,
+    dressCode: <DressCodeSection />,
+    wishWall: <WishWallSection guestName={invite?.inviteName} />,
+    rsvp: (
+      <section id="rsvp" className="scroll-mt-24 px-3 py-14 sm:px-8 sm:py-20">
         <div className="mx-auto max-w-3xl rounded-3xl border border-[#8a9a7a]/15 bg-white/70 p-3 shadow-[0_18px_55px_rgba(52,49,45,0.07)] backdrop-blur-sm sm:rounded-[2rem] sm:p-8 sm:shadow-[0_24px_80px_rgba(52,49,45,0.08)]">
           <RsvpForm
             guestId={invite?.id ?? guestId}
@@ -36,7 +37,23 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           />
         </div>
       </section>
-      <FinalRings settings={settings} />
+    ),
+    final: <FinalRings settings={settings} />,
+  };
+  const rendered = new Set<string>();
+  const sectionOrder = [
+    ...settings.sectionOrder,
+    ...Object.keys(sections).filter((key) => !settings.sectionOrder.includes(key)),
+  ];
+
+  return (
+    <div className="overflow-hidden bg-[#fdfbf7]">
+      <HeroSection guestName={invite?.inviteName} settings={settings} />
+      {sectionOrder.map((key) => {
+        if (rendered.has(key) || !(key in sections)) return null;
+        rendered.add(key);
+        return <div key={key}>{sections[key as keyof typeof sections]}</div>;
+      })}
     </div>
   );
 }

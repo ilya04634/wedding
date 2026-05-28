@@ -181,6 +181,25 @@ uploadLinkEnabled | false
 uploadLinkEnabled | true
 ```
 
+Порядок блоков на главной странице управляется ключом:
+
+```text
+sectionOrder
+```
+
+Значение можно менять в `/admin`, по одному ключу на строку:
+
+```text
+countdown
+program
+dressCode
+wishWall
+rsvp
+final
+```
+
+`hero` всегда остается первым экраном приглашения.
+
 ## Invite links
 
 `bg_url` is only the technical Google Drive image URL for the generated

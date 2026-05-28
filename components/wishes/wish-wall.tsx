@@ -11,9 +11,11 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 
 type WishCardStyle = {
   backgroundColor: string;
-  left: string;
-  top: number;
   rotate: number;
+  shiftX: number;
+  shiftY: number;
+  align: "start" | "center" | "end";
+  order: number;
 };
 
 const NOTE_COLORS = [
@@ -36,24 +38,25 @@ function hashText(value: string): number {
 
 function getCardStyle(wish: WeddingWish, index: number): WishCardStyle {
   const hash = hashText(`${wish.id}-${wish.guestName}-${wish.wishText}`);
-  const lane = index % 3;
-  const leftByLane = [
-    4 + (hash % 7),
-    30 + ((hash >> 3) % 7),
-    51 + ((hash >> 6) % 6),
-  ];
+  const alignments: WishCardStyle["align"][] = ["start", "center", "end"];
 
   return {
     backgroundColor: NOTE_COLORS[hash % NOTE_COLORS.length],
-    left: `${leftByLane[lane]}%`,
-    top: 28 + Math.floor(index / 3) * 118 + ((hash >> 9) % 30),
     rotate: ((hash >> 12) % 13) - 6,
+    shiftX: ((hash >> 3) % 17) - 8,
+    shiftY: ((hash >> 7) % 17) - 8,
+    align: alignments[(hash >> 10) % alignments.length],
+    order: (hash % 1000) + index,
   };
 }
 
-export function WishWall() {
+interface WishWallProps {
+  initialGuestName?: string;
+}
+
+export function WishWall({ initialGuestName }: WishWallProps) {
   const [wishes, setWishes] = useState<WeddingWish[]>([]);
-  const [guestName, setGuestName] = useState("");
+  const [guestName, setGuestName] = useState(initialGuestName ?? "");
   const [wishText, setWishText] = useState("");
   const [activeId, setActiveId] = useState<string | null>(null);
   const [liftedZ, setLiftedZ] = useState<Record<string, number>>({});
@@ -102,12 +105,16 @@ export function WishWall() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!guestName.trim() && initialGuestName) {
+      setGuestName(initialGuestName);
+    }
+  }, [guestName, initialGuestName]);
+
   const cardStyles = useMemo(
     () => wishes.map((wish, index) => getCardStyle(wish, index)),
     [wishes],
   );
-
-  const boardHeight = Math.max(430, 190 + Math.ceil(wishes.length / 3) * 122);
 
   function liftCard(id: string) {
     setActiveId(id);
@@ -148,7 +155,7 @@ export function WishWall() {
       }
 
       setWishes((current) => [...current, data.wish as WeddingWish]);
-      setGuestName("");
+      setGuestName(initialGuestName ?? "");
       setWishText("");
       liftCard(data.wish.id);
     } catch (submitError) {
@@ -233,9 +240,8 @@ export function WishWall() {
       </form>
 
       <div
-        className="relative overflow-hidden rounded-[1.75rem] border border-[#8a9a7a]/18 bg-[#f3ecdf] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.42),0_24px_70px_rgba(52,49,45,0.08)]"
+        className="relative min-h-[34rem] overflow-hidden rounded-[1.75rem] border border-[#8a9a7a]/18 bg-[#f3ecdf] p-4 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.42),0_24px_70px_rgba(52,49,45,0.08)] sm:min-h-[40rem] sm:p-6"
         style={{
-          minHeight: boardHeight,
           backgroundImage:
             "radial-gradient(circle at 18% 12%, rgba(244,208,63,0.16), transparent 24%), radial-gradient(circle at 82% 22%, rgba(231,151,150,0.14), transparent 28%), radial-gradient(circle at 28% 88%, rgba(138,154,122,0.13), transparent 30%), linear-gradient(135deg, rgba(255,255,255,0.48), rgba(253,251,247,0.18))",
         }}
@@ -255,47 +261,68 @@ export function WishWall() {
           </div>
         ) : null}
 
-        {wishes.map((wish, index) => {
-          const style = cardStyles[index];
-          const zIndex = liftedZ[wish.id] ?? 10 + index;
+        <div className="relative z-10 grid auto-rows-min grid-cols-2 gap-x-2 gap-y-4 pb-4 sm:grid-cols-3 sm:gap-x-4 sm:gap-y-5">
+          {wishes.map((wish, index) => {
+            const style = cardStyles[index];
+            const zIndex = liftedZ[wish.id] ?? 10 + index;
+            const isActive = activeId === wish.id;
 
-          return (
-            <button
-              key={wish.id}
-              type="button"
-              onClick={() => liftCard(wish.id)}
-              onFocus={() => liftCard(wish.id)}
-              className={cn(
-                "absolute w-[42vw] min-w-[8.5rem] max-w-[9.8rem] rounded-xl text-left outline-none transition duration-200 ease-out sm:w-52 sm:max-w-none",
-                "hover:scale-105 focus-visible:scale-105 focus-visible:ring-2 focus-visible:ring-[#e79796]/45 active:scale-105",
-                activeId === wish.id && "scale-105",
-              )}
-              style={{
-                left: style.left,
-                top: style.top,
-                zIndex,
-              }}
-            >
-              <span
+            return (
+              <button
+                key={wish.id}
+                type="button"
+                onClick={() => liftCard(wish.id)}
+                onFocus={() => liftCard(wish.id)}
                 className={cn(
-                  "block max-h-56 overflow-y-auto rounded-xl border border-white/55 p-3 shadow-md transition-shadow duration-200 sm:p-4",
-                  activeId === wish.id ? "shadow-xl" : "hover:shadow-xl",
+                  "min-h-36 rounded-xl text-left outline-none transition duration-200 ease-out sm:min-h-40",
+                  style.align === "start" && "justify-self-start",
+                  style.align === "center" && "justify-self-center",
+                  style.align === "end" && "justify-self-end",
+                  "hover:scale-105 focus-visible:scale-105 focus-visible:ring-2 focus-visible:ring-[#e79796]/45 active:scale-105",
+                  isActive && "scale-105",
                 )}
                 style={{
-                  backgroundColor: style.backgroundColor,
-                  transform: `rotate(${style.rotate}deg)`,
+                  order: style.order,
+                  transform: `translate(${style.shiftX}px, ${style.shiftY}px)`,
+                  zIndex,
                 }}
               >
-                <span className="block text-[0.62rem] font-bold uppercase tracking-[0.16em] text-[#5f6e53] sm:text-[0.68rem]">
-                  {wish.guestName}
+                <span
+                  className={cn(
+                    "block max-h-64 w-full max-w-[10.5rem] overflow-y-auto rounded-xl border p-3 text-left shadow-md transition-all duration-200 sm:max-w-52 sm:p-4",
+                    isActive
+                      ? "border-[#34312d]/35 bg-white/85 shadow-2xl ring-2 ring-white/80"
+                      : "border-white/55 hover:shadow-xl",
+                  )}
+                  style={{
+                    backgroundColor: isActive
+                      ? "rgba(255, 255, 255, 0.9)"
+                      : style.backgroundColor,
+                    transform: `rotate(${style.rotate}deg)`,
+                  }}
+                >
+                  <span
+                    className={cn(
+                      "block text-[0.62rem] font-bold uppercase tracking-[0.16em] text-[#5f6e53] sm:text-[0.68rem]",
+                      isActive && "text-[#34312d]",
+                    )}
+                  >
+                    {wish.guestName}
+                  </span>
+                  <span
+                    className={cn(
+                      "font-script mt-2 block text-2xl leading-[0.98] text-[#34312d] sm:text-3xl",
+                      isActive &&
+                        "[text-shadow:0_1px_0_rgba(255,255,255,0.9),0_0_5px_rgba(255,255,255,0.9)]",
+                    )}
+                  >
+                    {wish.wishText}
+                  </span>
                 </span>
-                <span className="font-script mt-2 block text-2xl leading-[0.95] text-[#34312d] sm:text-3xl">
-                  {wish.wishText}
-                </span>
-              </span>
-            </button>
-          );
-        })}
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

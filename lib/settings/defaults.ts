@@ -53,6 +53,14 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   footerText: "С любовью",
   uploadLinkEnabled: false,
   uploadLinkLabel: "Загрузить фото и видео",
+  sectionOrder: [
+    "countdown",
+    "program",
+    "dressCode",
+    "wishWall",
+    "rsvp",
+    "final",
+  ],
 };
 
 export function serializeProgramItems(settings: SiteSettings) {
