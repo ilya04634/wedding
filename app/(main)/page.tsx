@@ -46,6 +46,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     final: <FinalRings settings={settings} />,
   };
   const rendered = new Set<string>();
+  const enabledSections = new Set(settings.enabledSections);
   const sectionOrder = [
     ...settings.sectionOrder,
     ...Object.keys(sections).filter((key) => !settings.sectionOrder.includes(key)),
@@ -55,7 +56,13 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     <div className="overflow-hidden bg-[#fbf3d9]">
       <HeroSection guestName={invite?.inviteName} settings={settings} />
       {sectionOrder.map((key) => {
-        if (rendered.has(key) || !(key in sections)) return null;
+        if (
+          rendered.has(key) ||
+          !(key in sections) ||
+          !enabledSections.has(key)
+        ) {
+          return null;
+        }
         rendered.add(key);
         return <div key={key}>{sections[key as keyof typeof sections]}</div>;
       })}

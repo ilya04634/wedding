@@ -44,6 +44,7 @@ const SETTING_KEYS = [
   "uploadLinkEnabled",
   "uploadLinkLabel",
   "sectionOrder",
+  "enabledSections",
   "wishWallLayout",
   "wishWallDensity",
   "wishWallMaxTilt",
@@ -108,6 +109,26 @@ function parseProgramItems(value: string | undefined): ProgramItem[] {
 
 function parseSectionOrder(value: string | undefined): string[] {
   if (!value?.trim()) return DEFAULT_SITE_SETTINGS.sectionOrder;
+
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) {
+      return parsed
+        .map((item) => String(item ?? "").trim())
+        .filter(Boolean);
+    }
+  } catch {
+    // Fall back to comma/newline parsing below.
+  }
+
+  return value
+    .split(/[\n,]/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function parseSectionList(value: string | undefined, fallback: string[]): string[] {
+  if (!value?.trim()) return fallback;
 
   try {
     const parsed = JSON.parse(value);
@@ -210,6 +231,10 @@ function settingsFromMap(map: Map<string, string>): SiteSettings {
     uploadLinkLabel:
       map.get("uploadLinkLabel") || DEFAULT_SITE_SETTINGS.uploadLinkLabel,
     sectionOrder: parseSectionOrder(map.get("sectionOrder")),
+    enabledSections: parseSectionList(
+      map.get("enabledSections"),
+      DEFAULT_SITE_SETTINGS.enabledSections,
+    ),
     wishWallLayout: parseWishWallLayout(map.get("wishWallLayout")),
     wishWallDensity: parseWishWallDensity(map.get("wishWallDensity")),
     wishWallMaxTilt: parseNumberSetting(
@@ -280,6 +305,7 @@ export function settingsToFormData(settings: SiteSettings): SiteSettingsFormData
     uploadLinkEnabled: String(settings.uploadLinkEnabled),
     uploadLinkLabel: settings.uploadLinkLabel,
     sectionOrder: settings.sectionOrder.join("\n"),
+    enabledSections: settings.enabledSections.join("\n"),
     wishWallLayout: settings.wishWallLayout,
     wishWallDensity: settings.wishWallDensity,
     wishWallMaxTilt: String(settings.wishWallMaxTilt),

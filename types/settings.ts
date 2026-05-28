@@ -43,6 +43,7 @@ export interface SiteSettings {
   uploadLinkEnabled: boolean;
   uploadLinkLabel: string;
   sectionOrder: string[];
+  enabledSections: string[];
   wishWallLayout: WishWallLayout;
   wishWallDensity: WishWallDensity;
   wishWallMaxTilt: number;

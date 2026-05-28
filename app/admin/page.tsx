@@ -14,12 +14,40 @@ import {
 } from "@/lib/admin/auth";
 import { listInvites } from "@/lib/google/guests";
 import { getSiteSettings, settingsToFormData } from "@/lib/google/settings";
+import type { ReactNode } from "react";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
 
 interface AdminPageProps {
   searchParams: { error?: string };
+}
+
+function SettingsGroup({
+  children,
+  defaultOpen = false,
+  description,
+  title,
+}: {
+  children: ReactNode;
+  defaultOpen?: boolean;
+  description?: string;
+  title: string;
+}) {
+  return (
+    <details
+      className="rounded-lg border border-neutral-200 bg-white"
+      open={defaultOpen}
+    >
+      <summary className="cursor-pointer list-none border-b border-neutral-200 p-4">
+        <h3 className="text-base font-medium text-neutral-900">{title}</h3>
+        {description ? (
+          <p className="mt-1 text-sm text-neutral-600">{description}</p>
+        ) : null}
+      </summary>
+      <div className="grid gap-4 p-4 sm:grid-cols-2">{children}</div>
+    </details>
+  );
 }
 
 function LoginForm({
@@ -111,17 +139,21 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         </form>
       </section>
 
-      <section className="mt-8 rounded-lg border border-neutral-200 bg-white">
-        <header className="border-b border-neutral-200 p-4">
+      <section className="mt-8">
+        <header className="rounded-t-lg border border-b-0 border-neutral-200 bg-white p-4">
           <h2 className="text-lg font-medium text-neutral-900">
             Тексты и настройки сайта
           </h2>
           <p className="mt-1 text-sm text-neutral-600">
-            Эти поля сохраняются в лист Settings. Для программы дня используйте
-            JSON-массив.
+            Настройки сгруппированы по блокам и сохраняются в лист Settings.
           </p>
         </header>
-        <form action={updateSiteSettingsAction} className="grid gap-4 p-4 sm:grid-cols-2">
+        <form action={updateSiteSettingsAction} className="space-y-4">
+          <SettingsGroup
+            defaultOpen
+            description="Название сайта, меню и видимость основных блоков."
+            title="Общие настройки и блоки"
+          >
           <div>
             <Label htmlFor="coupleNames">Имена пары</Label>
             <Input id="coupleNames" name="coupleNames" defaultValue={settingsForm.coupleNames} />
@@ -152,6 +184,19 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             Показывать ссылку на загрузку фото и видео
           </label>
           <div className="sm:col-span-2">
+            <Label htmlFor="enabledSections">Включенные блоки главной</Label>
+            <textarea
+              id="enabledSections"
+              name="enabledSections"
+              defaultValue={settingsForm.enabledSections}
+              className="min-h-28 w-full rounded-md border border-neutral-300 px-3 py-2 font-mono text-xs"
+            />
+            <p className="mt-1 text-xs text-neutral-500">
+              Удалите ключ из списка, чтобы скрыть блок. Доступно: countdown,
+              program, dressCode, wishWall, rsvp, final.
+            </p>
+          </div>
+          <div className="sm:col-span-2">
             <Label htmlFor="sectionOrder">Порядок блоков на главной</Label>
             <textarea
               id="sectionOrder"
@@ -164,6 +209,121 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               rsvp, final.
             </p>
           </div>
+          </SettingsGroup>
+
+          <SettingsGroup title="Hero / первый экран">
+          <div className="sm:col-span-2">
+            <Label htmlFor="heroDefaultEyebrow">Верхний текст hero</Label>
+            <Input id="heroDefaultEyebrow" name="heroDefaultEyebrow" defaultValue={settingsForm.heroDefaultEyebrow} />
+          </div>
+          <div>
+            <Label htmlFor="heroPersonalEyebrowTemplate">Hero для гостя</Label>
+            <Input id="heroPersonalEyebrowTemplate" name="heroPersonalEyebrowTemplate" defaultValue={settingsForm.heroPersonalEyebrowTemplate} />
+          </div>
+          <div className="sm:col-span-2">
+            <Label htmlFor="heroSubtitle">Подзаголовок hero</Label>
+            <Input id="heroSubtitle" name="heroSubtitle" defaultValue={settingsForm.heroSubtitle} />
+          </div>
+          <div className="sm:col-span-2">
+            <Label htmlFor="heroText">Основной текст hero</Label>
+            <textarea
+              id="heroText"
+              name="heroText"
+              defaultValue={settingsForm.heroText}
+              className="min-h-20 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            />
+          </div>
+          </SettingsGroup>
+
+          <SettingsGroup title="Персональное приглашение">
+          <div>
+            <Label htmlFor="inviteLabel">Метка на приглашении</Label>
+            <Input id="inviteLabel" name="inviteLabel" defaultValue={settingsForm.inviteLabel} />
+          </div>
+          <div>
+            <Label htmlFor="inviteChildrenPrefix">Текст перед детьми</Label>
+            <Input id="inviteChildrenPrefix" name="inviteChildrenPrefix" defaultValue={settingsForm.inviteChildrenPrefix} />
+          </div>
+          <div className="sm:col-span-2">
+            <Label htmlFor="inviteBodyText">Основной текст приглашения</Label>
+            <textarea
+              id="inviteBodyText"
+              name="inviteBodyText"
+              defaultValue={settingsForm.inviteBodyText}
+              className="min-h-20 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <Label htmlFor="inviteGuestCountTemplate">Текст количества гостей</Label>
+            <Input id="inviteGuestCountTemplate" name="inviteGuestCountTemplate" defaultValue={settingsForm.inviteGuestCountTemplate} />
+            <p className="mt-1 text-xs text-neutral-500">Используйте {"{{count}}"} для количества гостей.</p>
+          </div>
+          <div>
+            <Label htmlFor="invitePrimaryButtonLabel">Кнопка на главную</Label>
+            <Input id="invitePrimaryButtonLabel" name="invitePrimaryButtonLabel" defaultValue={settingsForm.invitePrimaryButtonLabel} />
+          </div>
+          <div>
+            <Label htmlFor="inviteRsvpButtonLabel">Кнопка анкеты</Label>
+            <Input id="inviteRsvpButtonLabel" name="inviteRsvpButtonLabel" defaultValue={settingsForm.inviteRsvpButtonLabel} />
+          </div>
+          <div className="sm:col-span-2">
+            <Label htmlFor="inviteMissingBackgroundText">Текст без фона приглашения</Label>
+            <Input id="inviteMissingBackgroundText" name="inviteMissingBackgroundText" defaultValue={settingsForm.inviteMissingBackgroundText} />
+          </div>
+          </SettingsGroup>
+
+          <SettingsGroup title="Дата, время и место">
+          <div>
+            <Label htmlFor="weddingDate">Дата</Label>
+            <Input id="weddingDate" name="weddingDate" defaultValue={settingsForm.weddingDate} />
+          </div>
+          <div>
+            <Label htmlFor="weddingTime">Время</Label>
+            <Input id="weddingTime" name="weddingTime" defaultValue={settingsForm.weddingTime} />
+          </div>
+          <div>
+            <Label htmlFor="weddingVenue">Место</Label>
+            <Input id="weddingVenue" name="weddingVenue" defaultValue={settingsForm.weddingVenue} />
+          </div>
+          <div>
+            <Label htmlFor="weddingMapUrl">Ссылка 2ГИС</Label>
+            <Input id="weddingMapUrl" name="weddingMapUrl" defaultValue={settingsForm.weddingMapUrl} />
+          </div>
+          <div className="sm:col-span-2">
+            <Label htmlFor="weddingAddressLine">Адрес</Label>
+            <Input id="weddingAddressLine" name="weddingAddressLine" defaultValue={settingsForm.weddingAddressLine} />
+          </div>
+          </SettingsGroup>
+
+          <SettingsGroup
+            description="Для программы дня используйте JSON-массив."
+            title="Программа дня"
+          >
+          <div>
+            <Label htmlFor="programTitle">Заголовок программы</Label>
+            <Input id="programTitle" name="programTitle" defaultValue={settingsForm.programTitle} />
+          </div>
+          <div className="sm:col-span-2">
+            <Label htmlFor="programDescription">Описание программы</Label>
+            <textarea
+              id="programDescription"
+              name="programDescription"
+              defaultValue={settingsForm.programDescription}
+              className="min-h-20 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <Label htmlFor="programItemsJson">Программа дня JSON</Label>
+            <textarea
+              id="programItemsJson"
+              name="programItemsJson"
+              defaultValue={settingsForm.programItemsJson}
+              className="min-h-52 w-full rounded-md border border-neutral-300 px-3 py-2 font-mono text-xs"
+            />
+          </div>
+          </SettingsGroup>
+
+          <SettingsGroup title="Стена пожеланий">
           <div className="sm:col-span-2">
             <Label htmlFor="wishWallLayout">Вид стены пожеланий</Label>
             <select
@@ -221,107 +381,9 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               заметнее заезжают друг на друга.
             </p>
           </div>
-          <div>
-            <Label htmlFor="heroDefaultEyebrow">Верхний текст hero</Label>
-            <Input id="heroDefaultEyebrow" name="heroDefaultEyebrow" defaultValue={settingsForm.heroDefaultEyebrow} />
-          </div>
-          <div>
-            <Label htmlFor="heroPersonalEyebrowTemplate">Hero для гостя</Label>
-            <Input id="heroPersonalEyebrowTemplate" name="heroPersonalEyebrowTemplate" defaultValue={settingsForm.heroPersonalEyebrowTemplate} />
-          </div>
-          <div className="sm:col-span-2">
-            <Label htmlFor="heroSubtitle">Подзаголовок hero</Label>
-            <Input id="heroSubtitle" name="heroSubtitle" defaultValue={settingsForm.heroSubtitle} />
-          </div>
-          <div className="sm:col-span-2">
-            <Label htmlFor="heroText">Основной текст hero</Label>
-            <textarea
-              id="heroText"
-              name="heroText"
-              defaultValue={settingsForm.heroText}
-              className="min-h-20 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
-            />
-          </div>
-          <div>
-            <Label htmlFor="inviteLabel">Метка на приглашении</Label>
-            <Input id="inviteLabel" name="inviteLabel" defaultValue={settingsForm.inviteLabel} />
-          </div>
-          <div>
-            <Label htmlFor="inviteChildrenPrefix">Текст перед детьми</Label>
-            <Input id="inviteChildrenPrefix" name="inviteChildrenPrefix" defaultValue={settingsForm.inviteChildrenPrefix} />
-          </div>
-          <div className="sm:col-span-2">
-            <Label htmlFor="inviteBodyText">Основной текст приглашения</Label>
-            <textarea
-              id="inviteBodyText"
-              name="inviteBodyText"
-              defaultValue={settingsForm.inviteBodyText}
-              className="min-h-20 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
-            />
-          </div>
-          <div className="sm:col-span-2">
-            <Label htmlFor="inviteGuestCountTemplate">Текст количества гостей</Label>
-            <Input id="inviteGuestCountTemplate" name="inviteGuestCountTemplate" defaultValue={settingsForm.inviteGuestCountTemplate} />
-            <p className="mt-1 text-xs text-neutral-500">Используйте {"{{count}}"} для количества гостей.</p>
-          </div>
-          <div>
-            <Label htmlFor="invitePrimaryButtonLabel">Кнопка на главную</Label>
-            <Input id="invitePrimaryButtonLabel" name="invitePrimaryButtonLabel" defaultValue={settingsForm.invitePrimaryButtonLabel} />
-          </div>
-          <div>
-            <Label htmlFor="inviteRsvpButtonLabel">Кнопка анкеты</Label>
-            <Input id="inviteRsvpButtonLabel" name="inviteRsvpButtonLabel" defaultValue={settingsForm.inviteRsvpButtonLabel} />
-          </div>
-          <div className="sm:col-span-2">
-            <Label htmlFor="inviteMissingBackgroundText">Текст без фона приглашения</Label>
-            <Input id="inviteMissingBackgroundText" name="inviteMissingBackgroundText" defaultValue={settingsForm.inviteMissingBackgroundText} />
-          </div>
-          <div>
-            <Label htmlFor="weddingDate">Дата</Label>
-            <Input id="weddingDate" name="weddingDate" defaultValue={settingsForm.weddingDate} />
-          </div>
-          <div>
-            <Label htmlFor="weddingTime">Время</Label>
-            <Input id="weddingTime" name="weddingTime" defaultValue={settingsForm.weddingTime} />
-          </div>
-          <div>
-            <Label htmlFor="weddingVenue">Место</Label>
-            <Input id="weddingVenue" name="weddingVenue" defaultValue={settingsForm.weddingVenue} />
-          </div>
-          <div>
-            <Label htmlFor="weddingMapUrl">Ссылка 2ГИС</Label>
-            <Input id="weddingMapUrl" name="weddingMapUrl" defaultValue={settingsForm.weddingMapUrl} />
-          </div>
-          <div className="sm:col-span-2">
-            <Label htmlFor="weddingAddressLine">Адрес</Label>
-            <Input id="weddingAddressLine" name="weddingAddressLine" defaultValue={settingsForm.weddingAddressLine} />
-          </div>
-          <div>
-            <Label htmlFor="programTitle">Заголовок программы</Label>
-            <Input id="programTitle" name="programTitle" defaultValue={settingsForm.programTitle} />
-          </div>
-          <div>
-            <Label htmlFor="footerText">Текст footer</Label>
-            <Input id="footerText" name="footerText" defaultValue={settingsForm.footerText} />
-          </div>
-          <div className="sm:col-span-2">
-            <Label htmlFor="programDescription">Описание программы</Label>
-            <textarea
-              id="programDescription"
-              name="programDescription"
-              defaultValue={settingsForm.programDescription}
-              className="min-h-20 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
-            />
-          </div>
-          <div className="sm:col-span-2">
-            <Label htmlFor="programItemsJson">Программа дня JSON</Label>
-            <textarea
-              id="programItemsJson"
-              name="programItemsJson"
-              defaultValue={settingsForm.programItemsJson}
-              className="min-h-52 w-full rounded-md border border-neutral-300 px-3 py-2 font-mono text-xs"
-            />
-          </div>
+          </SettingsGroup>
+
+          <SettingsGroup title="Анкета RSVP и финал">
           <div className="sm:col-span-2">
             <Label htmlFor="rsvpDescription">Описание анкеты</Label>
             <textarea
@@ -331,6 +393,12 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               className="min-h-20 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
             />
           </div>
+          <div>
+            <Label htmlFor="footerText">Текст footer</Label>
+            <Input id="footerText" name="footerText" defaultValue={settingsForm.footerText} />
+          </div>
+          </SettingsGroup>
+
           <div className="sm:col-span-2">
             <Button type="submit">Сохранить настройки сайта</Button>
           </div>
