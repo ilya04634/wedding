@@ -84,9 +84,9 @@ button {
 }
 
 .envelope-paper {
-  inset: 7% 8% auto;
+  inset: 10% 8% auto;
   z-index: 1;
-  height: 80%;
+  height: 66%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -95,7 +95,7 @@ button {
     radial-gradient(circle at top left, rgba(138, 154, 122, 0.16), transparent 42%),
     #fffaf0;
   border: 1px solid rgba(79, 86, 9, 0.13);
-  transform: translateY(34%);
+  transform: translateY(20%);
   transition: transform 0.85s cubic-bezier(0.2, 0.74, 0.17, 1) 0.18s;
 }
 
@@ -115,7 +115,7 @@ button {
 }
 
 .envelope-shell.is-opening .envelope-paper {
-  transform: translateY(-34%);
+  transform: translateY(-46%);
 }
 
 .envelope-shell.is-opening .envelope-seal {
