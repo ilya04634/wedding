@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -210,7 +210,7 @@ export function UploadZone() {
 
   return (
     <div className="space-y-5 sm:space-y-6">
-      <div className="space-y-4 border-y border-[#11100e]/20 bg-transparent py-5">
+      <div className="space-y-4 border-y border-[#4f5609]/20 bg-transparent py-5">
         <div className="space-y-2">
           <Label htmlFor={uploaderNameId}>Ваше имя</Label>
           <Input
@@ -245,11 +245,11 @@ export function UploadZone() {
         className={cn(
           "flex cursor-pointer flex-col items-center justify-center border border-dashed px-4 py-9 text-center transition-colors sm:px-6 sm:py-12",
           isDragging
-            ? "border-[#11100e] bg-white/55"
-            : "border-[#11100e]/35 bg-white/20 hover:border-[#11100e]/60 hover:bg-white/40",
+            ? "border-[#4f5609] bg-white/55"
+            : "border-[#4f5609]/35 bg-white/20 hover:border-[#4f5609]/60 hover:bg-white/40",
         )}
       >
-        <ImagePlus className="mb-3 h-10 w-10 text-[#e79796]" aria-hidden />
+        <ImagePlus className="mb-3 h-10 w-10 text-[#6c7411]" aria-hidden />
         <p className="text-sm font-medium text-neutral-800">
           Перетащите файлы сюда
         </p>
@@ -275,7 +275,7 @@ export function UploadZone() {
         <Button
           type="button"
           variant="secondary"
-          className="w-full rounded-full border-[#11100e]/30 bg-transparent text-[#11100e] hover:bg-white/45 sm:w-auto"
+          className="w-full rounded-full border-[#4f5609]/30 bg-transparent text-[#4f5609] hover:bg-white/45 sm:w-auto"
           onClick={() => inputRef.current?.click()}
         >
           <Images className="mr-2 h-4 w-4" aria-hidden />
@@ -297,7 +297,7 @@ export function UploadZone() {
           </ul>
           <Button
             type="button"
-            className="w-full rounded-full bg-[#11100e] text-[#f5f0e6] hover:bg-[#34312d]"
+            className="w-full rounded-full bg-[#4f5609] text-[#fbf3d9] hover:bg-[#4f5609]"
             disabled={!hasUploadable || isUploading}
             onClick={startUpload}
           >
@@ -314,3 +314,4 @@ export function UploadZone() {
     </div>
   );
 }
+

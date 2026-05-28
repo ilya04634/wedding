@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+﻿import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
 
 interface SectionProps {
@@ -19,7 +19,7 @@ export function Section({
   return (
     <section id={id} className={cn("scroll-mt-24", className)}>
       <header className="mb-6 text-center sm:mb-7">
-        <h2 className="font-display text-3xl leading-tight text-[#34312d] sm:text-5xl">
+        <h2 className="font-display text-3xl leading-tight text-[#4f5609] sm:text-5xl">
           {title}
         </h2>
         {description ? (
@@ -32,3 +32,4 @@ export function Section({
     </section>
   );
 }
+

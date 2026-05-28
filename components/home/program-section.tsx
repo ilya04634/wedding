@@ -1,4 +1,4 @@
-import type { SiteSettings } from "@/types/settings";
+﻿import type { SiteSettings } from "@/types/settings";
 
 interface ProgramSectionProps {
   settings: SiteSettings;
@@ -70,11 +70,11 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
   return (
     <section
       id="program"
-      className="garden-fade-delay scroll-mt-24 bg-[#f5f0e6] px-4 py-16 sm:px-8 sm:py-24"
+      className="garden-fade-delay scroll-mt-24 bg-[#fbf3d9] px-4 py-16 sm:px-8 sm:py-24"
     >
       <div className="mx-auto max-w-md sm:max-w-2xl">
         <div className="text-center">
-          <h2 className="text-[#11100e]">
+          <h2 className="text-[#4f5609]">
             <span className="font-script block text-5xl leading-none sm:text-7xl">
               План
             </span>
@@ -82,14 +82,14 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
               мероприятия
             </span>
           </h2>
-          <p className="mx-auto mt-5 max-w-sm text-sm uppercase leading-5 tracking-[0.08em] text-[#34312d]/70 sm:text-base">
+          <p className="mx-auto mt-5 max-w-sm text-sm uppercase leading-5 tracking-[0.08em] text-[#4f5609]/70 sm:text-base">
             {settings.programDescription}
           </p>
         </div>
 
         <ol className="relative mx-auto mt-10 h-[44rem] max-w-sm sm:h-[54rem] sm:max-w-md">
           <svg
-            className="pointer-events-none absolute inset-y-0 left-1/2 h-full w-full -translate-x-1/2 text-[#11100e]"
+            className="pointer-events-none absolute inset-y-0 left-1/2 h-full w-full -translate-x-1/2 text-[#4f5609]"
             viewBox="0 0 360 820"
             preserveAspectRatio="none"
             aria-hidden
@@ -114,7 +114,7 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
           {items.map((item, index) => (
             <li
               key={`${item.time}-${item.title}`}
-              className={`absolute z-10 max-w-[9rem] text-[#11100e] ${POSITIONS[index] ?? POSITIONS[index % POSITIONS.length]}`}
+              className={`absolute z-10 max-w-[9rem] text-[#4f5609] ${POSITIONS[index] ?? POSITIONS[index % POSITIONS.length]}`}
             >
               <p className="font-script text-2xl leading-none sm:text-3xl">
                 {item.title}
@@ -129,3 +129,4 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
     </section>
   );
 }
+

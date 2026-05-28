@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -379,7 +379,7 @@ export function WishWall({
         onFocus={() => liftCard(wish.id)}
         className={cn(
           "relative rounded-xl text-left outline-none transition duration-200 ease-out",
-          "hover:scale-105 focus-visible:scale-105 focus-visible:ring-2 focus-visible:ring-[#e79796]/45 active:scale-105",
+          "hover:scale-105 focus-visible:scale-105 focus-visible:ring-2 focus-visible:ring-[#6c7411]/45 active:scale-105",
           isActive && "scale-105",
           options.className,
         )}
@@ -393,7 +393,7 @@ export function WishWall({
             "relative block overflow-y-auto rounded-xl border p-3 text-left shadow-md transition-all duration-200 sm:p-4",
             options.isFeatured ? "min-h-44" : "max-h-64 min-h-32",
             isActive
-              ? "border-[#34312d]/35 bg-white/85 shadow-2xl ring-2 ring-white/80"
+              ? "border-[#4f5609]/35 bg-white/85 shadow-2xl ring-2 ring-white/80"
               : "border-white/55 hover:shadow-xl",
           )}
           style={{
@@ -411,14 +411,14 @@ export function WishWall({
           <span
             className={cn(
               "block text-[0.62rem] font-bold uppercase tracking-[0.16em] text-[#5f6e53] sm:text-[0.68rem]",
-              isActive && "text-[#34312d]",
+              isActive && "text-[#4f5609]",
             )}
           >
             {wish.guestName}
           </span>
           <span
             className={cn(
-              "font-script mt-2 block text-2xl leading-[0.98] text-[#34312d] sm:text-3xl",
+              "font-script mt-2 block text-2xl leading-[0.98] text-[#4f5609] sm:text-3xl",
               options.isFeatured && "text-4xl sm:text-5xl",
               isActive &&
                 "[text-shadow:0_1px_0_rgba(255,255,255,0.9),0_0_5px_rgba(255,255,255,0.9)]",
@@ -535,7 +535,7 @@ export function WishWall({
             <p className="text-xs font-bold uppercase tracking-[0.2em]">
               Для молодых
             </p>
-            <h3 className="font-display text-2xl leading-tight text-[#34312d]">
+            <h3 className="font-display text-2xl leading-tight text-[#4f5609]">
               Оставьте пожелание
             </h3>
           </div>
@@ -552,7 +552,7 @@ export function WishWall({
               onChange={(event) => setGuestName(event.target.value)}
               maxLength={80}
               placeholder="Например, Егор и Ирина"
-              className="border-[#8a9a7a]/25 bg-[#fdfbf7]/85 focus:border-[#8a9a7a] focus:ring-[#8a9a7a]/18"
+              className="border-[#8a9a7a]/25 bg-[#fbf3d9]/85 focus:border-[#8a9a7a] focus:ring-[#8a9a7a]/18"
             />
           </div>
 
@@ -566,13 +566,13 @@ export function WishWall({
               onChange={(event) => setWishText(event.target.value)}
               maxLength={600}
               placeholder="Напишите пару теплых слов..."
-              className="min-h-36 border-[#8a9a7a]/25 bg-[#fdfbf7]/85 focus:border-[#8a9a7a] focus:ring-[#8a9a7a]/18"
+              className="min-h-36 border-[#8a9a7a]/25 bg-[#fbf3d9]/85 focus:border-[#8a9a7a] focus:ring-[#8a9a7a]/18"
             />
           </div>
         </div>
 
         {error ? (
-          <p className="mt-4 rounded-2xl bg-[#e79796]/12 px-4 py-3 text-sm text-[#9b4f4f]">
+          <p className="mt-4 rounded-2xl bg-[#6c7411]/12 px-4 py-3 text-sm text-[#9b4f4f]">
             {error}
           </p>
         ) : null}
@@ -580,7 +580,7 @@ export function WishWall({
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="mt-5 w-full rounded-2xl bg-[#e79796] text-white shadow-[0_14px_30px_rgba(231,151,150,0.3)] hover:bg-[#d98281] focus-visible:outline-[#e79796]"
+          className="mt-5 w-full rounded-2xl bg-[#6c7411] text-white shadow-[0_14px_30px_rgba(231,151,150,0.3)] hover:bg-[#d98281] focus-visible:outline-[#6c7411]"
         >
           {isSubmitting ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />
@@ -644,3 +644,4 @@ export function WishWall({
     </div>
   );
 }
+

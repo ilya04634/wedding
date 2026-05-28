@@ -1,12 +1,12 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #fdfbf7;
-  --foreground: #34312d;
+  --background: #fbf3d9;
+  --foreground: #4f5609;
   --sage: #8a9a7a;
-  --peony: #e79796;
+  --peony: #6c7411;
   --lemon: #f4d03f;
   color-scheme: light;
 }
@@ -54,3 +54,4 @@ body {
     transform: translateY(0);
   }
 }
+

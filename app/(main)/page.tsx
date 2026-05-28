@@ -1,4 +1,4 @@
-import { CountdownSection } from "@/components/home/countdown-section";
+﻿import { CountdownSection } from "@/components/home/countdown-section";
 import { DressCodeSection } from "@/components/home/dress-code-section";
 import { FinalRings } from "@/components/home/final-rings";
 import { HeroSection } from "@/components/home/hero-section";
@@ -52,7 +52,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   ];
 
   return (
-    <div className="overflow-hidden bg-[#f5f0e6]">
+    <div className="overflow-hidden bg-[#fbf3d9]">
       <HeroSection guestName={invite?.inviteName} settings={settings} />
       {sectionOrder.map((key) => {
         if (rendered.has(key) || !(key in sections)) return null;
@@ -62,3 +62,4 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     </div>
   );
 }
+

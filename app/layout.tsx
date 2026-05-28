@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Caveat, Montserrat, Playfair_Display } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -42,10 +42,11 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${caveat.variable} ${montserrat.variable} min-h-screen bg-[#fdfbf7] font-[family-name:var(--font-montserrat)] text-[#34312d] antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${caveat.variable} ${montserrat.variable} min-h-screen bg-[#fbf3d9] font-[family-name:var(--font-montserrat)] text-[#4f5609] antialiased`}
       >
         {children}
       </body>
     </html>
   );
 }
+
