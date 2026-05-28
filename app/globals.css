@@ -124,11 +124,14 @@ button {
 }
 
 .scroll-reveal {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 720px;
   opacity: 0;
   transform: translateY(var(--reveal-distance, 30px));
   transition:
     opacity var(--reveal-duration, 850ms) ease,
     transform var(--reveal-duration, 850ms) cubic-bezier(0.2, 0.74, 0.17, 1);
+  will-change: opacity, transform;
 }
 
 .scroll-reveal.is-visible {
