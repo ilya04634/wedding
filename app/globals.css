@@ -8,18 +8,18 @@
   --sage: #8a9a7a;
   --peony: #6c7411;
   --lemon: #f4d03f;
-  color-scheme: light;
+  color-scheme: only light;
 }
 
 html {
   background: var(--background);
-  color-scheme: light;
+  color-scheme: only light;
 }
 
 *,
 *::before,
 *::after {
-  color-scheme: light;
+  color-scheme: only light;
 }
 
 body {
@@ -31,7 +31,7 @@ input,
 textarea,
 select,
 button {
-  color-scheme: light;
+  color-scheme: only light;
 }
 
 @layer utilities {

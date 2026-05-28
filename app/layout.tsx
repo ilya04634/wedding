@@ -32,6 +32,10 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   title: "Приглашение на свадьбу",
   description: "Сайт-приглашение: программа, RSVP и загрузка фото",
+  other: {
+    "color-scheme": "light only",
+    "supported-color-schemes": "light",
+  },
 };
 
 export const viewport: Viewport = {
