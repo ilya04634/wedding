@@ -69,7 +69,13 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         }
         rendered.add(key);
         return (
-          <ScrollReveal key={key}>
+          <ScrollReveal
+            key={key}
+            distance={settings.revealAnimationDistance}
+            mode={settings.revealAnimationMode}
+            speed={settings.revealAnimationSpeed}
+            trigger={settings.revealAnimationTrigger}
+          >
             {sections[key as keyof typeof sections]}
           </ScrollReveal>
         );

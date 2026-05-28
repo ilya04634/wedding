@@ -125,10 +125,10 @@ button {
 
 .scroll-reveal {
   opacity: 0;
-  transform: translateY(30px);
+  transform: translateY(var(--reveal-distance, 30px));
   transition:
-    opacity 0.85s ease,
-    transform 0.85s cubic-bezier(0.2, 0.74, 0.17, 1);
+    opacity var(--reveal-duration, 850ms) ease,
+    transform var(--reveal-duration, 850ms) cubic-bezier(0.2, 0.74, 0.17, 1);
 }
 
 .scroll-reveal.is-visible {

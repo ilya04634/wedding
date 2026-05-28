@@ -5,7 +5,7 @@
 Первая строка должна быть заголовками:
 
 ```text
-id | invite_name | person_name | person_type | child_age | prompt | invite_text | bg_url | invite_url | status
+id | invite_name | person_name | invite_text | person_type | child_age | prompt | bg_url | invite_url | status
 ```
 
 Колонки:
@@ -231,6 +231,20 @@ masonry | staggered | garland | featured | ribbon | random
 `wishWallMaxTilt`: максимальный наклон карточек в градусах.
 `wishWallOverlap`: допустимое мягкое наложение карточек в пикселях.
 
+Анимации появления блоков управляются ключами:
+
+```text
+revealAnimationMode
+revealAnimationSpeed
+revealAnimationTrigger
+revealAnimationDistance
+```
+
+`revealAnimationMode`: `repeat`, `once`, `off`.
+`revealAnimationSpeed`: `fast`, `medium`, `smooth`.
+`revealAnimationTrigger`: `early`, `medium`, `late`.
+`revealAnimationDistance`: смещение появления в пикселях.
+
 ## Invite links
 
 `bg_url` is only the technical Google Drive image URL for the generated
@@ -277,7 +291,7 @@ storage.
 The `Guests` sheet can include an optional `prompt` column:
 
 ```text
-id | invite_name | person_name | person_type | child_age | prompt | invite_text | bg_url | invite_url | status
+id | invite_name | person_name | invite_text | person_type | child_age | prompt | bg_url | invite_url | status
 ```
 
 If `prompt` is empty, the invite background uses the default prompt from
@@ -302,7 +316,7 @@ automatic variant, as an extra accent.
 For easier data entry, helpers can fill only:
 
 ```text
-invite_name | person_name | person_type | child_age | prompt
+invite_name | person_name | invite_text | person_type | child_age | prompt
 ```
 
 Then open `/admin` and click `Заполнить пустые id`. The site will generate ids

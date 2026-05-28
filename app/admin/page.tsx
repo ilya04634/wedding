@@ -233,6 +233,66 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           </div>
           </SettingsGroup>
 
+          <SettingsGroup
+            description="Настройки появления блоков при прокрутке главной страницы."
+            title="Анимации сайта"
+          >
+          <div>
+            <Label htmlFor="revealAnimationMode">Режим появления</Label>
+            <select
+              id="revealAnimationMode"
+              name="revealAnimationMode"
+              defaultValue={settingsForm.revealAnimationMode}
+              className="flex h-11 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+            >
+              <option value="repeat">Повторять при скролле</option>
+              <option value="once">Один раз</option>
+              <option value="off">Выключено</option>
+            </select>
+          </div>
+          <div>
+            <Label htmlFor="revealAnimationSpeed">Скорость появления</Label>
+            <select
+              id="revealAnimationSpeed"
+              name="revealAnimationSpeed"
+              defaultValue={settingsForm.revealAnimationSpeed}
+              className="flex h-11 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+            >
+              <option value="fast">Быстро</option>
+              <option value="medium">Средне</option>
+              <option value="smooth">Плавно</option>
+            </select>
+          </div>
+          <div>
+            <Label htmlFor="revealAnimationTrigger">Момент появления</Label>
+            <select
+              id="revealAnimationTrigger"
+              name="revealAnimationTrigger"
+              defaultValue={settingsForm.revealAnimationTrigger}
+              className="flex h-11 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm"
+            >
+              <option value="early">Рано</option>
+              <option value="medium">Средне</option>
+              <option value="late">Позже</option>
+            </select>
+          </div>
+          <div>
+            <Label htmlFor="revealAnimationDistance">Смещение, px</Label>
+            <Input
+              id="revealAnimationDistance"
+              name="revealAnimationDistance"
+              type="number"
+              min="0"
+              max="100"
+              step="1"
+              defaultValue={settingsForm.revealAnimationDistance}
+            />
+            <p className="mt-1 text-xs text-neutral-500">
+              Чем больше значение, тем заметнее блок подъезжает снизу.
+            </p>
+          </div>
+          </SettingsGroup>
+
           <SettingsGroup title="Hero / первый экран">
           <div className="sm:col-span-2">
             <Label htmlFor="heroDefaultEyebrow">Верхний текст hero</Label>

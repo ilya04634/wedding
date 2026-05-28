@@ -2,6 +2,9 @@ import "server-only";
 
 import type {
   ProgramItem,
+  RevealAnimationMode,
+  RevealAnimationSpeed,
+  RevealAnimationTrigger,
   SiteSettings,
   WishWallDensity,
   WishWallLayout,
@@ -49,6 +52,10 @@ const SETTING_KEYS = [
   "wishWallDensity",
   "wishWallMaxTilt",
   "wishWallOverlap",
+  "revealAnimationMode",
+  "revealAnimationSpeed",
+  "revealAnimationTrigger",
+  "revealAnimationDistance",
 ] as const;
 
 export type SiteSettingKey = (typeof SETTING_KEYS)[number];
@@ -172,6 +179,39 @@ function parseWishWallDensity(value: string | undefined): WishWallDensity {
     : DEFAULT_SITE_SETTINGS.wishWallDensity;
 }
 
+function parseRevealAnimationMode(
+  value: string | undefined,
+): RevealAnimationMode {
+  const mode = value?.trim();
+  const allowed: RevealAnimationMode[] = ["once", "repeat", "off"];
+
+  return allowed.includes(mode as RevealAnimationMode)
+    ? (mode as RevealAnimationMode)
+    : DEFAULT_SITE_SETTINGS.revealAnimationMode;
+}
+
+function parseRevealAnimationSpeed(
+  value: string | undefined,
+): RevealAnimationSpeed {
+  const speed = value?.trim();
+  const allowed: RevealAnimationSpeed[] = ["fast", "medium", "smooth"];
+
+  return allowed.includes(speed as RevealAnimationSpeed)
+    ? (speed as RevealAnimationSpeed)
+    : DEFAULT_SITE_SETTINGS.revealAnimationSpeed;
+}
+
+function parseRevealAnimationTrigger(
+  value: string | undefined,
+): RevealAnimationTrigger {
+  const trigger = value?.trim();
+  const allowed: RevealAnimationTrigger[] = ["early", "medium", "late"];
+
+  return allowed.includes(trigger as RevealAnimationTrigger)
+    ? (trigger as RevealAnimationTrigger)
+    : DEFAULT_SITE_SETTINGS.revealAnimationTrigger;
+}
+
 function parseNumberSetting(value: string | undefined, fallback: number) {
   if (!value?.trim()) return fallback;
   const parsed = Number(value);
@@ -245,6 +285,19 @@ function settingsFromMap(map: Map<string, string>): SiteSettings {
       map.get("wishWallOverlap"),
       DEFAULT_SITE_SETTINGS.wishWallOverlap,
     ),
+    revealAnimationMode: parseRevealAnimationMode(
+      map.get("revealAnimationMode"),
+    ),
+    revealAnimationSpeed: parseRevealAnimationSpeed(
+      map.get("revealAnimationSpeed"),
+    ),
+    revealAnimationTrigger: parseRevealAnimationTrigger(
+      map.get("revealAnimationTrigger"),
+    ),
+    revealAnimationDistance: parseNumberSetting(
+      map.get("revealAnimationDistance"),
+      DEFAULT_SITE_SETTINGS.revealAnimationDistance,
+    ),
   };
 }
 
@@ -310,6 +363,10 @@ export function settingsToFormData(settings: SiteSettings): SiteSettingsFormData
     wishWallDensity: settings.wishWallDensity,
     wishWallMaxTilt: String(settings.wishWallMaxTilt),
     wishWallOverlap: String(settings.wishWallOverlap),
+    revealAnimationMode: settings.revealAnimationMode,
+    revealAnimationSpeed: settings.revealAnimationSpeed,
+    revealAnimationTrigger: settings.revealAnimationTrigger,
+    revealAnimationDistance: String(settings.revealAnimationDistance),
   };
 }
 

@@ -73,6 +73,10 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   wishWallDensity: "balanced",
   wishWallMaxTilt: 5,
   wishWallOverlap: 12,
+  revealAnimationMode: "repeat",
+  revealAnimationSpeed: "smooth",
+  revealAnimationTrigger: "medium",
+  revealAnimationDistance: 30,
 };
 
 export function serializeProgramItems(settings: SiteSettings) {

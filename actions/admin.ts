@@ -222,6 +222,18 @@ export async function updateSiteSettingsAction(formData: FormData) {
     wishWallOverlap:
       getRequiredString(formData, "wishWallOverlap") ||
       String(defaults.wishWallOverlap),
+    revealAnimationMode:
+      getRequiredString(formData, "revealAnimationMode") ||
+      defaults.revealAnimationMode,
+    revealAnimationSpeed:
+      getRequiredString(formData, "revealAnimationSpeed") ||
+      defaults.revealAnimationSpeed,
+    revealAnimationTrigger:
+      getRequiredString(formData, "revealAnimationTrigger") ||
+      defaults.revealAnimationTrigger,
+    revealAnimationDistance:
+      getRequiredString(formData, "revealAnimationDistance") ||
+      String(defaults.revealAnimationDistance),
   };
 
   await updateSiteSettings(data);

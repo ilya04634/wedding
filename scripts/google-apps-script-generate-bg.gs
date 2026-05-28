@@ -11,7 +11,7 @@
  * 5. Reload the sheet. Use menu: Wedding -> Open generator panel.
  *
  * Guests headers expected:
- * id | invite_name | person_name | person_type | child_age | prompt | invite_text | bg_url | invite_url | status
+ * id | invite_name | person_name | invite_text | person_type | child_age | prompt | bg_url | invite_url | status
  *
  * bg_url is a technical Google Drive image URL.
  * invite_url is the public site URL you send to guests.

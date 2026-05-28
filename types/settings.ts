@@ -13,6 +13,9 @@ export type WishWallLayout =
   | "random";
 
 export type WishWallDensity = "airy" | "balanced" | "compact";
+export type RevealAnimationMode = "once" | "repeat" | "off";
+export type RevealAnimationSpeed = "fast" | "medium" | "smooth";
+export type RevealAnimationTrigger = "early" | "medium" | "late";
 
 export interface SiteSettings {
   coupleNames: string;
@@ -48,4 +51,8 @@ export interface SiteSettings {
   wishWallDensity: WishWallDensity;
   wishWallMaxTilt: number;
   wishWallOverlap: number;
+  revealAnimationMode: RevealAnimationMode;
+  revealAnimationSpeed: RevealAnimationSpeed;
+  revealAnimationTrigger: RevealAnimationTrigger;
+  revealAnimationDistance: number;
 }
