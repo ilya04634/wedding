@@ -34,41 +34,31 @@ export function CountdownSection() {
 
   return (
     <section className="px-4 py-12 sm:px-8 sm:py-16">
-      <div className="relative mx-auto max-w-5xl overflow-hidden rounded-[2rem] border border-[#8a9a7a]/18 bg-[#fdfbf7] px-5 py-10 text-center shadow-[0_22px_70px_rgba(52,49,45,0.07)] sm:px-10 sm:py-14">
-        <div className="absolute -left-20 top-4 h-44 w-44 rounded-full bg-[radial-gradient(circle,_rgba(244,208,63,0.22),_rgba(244,208,63,0)_70%)]" />
-        <div className="absolute -right-20 bottom-0 h-52 w-52 rounded-full bg-[radial-gradient(circle,_rgba(231,151,150,0.22),_rgba(231,151,150,0)_70%)]" />
-        <div className="absolute left-1/2 top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,_rgba(138,154,122,0.13),_rgba(138,154,122,0)_70%)]" />
+      <div className="relative mx-auto max-w-5xl overflow-hidden bg-[#fdfbf7] px-3 py-10 text-center sm:px-10 sm:py-16">
+        <div className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,_rgba(231,151,150,0.14),_rgba(231,151,150,0)_70%)]" />
 
-        <div className="relative z-10">
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[#8a9a7a] sm:text-xs">
-            Countdown
-          </p>
-          <h2 className="font-display mt-3 text-3xl leading-tight text-[#34312d] sm:text-5xl">
-            Мы скажем да через
+        <div className="relative z-10 mx-auto max-w-4xl">
+          <h2 className="font-script mx-auto max-w-3xl text-balance text-[3.4rem] leading-[0.82] text-[#bd7e8b] sm:text-7xl lg:text-8xl">
+            Мы скажем
+            <span className="block">&quot;да&quot; через</span>
           </h2>
 
-          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+          <div className="mt-8 flex items-start justify-center gap-1 text-[#bd7e8b] sm:mt-10 sm:gap-3">
             {LABELS.map(([key, label], index) => (
-              <div
-                key={key}
-                className="rounded-3xl border border-white/70 bg-white/58 px-3 py-5 shadow-[0_14px_40px_rgba(52,49,45,0.05)] backdrop-blur-sm"
-              >
-                <p
-                  className="font-display text-4xl font-semibold leading-none sm:text-5xl"
-                  style={{
-                    color:
-                      index === 1
-                        ? "#e79796"
-                        : index === 2
-                          ? "#c9ab21"
-                          : "#8a9a7a",
-                  }}
-                >
-                  {String(remaining[key]).padStart(2, "0")}
-                </p>
-                <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#746f66]">
-                  {label}
-                </p>
+              <div key={key} className="flex items-start">
+                <div className="w-[4.4rem] sm:w-32 lg:w-40">
+                  <p className="font-display text-[3rem] font-medium leading-none tracking-[0.02em] sm:text-[5.8rem] lg:text-[7.2rem]">
+                    {String(remaining[key]).padStart(2, "0")}
+                  </p>
+                  <p className="font-script mt-1 text-xl leading-none text-[#34312d] sm:text-3xl">
+                    {label}
+                  </p>
+                </div>
+                {index < LABELS.length - 1 ? (
+                  <span className="font-display mt-1 text-[2.6rem] leading-none sm:mt-2 sm:text-[5.4rem] lg:text-[6.6rem]">
+                    :
+                  </span>
+                ) : null}
               </div>
             ))}
           </div>
