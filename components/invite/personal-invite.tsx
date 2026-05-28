@@ -231,6 +231,10 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
           >
             {settings.inviteRsvpButtonLabel}
           </Link>
+          <p className="mx-auto max-w-sm text-xs leading-5 text-[#4f5609]/70 sm:text-sm">
+            Пожалуйста, обязательно заполните анкету — так мы сможем всё
+            подготовить для вас.
+          </p>
           {!hasBackground ? (
             <p className="pt-2 text-xs text-[#4f5609]/60">
               {settings.inviteMissingBackgroundText}
