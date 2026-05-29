@@ -1,6 +1,7 @@
 import { PersonalInvite } from "@/components/invite/personal-invite";
 import { getInviteById } from "@/lib/google/guests";
 import { getSiteSettings } from "@/lib/google/settings";
+import { toAccusativeInviteName } from "@/lib/invite/russian-accusative";
 import { getSiteUrl } from "@/lib/invite/url";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -16,22 +17,24 @@ export async function generateMetadata({
 }: InvitePageProps): Promise<Metadata> {
   const invite = await getInviteById(params.id);
   if (!invite) return { title: "Приглашение" };
-  const title = `Приглашение для ${invite.inviteName}`;
+  const previewName = toAccusativeInviteName(invite.inviteName);
+  const title = `Приглашаем ${previewName}`;
+  const description = `Дарья и Илья приглашают ${previewName} на свадьбу`;
   const siteUrl = getSiteUrl();
   const inviteUrl = `${siteUrl}/i/${encodeURIComponent(params.id)}`;
   const imageUrl = `${siteUrl}/api/og/invite?name=${encodeURIComponent(
     invite.inviteName,
-  )}&v=2`;
+  )}&v=3`;
 
   return {
     title,
-    description: title,
+    description,
     alternates: {
       canonical: inviteUrl,
     },
     openGraph: {
       title,
-      description: title,
+      description,
       url: inviteUrl,
       siteName: "Свадьба Дарьи и Ильи",
       type: "website",
@@ -40,7 +43,7 @@ export async function generateMetadata({
         {
           url: imageUrl,
           width: 1200,
-          height: 630,
+          height: 1200,
           alt: title,
         },
       ],
@@ -48,7 +51,7 @@ export async function generateMetadata({
     twitter: {
       card: "summary_large_image",
       title,
-      description: title,
+      description,
       images: [imageUrl],
     },
   };

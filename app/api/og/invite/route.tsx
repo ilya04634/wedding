@@ -1,13 +1,16 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
+import { toAccusativeInviteName } from "@/lib/invite/russian-accusative";
 
 export const runtime = "edge";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const rawName = searchParams.get("name")?.trim();
-  const inviteName = rawName || "дорогих гостей";
-  const title = `Приглашение для ${inviteName}`;
+  const inviteName = rawName
+    ? toAccusativeInviteName(rawName)
+    : "дорогих гостей";
+  const title = `Приглашаем ${inviteName}`;
 
   return new ImageResponse(
     (
@@ -15,7 +18,7 @@ export async function GET(request: NextRequest) {
         style={{
           alignItems: "center",
           background:
-            "radial-gradient(circle at 18% 12%, rgba(244,208,63,0.2), transparent 24%), radial-gradient(circle at 82% 18%, rgba(138,154,122,0.2), transparent 27%), radial-gradient(circle at 76% 84%, rgba(231,151,150,0.14), transparent 30%), linear-gradient(135deg, #fbf3d9 0%, #f6edcf 100%)",
+            "radial-gradient(circle at 18% 12%, rgba(244,208,63,0.24), transparent 25%), radial-gradient(circle at 82% 18%, rgba(138,154,122,0.22), transparent 28%), radial-gradient(circle at 76% 84%, rgba(231,151,150,0.14), transparent 30%), linear-gradient(135deg, #fbf3d9 0%, #f6edcf 100%)",
           color: "#4f5609",
           display: "flex",
           height: "100%",
@@ -27,33 +30,33 @@ export async function GET(request: NextRequest) {
       >
         <svg
           width="1200"
-          height="630"
-          viewBox="0 0 1200 630"
+          height="1200"
+          viewBox="0 0 1200 1200"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           style={{ position: "absolute", inset: 0 }}
         >
           <path
-            d="M80 500C236 352 239 230 159 180C68 123 195 52 320 112C439 169 470 265 610 205C789 128 772 38 919 90C1045 135 984 265 1108 330C1214 386 1085 510 1000 492"
+            d="M92 900C278 705 262 503 158 413C54 323 168 176 337 248C477 308 510 450 665 348C848 228 889 101 1040 204C1181 300 1048 521 1112 660C1176 800 1052 948 926 885"
             stroke="#8A9A7A"
-            strokeWidth="2.5"
+            strokeWidth="4"
             strokeLinecap="round"
             opacity="0.24"
           />
           <path
-            d="M210 145C233 129 251 139 258 158C239 160 224 156 210 145Z"
+            d="M220 290C255 265 283 279 294 308C265 312 242 305 220 290Z"
             stroke="#8A9A7A"
-            strokeWidth="3"
+            strokeWidth="5"
           />
           <path
-            d="M960 118C984 99 1007 106 1018 127C996 133 979 130 960 118Z"
+            d="M940 180C976 151 1010 162 1027 194C994 203 968 198 940 180Z"
             stroke="#E79796"
-            strokeWidth="3"
+            strokeWidth="5"
           />
           <path
-            d="M1000 492C1023 475 1041 486 1048 505C1029 507 1014 502 1000 492Z"
+            d="M954 912C988 886 1016 903 1027 932C999 936 976 928 954 912Z"
             stroke="#8A9A7A"
-            strokeWidth="3"
+            strokeWidth="5"
           />
         </svg>
 
@@ -63,7 +66,7 @@ export async function GET(request: NextRequest) {
             display: "flex",
             flexDirection: "column",
             gap: 22,
-            paddingTop: 28,
+            paddingTop: 78,
             position: "relative",
             width: "100%",
           }}
@@ -72,7 +75,7 @@ export async function GET(request: NextRequest) {
             style={{
               color: "#8a9a7a",
               fontFamily: "serif",
-              fontSize: 34,
+              fontSize: 48,
               lineHeight: 1,
             }}
           >
@@ -82,9 +85,9 @@ export async function GET(request: NextRequest) {
           <div
             style={{
               display: "flex",
-              height: 310,
+              height: 390,
               position: "relative",
-              width: 560,
+              width: 690,
             }}
           >
             <div
@@ -92,44 +95,44 @@ export async function GET(request: NextRequest) {
                 background: "rgba(79,86,9,0.18)",
                 borderRadius: 32,
                 filter: "blur(24px)",
-                height: 230,
+                height: 280,
                 left: 0,
                 position: "absolute",
-                top: 88,
-                width: 560,
+                top: 112,
+                width: 690,
               }}
             />
             <div
               style={{
                 background: "#fffaf0",
                 border: "2px solid rgba(138,154,122,0.28)",
-                borderRadius: 24,
-                height: 205,
-                left: 46,
+                borderRadius: 30,
+                height: 255,
+                left: 58,
                 position: "absolute",
                 top: 42,
-                width: 468,
+                width: 574,
               }}
             />
             <div
               style={{
                 background: "linear-gradient(180deg, #f7edc7 0%, #efe2b5 100%)",
                 border: "2px solid rgba(138,154,122,0.28)",
-                borderRadius: 28,
+                borderRadius: 34,
                 display: "flex",
-                height: 230,
+                height: 280,
                 left: 0,
                 overflow: "hidden",
                 position: "absolute",
-                top: 95,
-                width: 560,
+                top: 110,
+                width: 690,
               }}
             >
               <div
                 style={{
-                  borderBottom: "115px solid transparent",
-                  borderLeft: "280px solid rgba(251,243,217,0.88)",
-                  borderTop: "115px solid transparent",
+                  borderBottom: "140px solid transparent",
+                  borderLeft: "345px solid rgba(251,243,217,0.88)",
+                  borderTop: "140px solid transparent",
                   height: 0,
                   left: 0,
                   position: "absolute",
@@ -139,9 +142,9 @@ export async function GET(request: NextRequest) {
               />
               <div
                 style={{
-                  borderBottom: "115px solid transparent",
-                  borderRight: "280px solid rgba(251,243,217,0.88)",
-                  borderTop: "115px solid transparent",
+                  borderBottom: "140px solid transparent",
+                  borderRight: "345px solid rgba(251,243,217,0.88)",
+                  borderTop: "140px solid transparent",
                   height: 0,
                   position: "absolute",
                   right: 0,
@@ -151,9 +154,9 @@ export async function GET(request: NextRequest) {
               />
               <div
                 style={{
-                  borderBottom: "116px solid rgba(241,226,180,0.95)",
-                  borderLeft: "280px solid transparent",
-                  borderRight: "280px solid transparent",
+                  borderBottom: "142px solid rgba(241,226,180,0.95)",
+                  borderLeft: "345px solid transparent",
+                  borderRight: "345px solid transparent",
                   bottom: 0,
                   height: 0,
                   position: "absolute",
@@ -163,14 +166,14 @@ export async function GET(request: NextRequest) {
             </div>
             <div
               style={{
-                borderBottom: "112px solid transparent",
-                borderLeft: "280px solid transparent",
-                borderRight: "280px solid transparent",
-                borderTop: "112px solid rgba(248,239,211,0.94)",
+                borderBottom: "136px solid transparent",
+                borderLeft: "345px solid transparent",
+                borderRight: "345px solid transparent",
+                borderTop: "136px solid rgba(248,239,211,0.94)",
                 height: 0,
                 left: 0,
                 position: "absolute",
-                top: 95,
+                top: 110,
                 width: 0,
               }}
             />
@@ -183,13 +186,13 @@ export async function GET(request: NextRequest) {
                 color: "#fff8da",
                 display: "flex",
                 fontFamily: "serif",
-                fontSize: 56,
-                height: 88,
+                fontSize: 70,
+                height: 108,
                 justifyContent: "center",
-                left: 236,
+                left: 291,
                 position: "absolute",
-                top: 180,
-                width: 88,
+                top: 220,
+                width: 108,
               }}
             >
               Д
@@ -210,8 +213,8 @@ export async function GET(request: NextRequest) {
               style={{
                 color: "#4f5609",
                 fontFamily: "serif",
-                fontSize: inviteName.length > 28 ? 58 : 72,
-                lineHeight: 0.95,
+                fontSize: inviteName.length > 28 ? 74 : 92,
+                lineHeight: 0.96,
               }}
             >
               {title}
@@ -220,7 +223,7 @@ export async function GET(request: NextRequest) {
               style={{
                 color: "#8a9a7a",
                 fontFamily: "serif",
-                fontSize: 44,
+                fontSize: 56,
                 fontStyle: "italic",
                 lineHeight: 1,
               }}
@@ -233,7 +236,7 @@ export async function GET(request: NextRequest) {
     ),
     {
       width: 1200,
-      height: 630,
+      height: 1200,
     },
   );
 }
