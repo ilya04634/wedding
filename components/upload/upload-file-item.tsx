@@ -29,29 +29,29 @@ export function UploadFileItem({
           : "Ошибка";
 
   return (
-    <li className="rounded-2xl border border-[#8a9a7a]/18 bg-white/75 p-3 shadow-sm backdrop-blur-sm sm:rounded-3xl sm:p-4">
+    <li className="border border-[#3f8059]/18 bg-white/65 p-3 shadow-sm sm:p-4">
       <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#fbf3d9] text-[#8a9a7a]">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center bg-[#fbf3d9] text-[#3f8059]">
           <Icon className="h-5 w-5" aria-hidden />
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium text-neutral-900">
+              <p className="truncate text-sm font-medium text-[#24340d]">
                 {file.file.name}
               </p>
-              <p className="text-xs text-neutral-500">
+              <p className="text-xs text-[#24340d]/60">
                 {formatFileSize(file.file.size)} · {statusLabel}
               </p>
               {file.stage ? (
-                <p className="mt-1 text-xs text-neutral-500">{file.stage}</p>
+                <p className="mt-1 text-xs text-[#24340d]/60">{file.stage}</p>
               ) : null}
             </div>
             {file.status === "pending" || file.status === "error" ? (
               <button
                 type="button"
                 onClick={() => onRemove(file.id)}
-                className="shrink-0 rounded p-1 text-neutral-400 hover:bg-neutral-100 hover:text-neutral-700"
+                className="shrink-0 p-1 text-[#24340d]/45 hover:bg-white/70 hover:text-[#24340d]"
                 aria-label={`Удалить ${file.file.name}`}
               >
                 <X className="h-4 w-4" />

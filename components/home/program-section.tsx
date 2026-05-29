@@ -1,4 +1,5 @@
-﻿import type { SiteSettings } from "@/types/settings";
+import type { SiteSettings } from "@/types/settings";
+import Image from "next/image";
 
 interface ProgramSectionProps {
   settings: SiteSettings;
@@ -32,18 +33,18 @@ function RoseAccent({
       />
       <path
         d="M34 49 C29 56 24 59 17 61"
-        stroke="#8a9a7a"
+        stroke="#3f8059"
         strokeWidth="1.1"
         strokeLinecap="round"
       />
       <path
         d="M21 58 C17 52 12 51 8 55 C12 60 16 61 21 58 Z"
-        stroke="#8a9a7a"
+        stroke="#3f8059"
         strokeWidth="1"
       />
       <path
         d="M28 53 C27 47 23 44 18 45 C19 51 23 54 28 53 Z"
-        stroke="#8a9a7a"
+        stroke="#3f8059"
         strokeWidth="1"
       />
     </svg>
@@ -51,17 +52,31 @@ function RoseAccent({
 }
 
 const POSITIONS = [
-  "right-5 top-[9%] text-right sm:right-16",
-  "left-3 top-[31%] text-left sm:left-8",
-  "right-7 top-[56%] text-right sm:right-20",
-  "left-3 top-[79%] text-left sm:left-8",
+  "right-0 top-[12%] text-left sm:right-12",
+  "left-0 top-[32%] text-left sm:left-8",
+  "right-0 top-[57%] text-left sm:right-12",
+  "left-0 top-[80%] text-left sm:left-8",
 ];
 
 const ROSES = [
-  "left-[18%] top-[12%]",
-  "right-[23%] top-[27%]",
-  "left-[30%] top-[51%]",
-  "right-[12%] top-[78%]",
+  "left-[17%] top-[14%]",
+  "right-[24%] top-[31%]",
+  "left-[30%] top-[52%]",
+  "right-[13%] top-[78%]",
+];
+
+const ILLUSTRATIONS = [
+  "/wedding-design/rings.png",
+  "/wedding-design/wildflowers-stem.png",
+  "/wedding-design/cocktail.png",
+  "/wedding-design/wildflowers-stem.png",
+];
+
+const ILLUSTRATION_POSITIONS = [
+  "left-2 top-[20%] w-20 sm:left-6 sm:w-24",
+  "right-6 top-[38%] w-20 rotate-[18deg] opacity-70 sm:right-12 sm:w-24",
+  "left-0 top-[61%] w-20 sm:left-8 sm:w-24",
+  "right-8 top-[83%] w-16 rotate-[-20deg] opacity-70 sm:w-20",
 ];
 
 export function ProgramSection({ settings }: ProgramSectionProps) {
@@ -70,11 +85,18 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
   return (
     <section
       id="program"
-      className="scroll-mt-24 bg-[#fbf3d9] px-4 py-16 sm:px-8 sm:py-24"
+      className="wedding-paper relative isolate scroll-mt-24 overflow-hidden px-4 py-16 sm:px-8 sm:py-24"
     >
+      <Image
+        src="/wedding-design/wildflowers-wide.png"
+        alt=""
+        width={740}
+        height={423}
+        className="pointer-events-none absolute right-0 top-0 w-52 opacity-85 mix-blend-multiply sm:w-80"
+      />
       <div className="mx-auto max-w-md sm:max-w-2xl">
-        <div className="text-center">
-          <h2 className="text-[#4f5609]">
+        <div className="text-left sm:text-center">
+          <h2 className="paper-ink">
             <span className="font-script block text-5xl leading-none sm:text-7xl">
               План
             </span>
@@ -82,23 +104,23 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
               мероприятия
             </span>
           </h2>
-          <p className="mx-auto mt-5 max-w-sm text-sm uppercase leading-5 tracking-[0.08em] text-[#4f5609]/70 sm:text-base">
+          <p className="mt-5 max-w-sm font-display text-sm uppercase leading-5 tracking-[0.08em] text-[#24340d]/70 sm:mx-auto sm:text-base">
             {settings.programDescription}
           </p>
         </div>
 
-        <ol className="relative mx-auto mt-10 h-[44rem] max-w-sm sm:h-[54rem] sm:max-w-md">
+        <ol className="relative mx-auto mt-10 h-[54rem] max-w-sm sm:h-[62rem] sm:max-w-md">
           <svg
-            className="pointer-events-none absolute inset-y-0 left-1/2 h-full w-full -translate-x-1/2 text-[#4f5609]"
-            viewBox="0 0 360 820"
+            className="pointer-events-none absolute inset-y-0 left-1/2 h-full w-full -translate-x-1/2 text-[#3f8059]"
+            viewBox="0 0 360 920"
             preserveAspectRatio="none"
             aria-hidden
           >
             <path
-              d="M135 0 C118 86 205 122 237 176 C288 262 72 300 86 414 C100 528 263 494 235 606 C216 681 116 680 126 820"
+              d="M130 0 C112 95 215 128 245 202 C286 305 70 338 86 462 C102 588 268 544 236 682 C212 786 122 782 126 920"
               fill="none"
               stroke="currentColor"
-              strokeWidth="1.35"
+              strokeWidth="1.25"
               strokeLinecap="round"
             />
           </svg>
@@ -114,19 +136,32 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
           {items.map((item, index) => (
             <li
               key={`${item.time}-${item.title}`}
-              className={`absolute z-10 max-w-[9rem] text-[#4f5609] ${POSITIONS[index] ?? POSITIONS[index % POSITIONS.length]}`}
+              className={`absolute z-10 max-w-[8.7rem] text-[#24340d] sm:max-w-[11rem] ${POSITIONS[index] ?? POSITIONS[index % POSITIONS.length]}`}
             >
-              <p className="font-script text-2xl leading-none sm:text-3xl">
+              <p className="font-script text-3xl leading-none sm:text-4xl">
                 {item.title}
               </p>
-              <p className="font-display mt-12 text-xl italic leading-none sm:mt-16 sm:text-2xl">
+              <p className="mt-2 font-display text-[1.05rem] uppercase leading-5 tracking-[0.08em] sm:text-lg">
+                {item.description}
+              </p>
+              <p className="font-display mt-5 text-2xl italic leading-none sm:text-3xl">
                 {item.time}
               </p>
             </li>
+          ))}
+
+          {items.map((item, index) => (
+            <Image
+              key={`${item.time}-illustration`}
+              src={ILLUSTRATIONS[index] ?? ILLUSTRATIONS[index % ILLUSTRATIONS.length]}
+              alt=""
+              width={736}
+              height={736}
+              className={`pointer-events-none absolute z-0 mix-blend-multiply ${ILLUSTRATION_POSITIONS[index] ?? ILLUSTRATION_POSITIONS[index % ILLUSTRATION_POSITIONS.length]}`}
+            />
           ))}
         </ol>
       </div>
     </section>
   );
 }
-

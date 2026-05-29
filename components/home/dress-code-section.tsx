@@ -1,4 +1,6 @@
-﻿function MiniFlower({ className }: { className?: string }) {
+import Image from "next/image";
+
+function MiniFlower({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 120 34" fill="none" aria-hidden>
       <path
@@ -21,14 +23,28 @@
 
 export function DressCodeSection() {
   return (
-    <section className="relative isolate overflow-hidden bg-[#fbf3d9] px-4 py-16 sm:px-8 sm:py-24">
-      <div className="mx-auto max-w-md text-[#4f5609]">
+    <section className="wedding-paper relative isolate overflow-hidden px-4 py-16 sm:px-8 sm:py-24">
+      <Image
+        src="/wedding-design/wildflowers-corner.png"
+        alt=""
+        width={675}
+        height={900}
+        className="pointer-events-none absolute -left-8 top-0 w-48 opacity-85 mix-blend-multiply sm:w-64"
+      />
+      <Image
+        src="/wedding-design/wildflowers-stem.png"
+        alt=""
+        width={600}
+        height={900}
+        className="pointer-events-none absolute -right-8 bottom-0 w-40 opacity-85 mix-blend-multiply sm:w-56"
+      />
+      <div className="mx-auto max-w-md text-[#24340d]">
         <div className="text-center">
           <h2 className="font-display text-4xl uppercase tracking-[0.08em] sm:text-5xl">
             Дресс-код
           </h2>
-          <div className="mt-2 flex items-center justify-center gap-2 text-[#6c7411]">
-            <span className="h-px w-12 bg-[#4f5609]/50" />
+          <div className="mt-2 flex items-center justify-center gap-2 text-[#3f8059]">
+            <span className="h-px w-12 bg-[#3f8059]/70" />
             <span className="font-script text-4xl leading-none sm:text-5xl">
               dress-code
             </span>
@@ -39,10 +55,10 @@ export function DressCodeSection() {
           <p className="font-display text-lg uppercase leading-5 tracking-[0.04em]">
             Без строгих цветов приходите красивые и счастливые
           </p>
-          <p className="mt-5 text-xl leading-7 text-[#6c7411]">
+          <p className="mt-5 text-xl leading-7 text-[#3f8059]">
             Главное настроение дня - легкость, улыбки и ощущение летнего сада.
           </p>
-          <div className="mt-4 flex justify-center text-[#4f5609]">
+          <div className="mt-4 flex justify-center text-[#24340d]">
             <MiniFlower className="h-9 w-32" />
           </div>
         </div>
@@ -50,4 +66,3 @@ export function DressCodeSection() {
     </section>
   );
 }
-

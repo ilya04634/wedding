@@ -8,6 +8,7 @@ import { RsvpForm } from "@/components/rsvp/rsvp-form";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { getInviteById } from "@/lib/google/guests";
 import { getSiteSettings } from "@/lib/google/settings";
+import Image from "next/image";
 
 export const dynamic = "force-dynamic";
 
@@ -35,9 +36,16 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     rsvp: (
       <section
         id="rsvp"
-        className="scroll-mt-24 px-3 py-14 sm:px-8 sm:py-20"
+        className="wedding-paper relative scroll-mt-24 overflow-hidden px-3 py-14 sm:px-8 sm:py-20"
       >
-        <div className="mx-auto max-w-3xl rounded-3xl border border-[#8a9a7a]/15 bg-white/70 p-3 shadow-[0_18px_55px_rgba(52,49,45,0.07)] backdrop-blur-sm sm:rounded-[2rem] sm:p-8 sm:shadow-[0_24px_80px_rgba(52,49,45,0.08)]">
+        <Image
+          src="/wedding-design/wildflowers-wide.png"
+          alt=""
+          width={740}
+          height={423}
+          className="pointer-events-none absolute right-0 top-0 w-56 opacity-75 mix-blend-multiply sm:w-72"
+        />
+        <div className="paper-card relative z-10 mx-auto max-w-3xl p-3 sm:p-8">
           <RsvpForm
             guestId={invite?.id ?? guestId}
             initialName={invite?.inviteName}
@@ -57,7 +65,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   ];
 
   return (
-    <div className="overflow-hidden bg-[#fbf3d9]">
+    <div className="wedding-paper overflow-hidden">
       <HeroSection guestName={invite?.inviteName} settings={settings} />
       {sectionOrder.map((key) => {
         if (

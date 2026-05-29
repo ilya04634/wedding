@@ -210,7 +210,7 @@ export function UploadZone() {
 
   return (
     <div className="space-y-5 sm:space-y-6">
-      <div className="space-y-4 border-y border-[#4f5609]/20 bg-transparent py-5">
+      <div className="space-y-4 border-y border-[#3f8059]/30 bg-transparent py-5">
         <div className="space-y-2">
           <Label htmlFor={uploaderNameId}>Ваше имя</Label>
           <Input
@@ -221,7 +221,7 @@ export function UploadZone() {
             maxLength={80}
           />
         </div>
-        <p className="text-xs text-neutral-500">
+        <p className="text-xs text-[#24340d]/60">
           Необязательно. Название для каждого файла можно будет указать после выбора.
         </p>
       </div>
@@ -245,15 +245,15 @@ export function UploadZone() {
         className={cn(
           "flex cursor-pointer flex-col items-center justify-center border border-dashed px-4 py-9 text-center transition-colors sm:px-6 sm:py-12",
           isDragging
-            ? "border-[#4f5609] bg-white/55"
-            : "border-[#4f5609]/35 bg-white/20 hover:border-[#4f5609]/60 hover:bg-white/40",
+            ? "border-[#3f8059] bg-white/55"
+            : "border-[#3f8059]/45 bg-white/20 hover:border-[#3f8059]/70 hover:bg-white/40",
         )}
       >
-        <ImagePlus className="mb-3 h-10 w-10 text-[#6c7411]" aria-hidden />
-        <p className="text-sm font-medium text-neutral-800">
+        <ImagePlus className="mb-3 h-10 w-10 text-[#3f8059]" aria-hidden />
+        <p className="font-display text-sm font-medium uppercase tracking-[0.08em] text-[#24340d]">
           Перетащите файлы сюда
         </p>
-        <p className="mt-1 text-xs text-neutral-500">
+        <p className="mt-1 text-xs text-[#24340d]/60">
           или выберите фото и видео из галереи
         </p>
       </div>
@@ -275,7 +275,7 @@ export function UploadZone() {
         <Button
           type="button"
           variant="secondary"
-          className="w-full rounded-full border-[#4f5609]/30 bg-transparent text-[#4f5609] hover:bg-white/45 sm:w-auto"
+          className="w-full border-[#3f8059]/40 bg-transparent font-display uppercase tracking-[0.08em] text-[#24340d] hover:bg-white/45 sm:w-auto"
           onClick={() => inputRef.current?.click()}
         >
           <Images className="mr-2 h-4 w-4" aria-hidden />
@@ -297,7 +297,7 @@ export function UploadZone() {
           </ul>
           <Button
             type="button"
-            className="w-full rounded-full bg-[#4f5609] text-[#fbf3d9] hover:bg-[#4f5609]"
+            className="w-full bg-[#3f8059] font-display uppercase tracking-[0.08em] text-[#fbf3d9] hover:bg-[#326a49]"
             disabled={!hasUploadable || isUploading}
             onClick={startUpload}
           >
@@ -307,7 +307,7 @@ export function UploadZone() {
         </div>
       ) : null}
 
-      <p className="text-center text-xs text-neutral-500">
+      <p className="text-center text-xs text-[#24340d]/60">
         После выбора подпишите файлы, если хотите, и нажмите загрузку. Большие видео
         могут загружаться несколько минут.
       </p>
