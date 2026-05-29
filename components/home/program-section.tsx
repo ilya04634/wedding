@@ -92,7 +92,7 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
         alt=""
         width={740}
         height={423}
-        className="pointer-events-none absolute right-1 top-6 w-28 opacity-85 sm:right-0 sm:top-0 sm:w-80"
+        className="pointer-events-none absolute right-1 top-6 w-28 opacity-85 mix-blend-multiply sm:right-0 sm:top-0 sm:w-80"
       />
       <div className="mx-auto max-w-md sm:max-w-2xl">
         <div className="text-left sm:text-center">
@@ -136,7 +136,7 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
           {items.map((item, index) => (
             <li
               key={`${item.time}-${item.title}`}
-              className={`absolute z-10 max-w-[8rem] rounded-sm bg-[#fbf3d9] px-1.5 py-1 text-[#24340d] sm:max-w-[11rem] sm:bg-transparent sm:p-0 ${POSITIONS[index] ?? POSITIONS[index % POSITIONS.length]}`}
+              className={`absolute z-10 max-w-[8rem] rounded-sm bg-[#fbf3d9]/70 px-1.5 py-1 text-[#24340d] backdrop-blur-[1px] sm:max-w-[11rem] sm:bg-transparent sm:p-0 sm:backdrop-blur-0 ${POSITIONS[index] ?? POSITIONS[index % POSITIONS.length]}`}
             >
               <p className="font-script text-3xl leading-none sm:text-4xl">
                 {item.title}
@@ -157,7 +157,7 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
               alt=""
               width={736}
               height={736}
-              className={`pointer-events-none absolute z-0 ${ILLUSTRATION_POSITIONS[index] ?? ILLUSTRATION_POSITIONS[index % ILLUSTRATION_POSITIONS.length]}`}
+              className={`pointer-events-none absolute z-0 mix-blend-multiply ${ILLUSTRATION_POSITIONS[index] ?? ILLUSTRATION_POSITIONS[index % ILLUSTRATION_POSITIONS.length]}`}
             />
           ))}
         </ol>

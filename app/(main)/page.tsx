@@ -1,4 +1,4 @@
-import { CountdownSection } from "@/components/home/countdown-section";
+﻿import { CountdownSection } from "@/components/home/countdown-section";
 import { DressCodeSection } from "@/components/home/dress-code-section";
 import { FinalRings } from "@/components/home/final-rings";
 import { HeroSection } from "@/components/home/hero-section";
@@ -43,7 +43,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           alt=""
           width={740}
           height={423}
-          className="pointer-events-none absolute right-0 top-0 w-56 opacity-75 sm:w-72"
+          className="pointer-events-none absolute right-0 top-0 w-56 opacity-75 mix-blend-multiply sm:w-72"
         />
         <div className="paper-card relative z-10 mx-auto max-w-3xl p-3 sm:p-8">
           <RsvpForm

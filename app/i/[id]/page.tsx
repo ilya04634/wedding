@@ -36,7 +36,7 @@ export async function generateMetadata({
       title,
       description,
       url: inviteUrl,
-      siteName: "Свадьба Ильи и Дарьи",
+      siteName: "Свадьба Дарьи и Ильи",
       type: "website",
       locale: "ru_RU",
       images: [

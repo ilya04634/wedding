@@ -85,7 +85,7 @@ function EnvelopeGate({
       }`}
       aria-label="Открыть приглашение"
     >
-      <span className="pointer-events-none absolute left-1/2 top-1/2 h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#e4ead5] opacity-60" />
+      <span className="pointer-events-none absolute left-1/2 top-1/2 h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,_rgba(138,154,122,0.18),_rgba(251,243,217,0)_67%)]" />
       <span className="relative flex w-full max-w-sm flex-col items-center">
         <span className="font-display text-xs uppercase tracking-[0.28em] text-[#4f5609]/65">
           личное письмо
@@ -157,24 +157,27 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
           aria-label="Персональный фон приглашения"
         />
       ) : (
-        <div className="absolute inset-0 bg-[#fbf3d9]" aria-hidden />
+        <div
+          className="absolute inset-0 bg-[radial-gradient(circle_at_top,_#fff8ea,_#fbf3d9_55%,_#e6ddcf)]"
+          aria-hidden
+        />
       )}
 
-      <div className="absolute inset-0 bg-[#fbf3d9] opacity-40" aria-hidden />
-      <div className="absolute inset-x-0 bottom-0 h-[44%] bg-gradient-to-t from-[#fbf3d9] via-[#fbf3d9] to-transparent" aria-hidden />
+      <div className="absolute inset-0 bg-[#fbf3d9]/34" aria-hidden />
+      <div className="absolute inset-x-0 bottom-0 h-[44%] bg-gradient-to-t from-[#fbf3d9] via-[#fbf3d9]/92 to-transparent" aria-hidden />
       <Image
         src="/wedding-design/wildflowers-wide.png"
         alt=""
         width={740}
         height={423}
-        className="pointer-events-none absolute right-0 top-0 z-[1] w-48 opacity-80 sm:w-72"
+        className="pointer-events-none absolute right-0 top-0 z-[1] w-48 opacity-80 mix-blend-multiply sm:w-72"
       />
       <Image
         src="/wedding-design/wildflowers-stem.png"
         alt=""
         width={600}
         height={900}
-        className="pointer-events-none absolute -bottom-12 -left-12 z-[1] w-44 rotate-[-12deg] opacity-80 sm:w-60"
+        className="pointer-events-none absolute -bottom-12 -left-12 z-[1] w-44 rotate-[-12deg] opacity-80 mix-blend-multiply sm:w-60"
       />
 
       <section
@@ -247,7 +250,7 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
           </Link>
           <Link
             href={rsvpUrl}
-            className="inline-flex min-h-12 items-center justify-center border border-[#3f8059]/45 bg-[#fbf3d9] px-5 py-3 font-display text-sm font-semibold uppercase tracking-[0.08em] text-[#24340d] transition-colors hover:bg-[#fffaf0] sm:px-6"
+            className="inline-flex min-h-12 items-center justify-center border border-[#3f8059]/45 bg-[#fbf3d9]/75 px-5 py-3 font-display text-sm font-semibold uppercase tracking-[0.08em] text-[#24340d] transition-colors hover:bg-white/80 sm:px-6"
           >
             {settings.inviteRsvpButtonLabel}
           </Link>

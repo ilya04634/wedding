@@ -29,14 +29,14 @@ export function DressCodeSection() {
         alt=""
         width={675}
         height={900}
-        className="pointer-events-none absolute -left-20 top-24 z-0 w-36 opacity-30 sm:-left-8 sm:top-0 sm:w-64 sm:opacity-85"
+        className="pointer-events-none absolute -left-20 top-24 z-0 w-36 opacity-30 mix-blend-multiply sm:-left-8 sm:top-0 sm:w-64 sm:opacity-85"
       />
       <Image
         src="/wedding-design/wildflowers-stem.png"
         alt=""
         width={600}
         height={900}
-        className="pointer-events-none absolute -right-14 bottom-0 z-0 w-32 opacity-35 sm:-right-8 sm:w-56 sm:opacity-85"
+        className="pointer-events-none absolute -right-14 bottom-0 z-0 w-32 opacity-35 mix-blend-multiply sm:-right-8 sm:w-56 sm:opacity-85"
       />
       <div className="relative z-10 mx-auto max-w-md text-[#24340d]">
         <div className="text-center">

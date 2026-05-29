@@ -15,7 +15,7 @@ export default async function UploadPage() {
           alt=""
           width={740}
           height={423}
-          className="pointer-events-none absolute right-0 top-0 w-56 opacity-85"
+          className="pointer-events-none absolute right-0 top-0 w-56 opacity-85 mix-blend-multiply"
         />
         <section className="mx-auto max-w-2xl px-4 py-20 text-center text-[#24340d]">
           <p className="font-script text-5xl leading-none text-[#3f8059]">
@@ -42,14 +42,14 @@ export default async function UploadPage() {
         alt=""
         width={740}
         height={423}
-        className="pointer-events-none absolute right-0 top-0 w-56 opacity-85 sm:w-72"
+        className="pointer-events-none absolute right-0 top-0 w-56 opacity-85 mix-blend-multiply sm:w-72"
       />
       <Image
         src="/wedding-design/wildflowers-stem.png"
         alt=""
         width={600}
         height={900}
-        className="pointer-events-none absolute -bottom-10 -left-12 w-44 rotate-[-12deg] opacity-80 sm:w-60"
+        className="pointer-events-none absolute -bottom-10 -left-12 w-44 rotate-[-12deg] opacity-80 mix-blend-multiply sm:w-60"
       />
       <section className="relative z-10 mx-auto max-w-2xl text-center">
         <p className="font-script text-5xl leading-none text-[#3f8059] sm:text-6xl">

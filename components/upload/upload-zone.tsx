@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -245,8 +245,8 @@ export function UploadZone() {
         className={cn(
           "flex cursor-pointer flex-col items-center justify-center border border-dashed px-4 py-9 text-center transition-colors sm:px-6 sm:py-12",
           isDragging
-            ? "border-[#3f8059] bg-[#fffaf0]"
-            : "border-[#3f8059]/45 bg-[#fffaf0] hover:border-[#3f8059]/70 hover:bg-[#fff6df]",
+            ? "border-[#3f8059] bg-white/55"
+            : "border-[#3f8059]/45 bg-white/20 hover:border-[#3f8059]/70 hover:bg-white/40",
         )}
       >
         <ImagePlus className="mb-3 h-10 w-10 text-[#3f8059]" aria-hidden />
@@ -275,7 +275,7 @@ export function UploadZone() {
         <Button
           type="button"
           variant="secondary"
-          className="w-full border-[#3f8059]/40 bg-transparent font-display uppercase tracking-[0.08em] text-[#24340d] hover:bg-[#fff6df] sm:w-auto"
+          className="w-full border-[#3f8059]/40 bg-transparent font-display uppercase tracking-[0.08em] text-[#24340d] hover:bg-white/45 sm:w-auto"
           onClick={() => inputRef.current?.click()}
         >
           <Images className="mr-2 h-4 w-4" aria-hidden />

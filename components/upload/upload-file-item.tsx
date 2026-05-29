@@ -1,4 +1,4 @@
-import { Input } from "@/components/ui/input";
+﻿import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { formatFileSize } from "@/lib/utils";
 import { FileImage, FileVideo, X } from "lucide-react";
@@ -29,7 +29,7 @@ export function UploadFileItem({
           : "Ошибка";
 
   return (
-    <li className="border border-[#3f8059]/18 bg-[#fffaf0] p-3 shadow-sm sm:p-4">
+    <li className="border border-[#3f8059]/18 bg-white/65 p-3 shadow-sm sm:p-4">
       <div className="flex items-start gap-3">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center bg-[#fbf3d9] text-[#3f8059]">
           <Icon className="h-5 w-5" aria-hidden />
@@ -51,7 +51,7 @@ export function UploadFileItem({
               <button
                 type="button"
                 onClick={() => onRemove(file.id)}
-                className="shrink-0 p-1 text-[#24340d]/45 hover:bg-[#fff6df] hover:text-[#24340d]"
+                className="shrink-0 p-1 text-[#24340d]/45 hover:bg-white/70 hover:text-[#24340d]"
                 aria-label={`Удалить ${file.file.name}`}
               >
                 <X className="h-4 w-4" />

@@ -1,4 +1,4 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -26,7 +26,10 @@ html {
 body {
   color: var(--foreground);
   background-color: var(--background);
-  background: linear-gradient(180deg, #fbf3d9 0%, #f8efd4 100%);
+  background:
+    radial-gradient(circle at 12% 8%, rgba(244, 208, 63, 0.16), transparent 28rem),
+    radial-gradient(circle at 86% 18%, rgba(138, 154, 122, 0.13), transparent 30rem),
+    var(--background);
   forced-color-adjust: none;
 }
 
@@ -35,7 +38,7 @@ textarea,
 select {
   background-color: #fffaf0;
   color: #24340d;
-  color-scheme: light dark;
+  color-scheme: only light;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -45,39 +48,13 @@ select {
     --sage: #8a9a7a;
     --peony: #6c7411;
     --lemon: #f4d03f;
-    color-scheme: dark;
+    color-scheme: light dark;
   }
 
   html,
   body {
-    background: linear-gradient(180deg, #fbf3d9 0%, #f8efd4 100%);
     background-color: #fbf3d9;
     color: #4f5609;
-    color-scheme: dark;
-  }
-
-  *,
-  *::before,
-  *::after {
-    color-scheme: dark;
-  }
-
-  input,
-  textarea,
-  select {
-    background-color: #fffaf0;
-    color: #24340d;
-    color-scheme: dark;
-  }
-
-  .wedding-paper {
-    background: linear-gradient(180deg, #fbf3d9 0%, #f8efd4 100%) !important;
-    color: #4f5609;
-  }
-
-  .paper-card {
-    background: #fffaf0 !important;
-    color: #24340d;
   }
 }
 
@@ -217,7 +194,10 @@ select {
   }
 
   .wedding-paper {
-    background: linear-gradient(180deg, #fbf3d9 0%, #f8efd4 100%);
+    background:
+      radial-gradient(circle at 18% 12%, rgba(244, 208, 63, 0.1), transparent 18rem),
+      radial-gradient(circle at 82% 18%, rgba(138, 154, 122, 0.1), transparent 20rem),
+      linear-gradient(180deg, #fbf3d9 0%, #f8efd4 100%);
     forced-color-adjust: none;
   }
 
@@ -230,7 +210,7 @@ select {
   }
 
   .paper-card {
-    background: #fffaf0;
+    background: rgba(255, 250, 238, 0.72);
     box-shadow: 0 24px 70px rgba(52, 49, 45, 0.08);
     forced-color-adjust: none;
   }
