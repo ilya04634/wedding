@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Caveat, Montserrat, Playfair_Display } from "next/font/google";
 import localFont from "next/font/local";
+import Script from "next/script";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -29,6 +30,32 @@ const montserrat = Montserrat({
   display: "swap",
 });
 
+const autoDarkFixScript = `
+(() => {
+  try {
+    const ua = navigator.userAgent || "";
+    const isSamsung = /SamsungBrowser/i.test(ua);
+    const isTelegram =
+      /Telegram|TelegramBot|TgWebView/i.test(ua) ||
+      Boolean(window.Telegram || window.TelegramWebviewProxy);
+    const isDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const params = new URLSearchParams(window.location.search);
+    const forced = params.has("autoDarkFix");
+    const disabled =
+      window.localStorage &&
+      window.localStorage.getItem("disableAutoDarkFix") === "1";
+
+    if (!disabled && (forced || (isDark && (isSamsung || isTelegram)))) {
+      document.documentElement.classList.add("auto-dark-fix");
+    }
+  } catch {
+    // If browser APIs are unavailable, keep the normal light theme.
+  }
+})();
+`;
+
 export const metadata: Metadata = {
   title: "Приглашение на свадьбу",
   description: "Сайт-приглашение: программа, RSVP и загрузка фото",
@@ -53,6 +80,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${caveat.variable} ${montserrat.variable} min-h-screen bg-[#fbf3d9] font-[family-name:var(--font-montserrat)] text-[#4f5609] antialiased`}
       >
+        <Script
+          id="auto-dark-fix"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: autoDarkFixScript }}
+        />
         {children}
       </body>
     </html>
