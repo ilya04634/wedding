@@ -14,7 +14,7 @@ export function HeroSection({ guestName, settings }: HeroSectionProps) {
     : settings.heroDefaultEyebrow;
 
   return (
-    <section className="wedding-paper relative isolate min-h-[calc(100svh-57px)] overflow-hidden px-4 py-10 text-center sm:min-h-[calc(100svh-65px)] sm:px-8 sm:py-16 lg:py-20">
+    <section className="wedding-paper relative isolate min-h-[calc(100svh-57px)] overflow-hidden px-3 py-9 text-center sm:min-h-[calc(100svh-65px)] sm:px-8 sm:py-16 lg:py-20">
       <Image
         src="/wedding-design/wildflowers-wide.png"
         alt=""
@@ -38,10 +38,10 @@ export function HeroSection({ guestName, settings }: HeroSectionProps) {
         </p>
 
         <div className="mt-7 max-w-full sm:mt-8">
-          <p className="font-display paper-ink text-4xl font-semibold uppercase tracking-[0.22em] sm:text-6xl sm:tracking-[0.28em]">
+          <p className="font-display paper-ink text-[2.45rem] font-semibold uppercase tracking-[0.2em] sm:text-6xl sm:tracking-[0.28em]">
             {settings.heroFamilyName}
           </p>
-          <h1 className="font-script paper-green mt-1 text-balance text-[4.4rem] leading-[0.86] sm:text-8xl lg:text-9xl">
+          <h1 className="font-script paper-green mt-1 text-balance text-[4.15rem] leading-[0.86] sm:text-8xl lg:text-9xl">
             {settings.coupleNames}
           </h1>
         </div>
@@ -53,15 +53,15 @@ export function HeroSection({ guestName, settings }: HeroSectionProps) {
           {settings.heroText}
         </p>
 
-        <div className="mt-8 grid w-full max-w-4xl gap-6 text-[#24340d] sm:mt-10 md:grid-cols-[0.88fr_1.12fr] md:items-center">
-          <div className="paper-card relative rotate-[-3deg] px-5 py-7 text-center sm:px-8 sm:py-9">
+        <div className="mt-8 grid w-full max-w-4xl gap-5 text-[#24340d] sm:mt-10 sm:gap-6 md:grid-cols-[0.88fr_1.12fr] md:items-center">
+          <div className="paper-card relative mx-auto w-[calc(100%-0.5rem)] max-w-sm px-4 py-6 text-center sm:w-full sm:max-w-none sm:rotate-[-3deg] sm:px-8 sm:py-9">
             <p className="font-script text-3xl leading-none text-[#24340d] sm:text-4xl">
               место проведения
             </p>
-            <p className="font-display mt-1 text-3xl font-semibold uppercase leading-none text-[#3f8059] sm:text-5xl">
+            <p className="font-display mt-1 text-[1.7rem] font-semibold uppercase leading-none text-[#3f8059] sm:text-5xl">
               {settings.weddingVenue}
             </p>
-            <p className="mt-5 font-display text-lg leading-6 text-[#24340d]">
+            <p className="mt-5 font-display text-base leading-6 text-[#24340d] sm:text-lg">
               по адресу
               <span className="block">{settings.weddingAddressLine}</span>
             </p>
@@ -73,7 +73,7 @@ export function HeroSection({ guestName, settings }: HeroSectionProps) {
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-sm">
+          <div className="relative mx-auto w-full max-w-[21rem] sm:max-w-sm">
             <Image
               src="/wedding-design/venue.jpg"
               alt=""

@@ -52,17 +52,17 @@ function RoseAccent({
 }
 
 const POSITIONS = [
-  "right-0 top-[12%] text-left sm:right-12",
-  "left-0 top-[32%] text-left sm:left-8",
-  "right-0 top-[57%] text-left sm:right-12",
-  "left-0 top-[80%] text-left sm:left-8",
+  "right-1 top-[13%] text-left sm:right-12",
+  "left-1 top-[34%] text-left sm:left-8",
+  "right-1 top-[58%] text-left sm:right-12",
+  "left-1 top-[82%] text-left sm:left-8",
 ];
 
 const ROSES = [
-  "left-[17%] top-[14%]",
-  "right-[24%] top-[31%]",
-  "left-[30%] top-[52%]",
-  "right-[13%] top-[78%]",
+  "left-[20%] top-[16%]",
+  "right-[27%] top-[34%]",
+  "left-[31%] top-[55%]",
+  "right-[18%] top-[78%]",
 ];
 
 const ILLUSTRATIONS = [
@@ -73,10 +73,10 @@ const ILLUSTRATIONS = [
 ];
 
 const ILLUSTRATION_POSITIONS = [
-  "left-2 top-[20%] w-20 sm:left-6 sm:w-24",
-  "right-6 top-[38%] w-20 rotate-[18deg] opacity-70 sm:right-12 sm:w-24",
-  "left-0 top-[61%] w-20 sm:left-8 sm:w-24",
-  "right-8 top-[83%] w-16 rotate-[-20deg] opacity-70 sm:w-20",
+  "left-2 top-[21%] w-16 opacity-80 sm:left-6 sm:w-24",
+  "right-4 top-[40%] w-16 rotate-[18deg] opacity-55 sm:right-12 sm:w-24",
+  "left-0 top-[63%] w-16 opacity-80 sm:left-8 sm:w-24",
+  "right-8 top-[84%] w-14 rotate-[-20deg] opacity-55 sm:w-20",
 ];
 
 export function ProgramSection({ settings }: ProgramSectionProps) {
@@ -109,7 +109,7 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
           </p>
         </div>
 
-        <ol className="relative mx-auto mt-10 h-[54rem] max-w-sm sm:h-[62rem] sm:max-w-md">
+        <ol className="relative mx-auto mt-10 h-[62rem] max-w-sm sm:h-[62rem] sm:max-w-md">
           <svg
             className="pointer-events-none absolute inset-y-0 left-1/2 h-full w-full -translate-x-1/2 text-[#3f8059]"
             viewBox="0 0 360 920"
@@ -117,10 +117,10 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
             aria-hidden
           >
             <path
-              d="M130 0 C112 95 215 128 245 202 C286 305 70 338 86 462 C102 588 268 544 236 682 C212 786 122 782 126 920"
+              d="M176 0 C150 96 218 148 222 232 C228 346 132 366 128 482 C124 596 220 626 218 724 C216 822 166 842 176 920"
               fill="none"
               stroke="currentColor"
-              strokeWidth="1.25"
+              strokeWidth="1.15"
               strokeLinecap="round"
             />
           </svg>
@@ -136,15 +136,15 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
           {items.map((item, index) => (
             <li
               key={`${item.time}-${item.title}`}
-              className={`absolute z-10 max-w-[8.7rem] text-[#24340d] sm:max-w-[11rem] ${POSITIONS[index] ?? POSITIONS[index % POSITIONS.length]}`}
+              className={`absolute z-10 max-w-[8rem] rounded-sm bg-[#fbf3d9]/70 px-1.5 py-1 text-[#24340d] backdrop-blur-[1px] sm:max-w-[11rem] sm:bg-transparent sm:p-0 sm:backdrop-blur-0 ${POSITIONS[index] ?? POSITIONS[index % POSITIONS.length]}`}
             >
               <p className="font-script text-3xl leading-none sm:text-4xl">
                 {item.title}
               </p>
-              <p className="mt-2 font-display text-[1.05rem] uppercase leading-5 tracking-[0.08em] sm:text-lg">
+              <p className="mt-2 font-display text-[0.98rem] uppercase leading-[1.16] tracking-[0.07em] sm:text-lg sm:leading-5 sm:tracking-[0.08em]">
                 {item.description}
               </p>
-              <p className="font-display mt-5 text-2xl italic leading-none sm:text-3xl">
+              <p className="font-display mt-4 text-2xl italic leading-none sm:mt-5 sm:text-3xl">
                 {item.time}
               </p>
             </li>

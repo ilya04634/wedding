@@ -23,22 +23,22 @@ function MiniFlower({ className }: { className?: string }) {
 
 export function DressCodeSection() {
   return (
-    <section className="wedding-paper relative isolate overflow-hidden px-4 py-16 sm:px-8 sm:py-24">
+    <section className="wedding-paper relative isolate overflow-hidden px-4 py-20 sm:px-8 sm:py-24">
       <Image
         src="/wedding-design/wildflowers-corner.png"
         alt=""
         width={675}
         height={900}
-        className="pointer-events-none absolute -left-8 top-0 w-48 opacity-85 mix-blend-multiply sm:w-64"
+        className="pointer-events-none absolute -left-20 top-24 z-0 w-36 opacity-30 mix-blend-multiply sm:-left-8 sm:top-0 sm:w-64 sm:opacity-85"
       />
       <Image
         src="/wedding-design/wildflowers-stem.png"
         alt=""
         width={600}
         height={900}
-        className="pointer-events-none absolute -right-8 bottom-0 w-40 opacity-85 mix-blend-multiply sm:w-56"
+        className="pointer-events-none absolute -right-14 bottom-0 z-0 w-32 opacity-35 mix-blend-multiply sm:-right-8 sm:w-56 sm:opacity-85"
       />
-      <div className="mx-auto max-w-md text-[#24340d]">
+      <div className="relative z-10 mx-auto max-w-md text-[#24340d]">
         <div className="text-center">
           <h2 className="font-display text-4xl uppercase tracking-[0.08em] sm:text-5xl">
             Дресс-код
