@@ -85,14 +85,14 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
   return (
     <section
       id="program"
-      className="wedding-paper relative isolate scroll-mt-24 overflow-hidden px-4 py-16 sm:px-8 sm:py-24"
+      className="wedding-paper relative isolate scroll-mt-24 overflow-hidden px-4 pb-16 pt-8 sm:px-8 sm:py-24"
     >
       <Image
         src="/wedding-design/wildflowers-wide.png"
         alt=""
         width={740}
         height={423}
-        className="pointer-events-none absolute right-0 top-0 w-52 opacity-85 mix-blend-multiply sm:w-80"
+        className="pointer-events-none absolute right-1 top-6 w-28 opacity-85 mix-blend-multiply sm:right-0 sm:top-0 sm:w-80"
       />
       <div className="mx-auto max-w-md sm:max-w-2xl">
         <div className="text-left sm:text-center">
@@ -109,7 +109,7 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
           </p>
         </div>
 
-        <ol className="relative mx-auto mt-10 h-[62rem] max-w-sm sm:h-[62rem] sm:max-w-md">
+        <ol className="relative mx-auto mt-6 h-[62rem] max-w-sm sm:mt-10 sm:h-[62rem] sm:max-w-md">
           <svg
             className="pointer-events-none absolute inset-y-0 left-1/2 h-full w-full -translate-x-1/2 text-[#3f8059]"
             viewBox="0 0 360 920"

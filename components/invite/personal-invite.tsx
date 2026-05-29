@@ -238,7 +238,7 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
               С любовью,
             </p>
             <p className="mt-1 font-display text-base uppercase tracking-[0.18em] text-[#24340d] sm:text-lg">
-              Дарья и Илья
+              Илья и Дарья
             </p>
           </div>
           <Link

@@ -19,7 +19,7 @@ export async function generateMetadata({
   if (!invite) return { title: "Приглашение" };
   const previewName = toAccusativeInviteName(invite.inviteName);
   const title = `Приглашаем ${previewName}`;
-  const description = `Дарья и Илья приглашают ${previewName} на свадьбу`;
+  const description = `Илья и Дарья приглашают ${previewName} на свадьбу`;
   const siteUrl = getSiteUrl();
   const inviteUrl = `${siteUrl}/i/${encodeURIComponent(params.id)}`;
   const imageUrl = `${siteUrl}/api/og/invite?name=${encodeURIComponent(

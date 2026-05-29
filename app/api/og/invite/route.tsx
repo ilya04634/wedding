@@ -228,7 +228,7 @@ export async function GET(request: NextRequest) {
                 lineHeight: 1,
               }}
             >
-              Дарья и Илья
+              Илья и Дарья
             </div>
           </div>
         </div>
