@@ -17,23 +17,6 @@ html {
   forced-color-adjust: none;
 }
 
-html.auto-dark-fix {
-  filter: invert(1) hue-rotate(180deg);
-  background: #040c02;
-}
-
-html.auto-dark-fix img,
-html.auto-dark-fix picture,
-html.auto-dark-fix video,
-html.auto-dark-fix canvas,
-html.auto-dark-fix iframe {
-  filter: invert(1) hue-rotate(180deg);
-}
-
-html.auto-dark-fix [style*="background-image"] {
-  filter: invert(1) hue-rotate(180deg);
-}
-
 *,
 *::before,
 *::after {
