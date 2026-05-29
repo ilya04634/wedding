@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   title: "Приглашение на свадьбу",
   description: "Сайт-приглашение: программа, RSVP и загрузка фото",
   other: {
-    "color-scheme": "light only",
+    "color-scheme": "only light",
     "supported-color-schemes": "light",
   },
 };
