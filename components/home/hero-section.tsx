@@ -20,17 +20,17 @@ export function HeroSection({ guestName, settings }: HeroSectionProps) {
         alt=""
         width={740}
         height={423}
-        className="pointer-events-none absolute right-0 top-0 z-0 w-56 opacity-90 mix-blend-multiply sm:w-80"
+        className="pointer-events-none absolute right-0 top-0 z-0 w-56 opacity-90 sm:w-80"
       />
       <Image
         src="/wedding-design/wildflowers-stem.png"
         alt=""
         width={600}
         height={900}
-        className="pointer-events-none absolute -bottom-12 -left-16 z-0 w-44 rotate-[-14deg] opacity-75 mix-blend-multiply sm:w-64"
+        className="pointer-events-none absolute -bottom-12 -left-16 z-0 w-44 rotate-[-14deg] opacity-75 sm:w-64"
       />
-      <div className="absolute -left-32 top-8 h-64 w-64 rounded-full bg-[radial-gradient(circle,_rgba(138,154,122,0.18),_rgba(138,154,122,0)_70%)] sm:h-96 sm:w-96" />
-      <div className="absolute -right-28 top-24 h-72 w-72 rounded-full bg-[radial-gradient(circle,_rgba(231,151,150,0.13),_rgba(231,151,150,0)_70%)] sm:-right-20 sm:top-16 sm:h-[32rem] sm:w-[32rem]" />
+      <div className="absolute -left-32 top-8 h-64 w-64 rounded-full bg-[#edf1df] opacity-40 sm:h-96 sm:w-96" />
+      <div className="absolute -right-28 top-24 h-72 w-72 rounded-full bg-[#f6dada] opacity-35 sm:-right-20 sm:top-16 sm:h-[32rem] sm:w-[32rem]" />
 
       <div className="garden-fade relative z-10 mx-auto flex max-w-5xl flex-col items-center">
         <p className="max-w-full border-y border-[#3f8059]/40 px-3 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[#3f8059] sm:px-4 sm:text-xs sm:tracking-[0.22em]">
@@ -87,7 +87,7 @@ export function HeroSection({ guestName, settings }: HeroSectionProps) {
               alt=""
               width={600}
               height={900}
-              className="pointer-events-none absolute -bottom-14 -right-10 w-36 rotate-[18deg] opacity-90 mix-blend-multiply"
+              className="pointer-events-none absolute -bottom-14 -right-10 w-36 rotate-[18deg] opacity-90"
             />
           </div>
         </div>

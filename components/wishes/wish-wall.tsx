@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,10 +33,10 @@ type WishWallTuning = {
 };
 
 const NOTE_COLORS = [
-  "rgba(231, 151, 150, 0.36)",
-  "rgba(138, 154, 122, 0.28)",
-  "rgba(244, 208, 63, 0.34)",
-  "rgba(255, 249, 219, 0.78)",
+  "#f3c8c8",
+  "#d8e0cc",
+  "#f7e68f",
+  "#fff2c8",
 ];
 
 function hashText(value: string): number {
@@ -405,20 +405,18 @@ export function WishWall({
             "relative block overflow-y-auto rounded-xl border p-3 text-left shadow-sm transition-colors duration-150 sm:p-4",
             options.isFeatured ? "min-h-44" : "max-h-64 min-h-32",
             isActive
-              ? "border-[#4f5609]/35 bg-white/85 shadow-lg ring-2 ring-white/80"
-              : "border-white/55",
+              ? "border-[#4f5609]/35 bg-[#fffaf0] shadow-lg ring-2 ring-[#fffaf0]"
+              : "border-[#fff2d0]",
           )}
           style={{
-            backgroundColor: isActive
-              ? "rgba(255, 255, 255, 0.9)"
-              : base.backgroundColor,
+            backgroundColor: isActive ? "#fffaf0" : base.backgroundColor,
             transform: options.isFeatured
               ? "none"
               : `translate(${translateX}px, ${translateY}px) rotate(${base.rotate}deg)`,
           }}
         >
           {options.tape ? (
-            <span className="absolute left-1/2 top-0 h-5 w-16 -translate-x-1/2 -translate-y-1/2 rotate-[-3deg] rounded-sm bg-white/55 shadow-sm" />
+            <span className="absolute left-1/2 top-0 h-5 w-16 -translate-x-1/2 -translate-y-1/2 rotate-[-3deg] rounded-sm bg-[#fffaf0] shadow-sm" />
           ) : null}
           <span
             className={cn(
@@ -452,7 +450,7 @@ export function WishWall({
       return (
         <div className="relative z-10 space-y-5">
           {activeWish ? (
-            <div className="rounded-[1.5rem] border border-white/60 bg-white/42 p-3 shadow-inner">
+            <div className="rounded-[1.5rem] border border-[#fff2d0] bg-[#fffaf0] p-3 shadow-inner">
               {renderNote(activeWish, wishes.indexOf(activeWish), {
                 className: "mx-auto w-full max-w-lg",
                 isFeatured: true,
@@ -537,7 +535,7 @@ export function WishWall({
     <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:items-start">
       <form
         onSubmit={handleSubmit}
-        className="rounded-3xl border border-[#8a9a7a]/18 bg-white/80 p-5 text-left shadow-[0_14px_36px_rgba(52,49,45,0.06)] sm:p-6"
+        className="rounded-3xl border border-[#8a9a7a]/18 bg-[#fffaf0] p-5 text-left shadow-[0_14px_36px_rgba(52,49,45,0.06)] sm:p-6"
       >
         <div className="flex items-center gap-3 text-[#8a9a7a]">
           <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#fff9db] shadow-sm">
@@ -564,7 +562,7 @@ export function WishWall({
               onChange={(event) => setGuestName(event.target.value)}
               maxLength={80}
               placeholder="Например, Егор и Ирина"
-              className="border-[#8a9a7a]/25 bg-[#fbf3d9]/85 focus:border-[#8a9a7a] focus:ring-[#8a9a7a]/18"
+              className="border-[#8a9a7a]/25 bg-[#fbf3d9] focus:border-[#8a9a7a] focus:ring-[#8a9a7a]/18"
             />
           </div>
 
@@ -578,7 +576,7 @@ export function WishWall({
               onChange={(event) => setWishText(event.target.value)}
               maxLength={600}
               placeholder="Напишите пару теплых слов..."
-              className="min-h-36 border-[#8a9a7a]/25 bg-[#fbf3d9]/85 focus:border-[#8a9a7a] focus:ring-[#8a9a7a]/18"
+              className="min-h-36 border-[#8a9a7a]/25 bg-[#fbf3d9] focus:border-[#8a9a7a] focus:ring-[#8a9a7a]/18"
             />
           </div>
         </div>
@@ -609,7 +607,7 @@ export function WishWall({
         style={{
           minHeight: boardHeight,
           backgroundImage:
-            "radial-gradient(circle at 18% 12%, rgba(244,208,63,0.16), transparent 24%), radial-gradient(circle at 82% 22%, rgba(231,151,150,0.14), transparent 28%), radial-gradient(circle at 28% 88%, rgba(138,154,122,0.13), transparent 30%), linear-gradient(135deg, rgba(255,255,255,0.48), rgba(253,251,247,0.18))",
+            "linear-gradient(135deg, #f6eedc 0%, #efe5d2 100%)",
         }}
       >
         <div className="pointer-events-none absolute inset-0 opacity-[0.18] [background-image:linear-gradient(90deg,rgba(138,154,122,0.45)_1px,transparent_1px),linear-gradient(rgba(138,154,122,0.35)_1px,transparent_1px)] [background-size:34px_34px]" />
@@ -622,7 +620,7 @@ export function WishWall({
         ) : null}
 
         {!isLoading && wishes.length === 0 ? (
-          <div className="absolute inset-x-6 top-1/2 -translate-y-1/2 rounded-3xl border border-dashed border-[#8a9a7a]/30 bg-white/50 p-6 text-center text-[#746f66]">
+          <div className="absolute inset-x-6 top-1/2 -translate-y-1/2 rounded-3xl border border-dashed border-[#8a9a7a]/30 bg-[#fffaf0] p-6 text-center text-[#746f66]">
             Здесь появятся первые пожелания гостей.
           </div>
         ) : null}

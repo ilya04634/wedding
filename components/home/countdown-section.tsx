@@ -36,13 +36,12 @@ export function CountdownSection() {
   return (
     <section className="wedding-paper px-4 pb-2 pt-10 sm:px-8 sm:py-16">
       <div className="relative mx-auto max-w-5xl overflow-hidden px-3 py-8 text-center sm:px-10 sm:py-16">
-        <div className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,_rgba(231,151,150,0.12),_rgba(231,151,150,0)_70%)]" />
         <Image
           src="/wedding-design/wildflowers-stem.png"
           alt=""
           width={600}
           height={900}
-          className="pointer-events-none absolute right-0 top-5 w-32 opacity-80 mix-blend-multiply sm:w-48"
+          className="pointer-events-none absolute right-0 top-5 w-32 opacity-80 sm:w-48"
         />
 
         <div className="relative z-10 mx-auto max-w-4xl">

@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { Camera, Heart } from "lucide-react";
 
 interface SiteHeaderProps {
@@ -14,11 +14,11 @@ export function SiteHeader({
 }: SiteHeaderProps) {
   return (
     <header className="sticky top-0 z-40 px-2 pt-3 sm:px-6 sm:pt-4">
-      <div className="mx-auto max-w-6xl rounded-full border border-[#4f5609]/15 bg-[#fbf3d9]/88 px-2 py-2 shadow-[0_14px_45px_rgba(52,49,45,0.06)] backdrop-blur-md sm:px-3">
+      <div className="mx-auto max-w-6xl rounded-full border border-[#d8cc9d] bg-[#fbf3d9] px-2 py-2 shadow-[0_14px_45px_rgba(52,49,45,0.06)] sm:px-3">
         <nav className="flex items-center justify-center gap-1.5 sm:gap-3">
           <Link
             href="/"
-            className="flex min-h-10 min-w-0 items-center gap-2 rounded-full bg-white/35 px-3 text-sm font-semibold text-[#4f5609] transition hover:bg-white/70 sm:px-4"
+            className="flex min-h-10 min-w-0 items-center gap-2 rounded-full bg-[#fffaf0] px-3 text-sm font-semibold text-[#4f5609] transition hover:bg-[#fff6df] sm:px-4"
           >
             <Heart className="h-4 w-4 shrink-0 text-[#6c7411]" aria-hidden />
             <span className="truncate">{navTitle}</span>
@@ -26,7 +26,7 @@ export function SiteHeader({
           {uploadLinkEnabled ? (
             <Link
               href="/upload"
-              className="flex min-h-10 min-w-0 items-center gap-2 rounded-full px-3 text-xs font-semibold text-[#4f5609]/75 transition hover:bg-white/55 min-[420px]:text-sm sm:px-4"
+              className="flex min-h-10 min-w-0 items-center gap-2 rounded-full px-3 text-xs font-semibold text-[#6c7411] transition hover:bg-[#fffaf0] min-[420px]:text-sm sm:px-4"
             >
               <Camera className="h-4 w-4 shrink-0" aria-hidden />
               <span className="hidden whitespace-nowrap min-[360px]:inline">
