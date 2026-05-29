@@ -218,6 +218,14 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
         </div>
 
         <footer className="mx-auto flex w-full max-w-lg flex-col gap-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:gap-3 sm:pb-2">
+          <div className="pb-2 text-center">
+            <p className="font-script text-4xl leading-none text-[#6c7411] sm:text-5xl">
+              С любовью,
+            </p>
+            <p className="mt-1 font-display text-base uppercase tracking-[0.18em] text-[#4f5609] sm:text-lg">
+              Дарья и Илья
+            </p>
+          </div>
           <Link
             href={detailsUrl}
             className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#4f5609] px-5 py-3 text-sm font-semibold text-[#fbf3d9] shadow-[0_16px_35px_rgba(17,16,14,0.18)] transition-colors hover:bg-[#4f5609] sm:px-6"

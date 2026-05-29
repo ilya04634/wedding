@@ -17,15 +17,25 @@ export async function generateMetadata({
   const invite = await getInviteById(params.id);
   if (!invite) return { title: "Приглашение" };
   const title = `Приглашение для ${invite.inviteName}`;
-  const imageUrl = `${getSiteUrl()}/og-invite-envelope.png`;
+  const siteUrl = getSiteUrl();
+  const inviteUrl = `${siteUrl}/i/${encodeURIComponent(params.id)}`;
+  const imageUrl = `${siteUrl}/api/og/invite?name=${encodeURIComponent(
+    invite.inviteName,
+  )}&v=2`;
 
   return {
     title,
     description: title,
+    alternates: {
+      canonical: inviteUrl,
+    },
     openGraph: {
       title,
       description: title,
+      url: inviteUrl,
+      siteName: "Свадьба Дарьи и Ильи",
       type: "website",
+      locale: "ru_RU",
       images: [
         {
           url: imageUrl,
