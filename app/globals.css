@@ -8,19 +8,19 @@
   --sage: #8a9a7a;
   --peony: #6c7411;
   --lemon: #f4d03f;
-  color-scheme: only light;
+  color-scheme: light dark;
 }
 
 html {
   background: var(--background);
-  color-scheme: only light;
+  color-scheme: light dark;
   forced-color-adjust: none;
 }
 
 *,
 *::before,
 *::after {
-  color-scheme: only light;
+  color-scheme: light dark;
 }
 
 body {
@@ -45,7 +45,10 @@ select {
   :root {
     --background: #fbf3d9;
     --foreground: #4f5609;
-    color-scheme: only light;
+    --sage: #8a9a7a;
+    --peony: #6c7411;
+    --lemon: #f4d03f;
+    color-scheme: light dark;
   }
 
   html,
