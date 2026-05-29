@@ -1,6 +1,7 @@
 import { PersonalInvite } from "@/components/invite/personal-invite";
 import { getInviteById } from "@/lib/google/guests";
 import { getSiteSettings } from "@/lib/google/settings";
+import { getSiteUrl } from "@/lib/invite/url";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -16,6 +17,7 @@ export async function generateMetadata({
   const invite = await getInviteById(params.id);
   if (!invite) return { title: "Приглашение" };
   const title = `Приглашение для ${invite.inviteName}`;
+  const imageUrl = `${getSiteUrl()}/og-invite-envelope.png`;
 
   return {
     title,
@@ -24,11 +26,20 @@ export async function generateMetadata({
       title,
       description: title,
       type: "website",
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title,
       description: title,
+      images: [imageUrl],
     },
   };
 }
