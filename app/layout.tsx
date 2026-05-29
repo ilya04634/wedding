@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { ColorRescueToggle } from "@/components/ui/color-rescue-toggle";
 import { Caveat, Montserrat, Playfair_Display } from "next/font/google";
 import localFont from "next/font/local";
 import Script from "next/script";
@@ -43,11 +44,11 @@ const autoDarkFixScript = `
       window.matchMedia("(prefers-color-scheme: dark)").matches;
     const params = new URLSearchParams(window.location.search);
     const forced = params.has("autoDarkFix");
-    const disabled =
+    const stored =
       window.localStorage &&
-      window.localStorage.getItem("disableAutoDarkFix") === "1";
+      window.localStorage.getItem("autoDarkFix");
 
-    if (!disabled && (forced || (isDark && (isSamsung || isTelegram)))) {
+    if (stored === "1" || forced || (!stored && isDark && (isSamsung || isTelegram))) {
       document.documentElement.classList.add("auto-dark-fix");
     }
   } catch {
@@ -86,6 +87,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: autoDarkFixScript }}
         />
         {children}
+        <ColorRescueToggle />
       </body>
     </html>
   );
