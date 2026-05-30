@@ -11,7 +11,7 @@ export function VenueMapLink({ address, mapUrl }: VenueMapLinkProps) {
       href={mapUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="group mt-1 inline-flex items-center gap-2 rounded-lg px-2 py-1 transition-colors hover:bg-neutral-100"
+      className="group mt-1 inline-flex items-center justify-center rounded-lg px-2 py-1 transition-colors hover:bg-neutral-100"
       aria-label={`Открыть ${address} в 2ГИС`}
     >
       <Image
@@ -21,9 +21,6 @@ export function VenueMapLink({ address, mapUrl }: VenueMapLinkProps) {
         height={32}
         className="h-8 w-8"
       />
-      <span className="text-left text-neutral-500 group-hover:text-neutral-700">
-        {address}
-      </span>
     </a>
   );
 }

@@ -12,6 +12,8 @@ export function SiteHeader({
   uploadLinkEnabled,
   uploadLinkLabel,
 }: SiteHeaderProps) {
+  if (!uploadLinkEnabled) return null;
+
   return (
     <header className="sticky top-0 z-40 px-2 pt-3 sm:px-6 sm:pt-4">
       <div className="mx-auto max-w-6xl rounded-full border border-[#4f5609]/15 bg-[#fbf3d9]/88 px-2 py-2 shadow-[0_14px_45px_rgba(52,49,45,0.06)] backdrop-blur-md sm:px-3">
