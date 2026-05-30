@@ -60,16 +60,10 @@ export function CountdownSection() {
           dress-code
         </p>
         <p
-          className="absolute w-[253px] whitespace-pre-wrap font-display text-[15px] uppercase leading-[1.14] tracking-[0.3px] text-black"
+          className="absolute w-[253px] whitespace-pre-wrap font-display text-[18px] uppercase leading-[1.14] tracking-[0.3px] text-black"
           style={{ left: "calc(50% - 112px)", top: "calc(20% + 21.8px)" }}
         >
-          Без строгих цветов{"\n"}приходите красивые и счастливые
-        </p>
-        <p
-          className="absolute w-[253px] font-display text-[16px] leading-normal tracking-[0.32px] text-[#397c57]"
-          style={{ left: "calc(50% - 113px)", top: "calc(30% - 13.3px)" }}
-        >
-          Главное настроение дня - легкость, улыбки и ощущение летнего сада.
+          Приходите красивые и счастливые
         </p>
 
         <Image
@@ -130,19 +124,29 @@ export function CountdownSection() {
         ))}
 
         <p
-          className="absolute w-[265px] text-center font-figma-script text-[48px] leading-[0.89] text-[#397c57]"
-          style={{ left: "calc(20% + 108.1px)", top: "calc(50% + 5.5px)", transform: "translateX(-50%)" }}
+          className="absolute w-[265px] text-center font-readable-script text-[48px] leading-[0.89] text-[#397c57]"
+          style={{
+            left: "calc(20% + 108.1px)",
+            top: "calc(50% + 5.5px)",
+            transform: "translateX(-50%)",
+          }}
         >
           Мы скажем “да” через
         </p>
-        <p
-          className="absolute whitespace-nowrap font-display text-[48px] uppercase leading-[1.082] tracking-[7.2px] text-[#397c57]"
-          style={{ left: "calc(50% - 140px)", top: "calc(60% + 4.4px)" }}
-        >
-          {values.join(":")}
-        </p>
         <div
-          className="absolute grid w-[280px] grid-cols-4 text-center font-figma-script text-[16px] leading-none text-black"
+          className="absolute grid w-[288px] grid-cols-[58px_18px_58px_18px_58px_18px_58px] items-start text-center font-poltawski text-[48px] uppercase leading-[1.082] text-[#397c57]"
+          style={{ left: "calc(50% - 144px)", top: "calc(60% + 4.4px)" }}
+        >
+          <span>{values[0]}</span>
+          <span>:</span>
+          <span>{values[1]}</span>
+          <span>:</span>
+          <span>{values[2]}</span>
+          <span>:</span>
+          <span>{values[3]}</span>
+        </div>
+        <div
+          className="absolute grid w-[280px] grid-cols-4 text-center font-readable-script text-[16px] leading-none text-black"
           style={{ left: "calc(50% - 140px)", top: "calc(65% + 8.85px)" }}
         >
           {labels.map((label) => (

@@ -186,7 +186,15 @@ select {
   }
 
   .font-figma-script {
+    font-family: var(--font-great-vibes), var(--font-marck), var(--font-caveat), cursive;
+  }
+
+  .font-readable-script {
     font-family: var(--font-marck), var(--font-caveat), cursive;
+  }
+
+  .font-poltawski {
+    font-family: var(--font-poltawski), var(--font-playfair), serif;
   }
 
   .figma-section {
@@ -203,7 +211,8 @@ select {
 
   .figma-phone-frame {
     position: relative;
-    margin-inline: auto;
+    left: 50%;
+    margin-inline: 0;
     width: 402px;
     height: 951px;
     max-width: none;
@@ -211,6 +220,7 @@ select {
     background: #fdf5e0;
     forced-color-adjust: none;
     transform-origin: top center;
+    transform: translateX(-50%) scale(var(--figma-frame-scale, 1));
   }
 
   @media (max-width: 340px) {
@@ -219,7 +229,7 @@ select {
     }
 
     .figma-phone-frame {
-      transform: scale(0.74);
+      --figma-frame-scale: 0.74;
     }
   }
 
@@ -229,7 +239,7 @@ select {
     }
 
     .figma-phone-frame {
-      transform: scale(0.89);
+      --figma-frame-scale: 0.89;
     }
   }
 
@@ -239,7 +249,7 @@ select {
     }
 
     .figma-phone-frame {
-      transform: scale(0.97);
+      --figma-frame-scale: 0.97;
     }
   }
 

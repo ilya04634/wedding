@@ -176,7 +176,7 @@ function DecorImage({
 }) {
   return (
     <div
-      className="absolute flex items-center justify-center"
+      className="absolute z-20 flex items-center justify-center"
       style={wrapper}
       aria-hidden
     >
@@ -194,13 +194,13 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
     <section id="program" className="figma-frame-section scroll-mt-24">
       <div className="figma-phone-frame text-black">
         <p
-          className="absolute whitespace-nowrap font-figma-script text-[48px] leading-none text-black"
+          className="absolute z-30 whitespace-nowrap font-readable-script text-[48px] leading-none text-black"
           style={{ left: "calc(20% - 24.4px)", top: "calc(10% + 22.9px)" }}
         >
           План
         </p>
         <p
-          className="absolute whitespace-nowrap font-display text-[32px] uppercase leading-none tracking-[2.88px] text-black"
+          className="absolute z-30 whitespace-nowrap font-display text-[32px] uppercase leading-none tracking-[2.88px] text-black"
           style={{ left: "calc(30% - 25.6px)", top: "calc(15% + 13.35px)" }}
         >
           мероприятия
@@ -211,7 +211,7 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
           alt=""
           width={269}
           height={686}
-          className="absolute max-w-none"
+          className="absolute z-10 max-w-none"
           style={{
             left: "calc(20% - 12.9px)",
             top: "calc(25% + 16.25px)",
@@ -233,19 +233,19 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
           return (
             <div key={`${item.time}-${item.title}`}>
               <p
-                className="absolute whitespace-nowrap font-figma-script text-[24px] leading-none text-black"
+                className="absolute z-30 whitespace-nowrap font-readable-script text-[24px] leading-none text-black"
                 style={layout.title}
               >
                 {item.title}
               </p>
               <p
-                className="absolute w-[193px] whitespace-pre-wrap font-display text-[16px] leading-[0.9] tracking-[1.44px] text-black"
+                className="absolute z-30 w-[193px] whitespace-pre-wrap font-display text-[16px] leading-[0.9] tracking-[1.44px] text-black"
                 style={layout.description}
               >
                 {item.description}
               </p>
               <p
-                className="absolute whitespace-nowrap font-figma-script text-[24px] leading-none text-black"
+                className="absolute z-30 whitespace-nowrap font-readable-script text-[24px] leading-none text-black"
                 style={layout.time}
               >
                 {item.time}
@@ -255,7 +255,7 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
         })}
 
         <div
-          className="absolute flex h-[431.823px] w-[506.492px] items-center justify-center"
+          className="absolute z-20 flex h-[431.823px] w-[506.492px] items-center justify-center"
           style={{ left: "calc(30% - 9.6px)", top: "-134px" }}
         >
           <div className="relative h-[251px] w-[440px] rotate-[-28.78deg]">
@@ -269,21 +269,22 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
           </div>
         </div>
         <div
-          className="absolute flex h-[93.877px] w-[72.979px] items-center justify-center"
+          className="absolute z-20 flex h-[93.877px] w-[72.979px] items-center justify-center"
           style={{ left: "calc(80% - 5.6px)", top: "calc(45% + 24.05px)" }}
         >
           <div className="relative h-[84.509px] w-[58.269px] rotate-[-10.73deg] overflow-hidden">
             <Image
               src="/figma-wedding/program-hourglass.png"
               alt=""
-              fill
-              className="scale-[8.7] object-cover object-center"
+              width={448}
+              height={738}
+              className="absolute left-[-110.6%] top-[-324.2%] h-[873.06%] w-[768.21%] max-w-none"
               aria-hidden
             />
           </div>
         </div>
         <div
-          className="absolute flex h-[75.153px] w-[63.786px] items-center justify-center"
+          className="absolute z-20 flex h-[75.153px] w-[63.786px] items-center justify-center"
           style={{ left: "calc(10% - 4.2px)", top: "calc(70% - 2.7px)" }}
         >
           <div className="relative h-[69px] w-[56px] rotate-[6.81deg]">
@@ -301,7 +302,7 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
           alt=""
           width={80}
           height={81}
-          className="absolute h-[81px] w-[80px] object-cover"
+          className="absolute z-20 h-[81px] w-[80px] object-cover"
           style={{ left: "calc(10% + 1.8px)", top: "calc(35% + 31.15px)" }}
           aria-hidden
         />

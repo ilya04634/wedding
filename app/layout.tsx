@@ -1,5 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Caveat, Marck_Script, Montserrat, Playfair_Display } from "next/font/google";
+import {
+  Caveat,
+  Great_Vibes,
+  Marck_Script,
+  Montserrat,
+  Playfair_Display,
+  Poltawski_Nowy,
+} from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -27,6 +34,17 @@ const marck = Marck_Script({
   subsets: ["cyrillic", "latin"],
   variable: "--font-marck",
   weight: "400",
+  display: "swap",
+});
+const greatVibes = Great_Vibes({
+  subsets: ["latin"],
+  variable: "--font-great-vibes",
+  weight: "400",
+  display: "swap",
+});
+const poltawski = Poltawski_Nowy({
+  subsets: ["latin"],
+  variable: "--font-poltawski",
   display: "swap",
 });
 const montserrat = Montserrat({
@@ -57,7 +75,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${caveat.variable} ${marck.variable} ${montserrat.variable} min-h-screen bg-[#fbf3d9] font-[family-name:var(--font-montserrat)] text-[#4f5609] antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${caveat.variable} ${marck.variable} ${greatVibes.variable} ${poltawski.variable} ${montserrat.variable} min-h-screen bg-[#fbf3d9] font-[family-name:var(--font-montserrat)] text-[#4f5609] antialiased`}
       >
         {children}
       </body>
