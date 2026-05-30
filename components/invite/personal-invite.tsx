@@ -111,9 +111,6 @@ function EnvelopeGate({
         <span className="font-script mt-8 text-4xl leading-none text-[#6c7411]">
           Нажмите, чтобы открыть
         </span>
-        <span className="mt-3 max-w-xs text-sm leading-6 text-[#4f5609]/70">
-          После открытия появится ваше персональное приглашение.
-        </span>
       </span>
     </button>
   );
