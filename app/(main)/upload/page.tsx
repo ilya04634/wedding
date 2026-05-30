@@ -9,7 +9,7 @@ export default async function UploadPage() {
 
   if (!settings.uploadLinkEnabled) {
     return (
-      <div className="wedding-paper relative isolate min-h-[100dvh] overflow-hidden px-3 pb-14 pt-6 sm:px-4 sm:pb-16 sm:pt-8">
+      <div className="figma-section relative isolate min-h-[100dvh] overflow-hidden px-3 pb-14 pt-6 sm:px-4 sm:pb-16 sm:pt-8">
         <Image
           src="/wedding-design/wildflowers-wide.png"
           alt=""
@@ -18,7 +18,7 @@ export default async function UploadPage() {
           className="pointer-events-none absolute right-0 top-0 w-56 opacity-85 mix-blend-multiply"
         />
         <section className="mx-auto max-w-2xl px-4 py-20 text-center text-[#24340d]">
-          <p className="font-script text-5xl leading-none text-[#3f8059]">
+          <p className="font-figma-script text-5xl leading-none text-[#397c57]">
             Медиа
           </p>
           <h1 className="font-display mt-2 text-3xl uppercase tracking-[0.12em]">
@@ -36,7 +36,7 @@ export default async function UploadPage() {
   }
 
   return (
-    <div className="wedding-paper relative isolate min-h-[100dvh] overflow-hidden px-3 pb-14 pt-10 text-[#24340d] sm:px-4 sm:pb-16 sm:pt-12">
+    <div className="figma-section relative isolate min-h-[100dvh] overflow-hidden px-3 pb-14 pt-10 text-[#24340d] sm:px-4 sm:pb-16 sm:pt-12">
       <Image
         src="/wedding-design/wildflowers-wide.png"
         alt=""
@@ -52,7 +52,7 @@ export default async function UploadPage() {
         className="pointer-events-none absolute -bottom-10 -left-12 w-44 rotate-[-12deg] opacity-80 mix-blend-multiply sm:w-60"
       />
       <section className="relative z-10 mx-auto max-w-2xl text-center">
-        <p className="font-script text-5xl leading-none text-[#3f8059] sm:text-6xl">
+        <p className="font-figma-script text-5xl leading-none text-[#397c57] sm:text-6xl">
           Наши кадры
         </p>
         <h1 className="font-display mt-2 text-3xl uppercase tracking-[0.12em] sm:text-4xl">

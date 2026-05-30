@@ -1,166 +1,310 @@
 import type { SiteSettings } from "@/types/settings";
 import Image from "next/image";
+import type { CSSProperties } from "react";
 
 interface ProgramSectionProps {
   settings: SiteSettings;
 }
 
-function RoseAccent({
-  className,
-  rotate = 0,
+const itemLayout = [
+  {
+    title: { left: "calc(50% - 2px)", top: "calc(25% + 25.25px)" },
+    description: { left: "calc(50% - 2px)", top: "calc(30% + 2.7px)" },
+    time: { left: "calc(50% - 2px)", top: "calc(35% + 11.15px)" },
+  },
+  {
+    title: { left: "calc(10% + 4.8px)", top: "calc(45% + 31.05px)" },
+    description: { left: "calc(10% + 4.8px)", top: "calc(50% + 15.5px)" },
+    time: { left: "calc(10% + 4.8px)", top: "calc(55% + 16.95px)" },
+  },
+  {
+    title: { left: "calc(50% - 4px)", top: "calc(65% + 18.85px)" },
+    description: { left: "calc(50% - 4px)", top: "calc(70% - 3.7px)" },
+    time: { left: "calc(50% - 4px)", top: "calc(75% + 4.75px)" },
+  },
+  {
+    title: { left: "calc(10% + 4.8px)", top: "calc(85% + 21.65px)" },
+    description: { left: "calc(10% + 4.8px)", top: "calc(90% - 0.9px)" },
+    time: { left: "calc(10% + 4.8px)", top: "calc(95% + 7.55px)" },
+  },
+] as const;
+
+const roseDecor = [
+  {
+    src: "/figma-wedding/program-rose-1.svg",
+    wrapper: {
+      left: "calc(20% + 4.6px)",
+      top: "calc(30% + 27.71px)",
+      width: "45.202px",
+      height: "46.221px",
+    },
+    inner: "rotate-[52.44deg]",
+  },
+  {
+    src: "/figma-wedding/program-rose-2.svg",
+    wrapper: {
+      left: "calc(60% - 9.2px)",
+      top: "calc(45% - 5.95px)",
+      width: "45.202px",
+      height: "46.221px",
+    },
+    inner: "rotate-[52.44deg]",
+  },
+  {
+    src: "/figma-wedding/program-rose-3.svg",
+    wrapper: {
+      left: "calc(40% + 18.2px)",
+      top: "calc(60% - 4.6px)",
+      width: "45.202px",
+      height: "46.221px",
+    },
+    inner: "-scale-y-100 rotate-[127.56deg]",
+  },
+  {
+    src: "/figma-wedding/program-rose-4.svg",
+    wrapper: {
+      left: "calc(30% - 10px)",
+      top: "calc(70% + 25.78px)",
+      width: "39.753px",
+      height: "43.19px",
+    },
+    inner: "-scale-y-100 rotate-[-109.1deg]",
+  },
+  {
+    src: "/figma-wedding/program-rose-5.svg",
+    wrapper: {
+      left: "calc(70% + 22.61px)",
+      top: "calc(85% + 30.65px)",
+      width: "46.112px",
+      height: "44.802px",
+    },
+    inner: "-scale-y-100 rotate-[-144.58deg]",
+  },
+] as const;
+
+const leafDecor = [
+  {
+    src: "/figma-wedding/program-leaf-1.svg",
+    wrapper: {
+      left: "calc(40% - 10.8px)",
+      top: "calc(35% + 26.15px)",
+      width: "24.492px",
+      height: "32.483px",
+    },
+    inner: "rotate-[-23.7deg]",
+  },
+  {
+    src: "/figma-wedding/program-leaf-2.svg",
+    wrapper: {
+      left: "calc(10% + 4.8px)",
+      top: "calc(30% - 6.3px)",
+      width: "31.566px",
+      height: "19.416px",
+    },
+    inner: "rotate-[-78.52deg]",
+  },
+  {
+    src: "/figma-wedding/program-leaf-3.svg",
+    wrapper: {
+      left: "calc(60% + 25.8px)",
+      top: "calc(55% - 7.05px)",
+      width: "31.566px",
+      height: "19.416px",
+    },
+    inner: "-scale-y-100 rotate-[-101.48deg]",
+  },
+  {
+    src: "/figma-wedding/program-leaf-4.svg",
+    wrapper: {
+      left: "calc(50% + 19.79px)",
+      top: "calc(80% + 22.17px)",
+      width: "13.981px",
+      height: "29.465px",
+    },
+    inner: "-scale-y-100 rotate-[-179.73deg]",
+  },
+  {
+    src: "/figma-wedding/program-leaf-5.svg",
+    wrapper: {
+      left: "calc(40% - 19.8px)",
+      top: "calc(80% + 13.2px)",
+      width: "31.306px",
+      height: "18.582px",
+    },
+    inner: "-scale-y-100 rotate-[99.67deg]",
+  },
+  {
+    src: "/figma-wedding/program-leaf-6.svg",
+    wrapper: {
+      left: "calc(80% - 1.6px)",
+      top: "calc(95% + 6.55px)",
+      width: "31.177px",
+      height: "29.864px",
+    },
+    inner: "rotate-[48.42deg]",
+  },
+  {
+    src: "/figma-wedding/program-leaf-7.svg",
+    wrapper: {
+      left: "calc(30% - 2.6px)",
+      top: "calc(65% + 7.85px)",
+      width: "26.625px",
+      height: "32.389px",
+    },
+    inner: "-scale-y-100 rotate-[150.19deg]",
+  },
+  {
+    src: "/figma-wedding/program-leaf-8.svg",
+    wrapper: {
+      left: "calc(40% + 17.2px)",
+      top: "calc(40% + 20.6px)",
+      width: "24.492px",
+      height: "32.483px",
+    },
+    inner: "rotate-[156.3deg]",
+  },
+] as const;
+
+function DecorImage({
+  src,
+  wrapper,
+  inner,
 }: {
-  className?: string;
-  rotate?: number;
+  src: string;
+  wrapper: CSSProperties;
+  inner: string;
 }) {
   return (
-    <svg
-      className={className}
-      viewBox="0 0 72 72"
-      fill="none"
-      style={{ transform: `rotate(${rotate}deg)` }}
+    <div
+      className="absolute flex items-center justify-center"
+      style={wrapper}
       aria-hidden
     >
-      <path
-        d="M36 49 C31 43 25 42 23 36 C21 29 28 22 36 22 C45 22 52 30 49 39 C47 45 42 47 36 49 Z"
-        stroke="currentColor"
-        strokeWidth="1.3"
-      />
-      <path
-        d="M35 47 C33 39 36 34 42 31 C38 30 33 31 30 36 C30 31 34 27 39 25"
-        stroke="currentColor"
-        strokeWidth="1.1"
-        strokeLinecap="round"
-      />
-      <path
-        d="M34 49 C29 56 24 59 17 61"
-        stroke="#3f8059"
-        strokeWidth="1.1"
-        strokeLinecap="round"
-      />
-      <path
-        d="M21 58 C17 52 12 51 8 55 C12 60 16 61 21 58 Z"
-        stroke="#3f8059"
-        strokeWidth="1"
-      />
-      <path
-        d="M28 53 C27 47 23 44 18 45 C19 51 23 54 28 53 Z"
-        stroke="#3f8059"
-        strokeWidth="1"
-      />
-    </svg>
+      <div className={`relative h-full w-full flex-none ${inner}`}>
+        <Image src={src} alt="" fill className="object-contain" />
+      </div>
+    </div>
   );
 }
 
-const POSITIONS = [
-  "right-1 top-[13%] text-left sm:right-12",
-  "left-1 top-[34%] text-left sm:left-8",
-  "right-1 top-[58%] text-left sm:right-12",
-  "left-1 top-[82%] text-left sm:left-8",
-];
-
-const ROSES = [
-  "left-[20%] top-[16%]",
-  "right-[27%] top-[34%]",
-  "left-[31%] top-[55%]",
-  "right-[18%] top-[78%]",
-];
-
-const ILLUSTRATIONS = [
-  "/wedding-design/rings.png",
-  "/wedding-design/wildflowers-stem.png",
-  "/wedding-design/cocktail.png",
-  "/wedding-design/wildflowers-stem.png",
-];
-
-const ILLUSTRATION_POSITIONS = [
-  "left-2 top-[21%] w-16 opacity-80 sm:left-6 sm:w-24",
-  "right-4 top-[40%] w-16 rotate-[18deg] opacity-55 sm:right-12 sm:w-24",
-  "left-0 top-[63%] w-16 opacity-80 sm:left-8 sm:w-24",
-  "right-8 top-[84%] w-14 rotate-[-20deg] opacity-55 sm:w-20",
-];
-
 export function ProgramSection({ settings }: ProgramSectionProps) {
-  const items = settings.programItems;
+  const items = settings.programItems.slice(0, 4);
 
   return (
-    <section
-      id="program"
-      className="wedding-paper relative isolate scroll-mt-24 overflow-hidden px-4 pb-16 pt-8 sm:px-8 sm:py-24"
-    >
-      <Image
-        src="/wedding-design/wildflowers-wide.png"
-        alt=""
-        width={740}
-        height={423}
-        className="pointer-events-none absolute right-1 top-6 w-28 opacity-85 mix-blend-multiply sm:right-0 sm:top-0 sm:w-80"
-      />
-      <div className="mx-auto max-w-md sm:max-w-2xl">
-        <div className="text-left sm:text-center">
-          <h2 className="paper-ink">
-            <span className="font-script block text-5xl leading-none sm:text-7xl">
-              План
-            </span>
-            <span className="font-display -mt-2 block text-3xl uppercase tracking-[0.18em] sm:text-5xl">
-              мероприятия
-            </span>
-          </h2>
-          <p className="mt-5 max-w-sm font-display text-sm uppercase leading-5 tracking-[0.08em] text-[#24340d]/70 sm:mx-auto sm:text-base">
-            {settings.programDescription}
-          </p>
-        </div>
+    <section id="program" className="figma-frame-section scroll-mt-24">
+      <div className="figma-phone-frame text-black">
+        <p
+          className="absolute whitespace-nowrap font-figma-script text-[48px] leading-none text-black"
+          style={{ left: "calc(20% - 24.4px)", top: "calc(10% + 22.9px)" }}
+        >
+          План
+        </p>
+        <p
+          className="absolute whitespace-nowrap font-display text-[32px] uppercase leading-none tracking-[2.88px] text-black"
+          style={{ left: "calc(30% - 25.6px)", top: "calc(15% + 13.35px)" }}
+        >
+          мероприятия
+        </p>
 
-        <ol className="relative mx-auto mt-6 h-[62rem] max-w-sm sm:mt-10 sm:h-[62rem] sm:max-w-md">
-          <svg
-            className="pointer-events-none absolute inset-y-0 left-1/2 h-full w-full -translate-x-1/2 text-[#3f8059]"
-            viewBox="0 0 360 920"
-            preserveAspectRatio="none"
-            aria-hidden
-          >
-            <path
-              d="M176 0 C150 96 218 148 222 232 C228 346 132 366 128 482 C124 596 220 626 218 724 C216 822 166 842 176 920"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.15"
-              strokeLinecap="round"
-            />
-          </svg>
+        <Image
+          src="/figma-wedding/program-line.svg"
+          alt=""
+          width={269}
+          height={686}
+          className="absolute max-w-none"
+          style={{
+            left: "calc(20% - 12.9px)",
+            top: "calc(25% + 16.25px)",
+            width: "269.357px",
+            height: "686px",
+          }}
+          aria-hidden
+        />
 
-          {ROSES.map((position, index) => (
-            <RoseAccent
-              key={position}
-              className={`absolute h-14 w-14 text-[#bd7e8b] sm:h-16 sm:w-16 ${position}`}
-              rotate={index % 2 === 0 ? -18 : 22}
-            />
-          ))}
+        {roseDecor.map((item) => (
+          <DecorImage key={item.src} {...item} />
+        ))}
+        {leafDecor.map((item) => (
+          <DecorImage key={item.src} {...item} />
+        ))}
 
-          {items.map((item, index) => (
-            <li
-              key={`${item.time}-${item.title}`}
-              className={`absolute z-10 max-w-[8rem] rounded-sm bg-[#fbf3d9]/70 px-1.5 py-1 text-[#24340d] backdrop-blur-[1px] sm:max-w-[11rem] sm:bg-transparent sm:p-0 sm:backdrop-blur-0 ${POSITIONS[index] ?? POSITIONS[index % POSITIONS.length]}`}
-            >
-              <p className="font-script text-3xl leading-none sm:text-4xl">
+        {items.map((item, index) => {
+          const layout = itemLayout[index] ?? itemLayout[index % itemLayout.length];
+          return (
+            <div key={`${item.time}-${item.title}`}>
+              <p
+                className="absolute whitespace-nowrap font-figma-script text-[24px] leading-none text-black"
+                style={layout.title}
+              >
                 {item.title}
               </p>
-              <p className="mt-2 font-display text-[0.98rem] uppercase leading-[1.16] tracking-[0.07em] sm:text-lg sm:leading-5 sm:tracking-[0.08em]">
+              <p
+                className="absolute w-[193px] whitespace-pre-wrap font-display text-[16px] leading-[0.9] tracking-[1.44px] text-black"
+                style={layout.description}
+              >
                 {item.description}
               </p>
-              <p className="font-display mt-4 text-2xl italic leading-none sm:mt-5 sm:text-3xl">
+              <p
+                className="absolute whitespace-nowrap font-figma-script text-[24px] leading-none text-black"
+                style={layout.time}
+              >
                 {item.time}
               </p>
-            </li>
-          ))}
+            </div>
+          );
+        })}
 
-          {items.map((item, index) => (
+        <div
+          className="absolute flex h-[431.823px] w-[506.492px] items-center justify-center"
+          style={{ left: "calc(30% - 9.6px)", top: "-134px" }}
+        >
+          <div className="relative h-[251px] w-[440px] rotate-[-28.78deg]">
             <Image
-              key={`${item.time}-illustration`}
-              src={ILLUSTRATIONS[index] ?? ILLUSTRATIONS[index % ILLUSTRATIONS.length]}
+              src="/figma-wedding/program-flower-wide.png"
               alt=""
-              width={736}
-              height={736}
-              className={`pointer-events-none absolute z-0 mix-blend-multiply ${ILLUSTRATION_POSITIONS[index] ?? ILLUSTRATION_POSITIONS[index % ILLUSTRATION_POSITIONS.length]}`}
+              fill
+              className="object-cover"
+              aria-hidden
             />
-          ))}
-        </ol>
+          </div>
+        </div>
+        <div
+          className="absolute flex h-[93.877px] w-[72.979px] items-center justify-center"
+          style={{ left: "calc(80% - 5.6px)", top: "calc(45% + 24.05px)" }}
+        >
+          <div className="relative h-[84.509px] w-[58.269px] rotate-[-10.73deg] overflow-hidden">
+            <Image
+              src="/figma-wedding/program-hourglass.png"
+              alt=""
+              fill
+              className="scale-[8.7] object-cover object-center"
+              aria-hidden
+            />
+          </div>
+        </div>
+        <div
+          className="absolute flex h-[75.153px] w-[63.786px] items-center justify-center"
+          style={{ left: "calc(10% - 4.2px)", top: "calc(70% - 2.7px)" }}
+        >
+          <div className="relative h-[69px] w-[56px] rotate-[6.81deg]">
+            <Image
+              src="/figma-wedding/program-cocktail.png"
+              alt=""
+              fill
+              className="object-cover"
+              aria-hidden
+            />
+          </div>
+        </div>
+        <Image
+          src="/figma-wedding/program-rings.png"
+          alt=""
+          width={80}
+          height={81}
+          className="absolute h-[81px] w-[80px] object-cover"
+          style={{ left: "calc(10% + 1.8px)", top: "calc(35% + 31.15px)" }}
+          aria-hidden
+        />
       </div>
     </section>
   );

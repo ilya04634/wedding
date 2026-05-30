@@ -80,7 +80,7 @@ function EnvelopeGate({
       type="button"
       onClick={onOpen}
       disabled={isOpening}
-      className={`invitation-envelope-gate fixed inset-0 z-50 flex min-h-[100dvh] items-center justify-center overflow-hidden bg-[#fbf3d9] px-6 text-center text-[#4f5609] transition-opacity duration-700 ${
+      className={`invitation-envelope-gate fixed inset-0 z-50 flex min-h-[100dvh] items-center justify-center overflow-hidden bg-[#fdf5e0] px-6 text-center text-[#4f5609] transition-opacity duration-700 ${
         isOpening ? "pointer-events-none opacity-0 delay-700" : "opacity-100"
       }`}
       aria-label="Открыть приглашение"
@@ -94,7 +94,7 @@ function EnvelopeGate({
         <span className={`envelope-shell mt-8 ${isOpening ? "is-opening" : ""}`}>
           <span className="envelope-back" />
           <span className="envelope-paper">
-            <span className="font-script block text-4xl leading-none text-[#6c7411]">
+            <span className="font-figma-script block text-4xl leading-none text-[#6c7411]">
               {inviteName}
             </span>
             <span className="mt-2 block font-display text-[0.62rem] uppercase tracking-[0.18em] text-[#4f5609]/55">
@@ -108,7 +108,7 @@ function EnvelopeGate({
           </span>
         </span>
 
-        <span className="font-script mt-8 text-4xl leading-none text-[#6c7411]">
+        <span className="font-figma-script mt-8 text-4xl leading-none text-[#6c7411]">
           Нажмите, чтобы открыть
         </span>
       </span>
@@ -137,7 +137,7 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
   }, [isOpening]);
 
   return (
-    <main className="wedding-paper relative min-h-[100dvh] w-full overflow-hidden text-[#24340d]">
+    <main className="figma-section relative min-h-[100dvh] w-full overflow-hidden text-[#24340d]">
       {!isOpened ? (
         <EnvelopeGate
           inviteName={invite.inviteName}
@@ -160,8 +160,8 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
         />
       )}
 
-      <div className="absolute inset-0 bg-[#fbf3d9]/34" aria-hidden />
-      <div className="absolute inset-x-0 bottom-0 h-[44%] bg-gradient-to-t from-[#fbf3d9] via-[#fbf3d9]/92 to-transparent" aria-hidden />
+      <div className="absolute inset-0 bg-[#fdf5e0]/34" aria-hidden />
+      <div className="absolute inset-x-0 bottom-0 h-[44%] bg-gradient-to-t from-[#fdf5e0] via-[#fdf5e0]/92 to-transparent" aria-hidden />
       <Image
         src="/wedding-design/wildflowers-wide.png"
         alt=""
@@ -194,7 +194,7 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
           <p className="font-display text-xs uppercase tracking-[0.24em] text-[#24340d]/75 sm:text-sm">
             {settings.inviteLabel}
           </p>
-          <h1 className="font-script mt-4 text-balance text-6xl leading-[0.82] text-[#3f8059] sm:mt-5 sm:text-8xl">
+          <h1 className="font-figma-script mt-4 text-balance text-6xl leading-[0.82] text-[#397c57] sm:mt-5 sm:text-8xl">
             {invite.inviteName}
           </h1>
           <p className="mt-6 max-w-md text-balance font-display text-xl uppercase leading-7 tracking-[0.04em] text-[#24340d] sm:text-2xl">
@@ -231,7 +231,7 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
 
         <footer className="mx-auto flex w-full max-w-lg flex-col gap-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:gap-3 sm:pb-2">
           <div className="pb-2 text-center">
-            <p className="font-script text-4xl leading-none text-[#3f8059] sm:text-5xl">
+            <p className="font-figma-script text-4xl leading-none text-[#397c57] sm:text-5xl">
               С любовью,
             </p>
             <p className="mt-1 font-display text-base uppercase tracking-[0.18em] text-[#24340d] sm:text-lg">

@@ -15,12 +15,7 @@ function getRemainingTime() {
   return { days, hours, minutes, seconds };
 }
 
-const LABELS = [
-  ["days", "дней"],
-  ["hours", "часов"],
-  ["minutes", "минут"],
-  ["seconds", "секунд"],
-] as const;
+const labels = ["дней", "часов", "минут", "секунд"];
 
 export function CountdownSection() {
   const [remaining, setRemaining] = useState(getRemainingTime);
@@ -33,44 +28,146 @@ export function CountdownSection() {
     return () => window.clearInterval(interval);
   }, []);
 
+  const values = [
+    remaining.days,
+    remaining.hours,
+    remaining.minutes,
+    remaining.seconds,
+  ].map((value) => String(value).padStart(2, "0"));
+
   return (
-    <section className="wedding-paper px-4 pb-2 pt-10 sm:px-8 sm:py-16">
-      <div className="relative mx-auto max-w-5xl overflow-hidden px-3 py-8 text-center sm:px-10 sm:py-16">
-        <div className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,_rgba(231,151,150,0.12),_rgba(231,151,150,0)_70%)]" />
+    <section id="dress-code" className="figma-frame-section scroll-mt-24">
+      <div className="figma-phone-frame text-black">
         <Image
-          src="/wedding-design/wildflowers-stem.png"
+          src="/figma-wedding/dress-flower-corner.png"
           alt=""
-          width={600}
-          height={900}
-          className="pointer-events-none absolute right-0 top-5 w-32 opacity-80 mix-blend-multiply sm:w-48"
+          width={163}
+          height={247}
+          className="absolute left-[-35px] top-[-53px] h-[247px] w-[163px] object-bottom"
+          aria-hidden
         />
 
-        <div className="relative z-10 mx-auto max-w-4xl">
-          <h2 className="font-script paper-green mx-auto max-w-3xl text-balance text-[3.4rem] leading-[0.82] sm:text-7xl lg:text-8xl">
-            Мы скажем
-            <span className="block">&quot;да&quot; через</span>
-          </h2>
+        <p
+          className="absolute whitespace-nowrap font-display text-[32px] uppercase leading-none tracking-[0.64px] text-black"
+          style={{ left: "calc(45% - 92.9px)", top: "calc(10% + 4.9px)" }}
+        >
+          Дресс-код
+        </p>
+        <p
+          className="absolute whitespace-nowrap font-figma-script text-[48px] leading-none text-[#397c57]"
+          style={{ left: "calc(40% - 0.8px)", top: "calc(15% + 0.35px)" }}
+        >
+          dress-code
+        </p>
+        <p
+          className="absolute w-[253px] whitespace-pre-wrap font-display text-[15px] uppercase leading-[1.14] tracking-[0.3px] text-black"
+          style={{ left: "calc(50% - 112px)", top: "calc(20% + 21.8px)" }}
+        >
+          Без строгих цветов{"\n"}приходите красивые и счастливые
+        </p>
+        <p
+          className="absolute w-[253px] font-display text-[16px] leading-normal tracking-[0.32px] text-[#397c57]"
+          style={{ left: "calc(50% - 113px)", top: "calc(30% - 13.3px)" }}
+        >
+          Главное настроение дня - легкость, улыбки и ощущение летнего сада.
+        </p>
 
-          <div className="mt-8 flex items-start justify-center gap-1 text-[#3f8059] sm:mt-10 sm:gap-3">
-            {LABELS.map(([key, label], index) => (
-              <div key={key} className="flex items-start">
-                <div className="w-[3.6rem] sm:w-32 lg:w-40">
-                  <p className="font-display text-[2.55rem] font-medium leading-none tracking-[0.02em] sm:text-[5.8rem] lg:text-[7.2rem]">
-                    {String(remaining[key]).padStart(2, "0")}
-                  </p>
-                  <p className="font-script paper-ink mt-1 text-xl leading-none sm:text-3xl">
-                    {label}
-                  </p>
-                </div>
-                {index < LABELS.length - 1 ? (
-                  <span className="font-display mt-1 text-[2.15rem] leading-none sm:mt-2 sm:text-[5.4rem] lg:text-[6.6rem]">
-                    :
-                  </span>
-                ) : null}
-              </div>
-            ))}
+        <Image
+          src="/figma-wedding/dress-divider.svg"
+          alt=""
+          width={102}
+          height={14}
+          className="absolute h-[14px] w-[102px]"
+          style={{ left: "calc(40% + 7.2px)", top: "calc(40% + 31.6px)" }}
+          aria-hidden
+        />
+        {[
+          {
+            src: "/figma-wedding/dress-mini-1.svg",
+            style: {
+              left: "calc(50% - 16.44px)",
+              top: "calc(40% + 14.6px)",
+              width: "13.44px",
+              height: "17.998px",
+            },
+          },
+          {
+            src: "/figma-wedding/dress-mini-2.svg",
+            style: {
+              left: "calc(50% + 5.54px)",
+              top: "calc(40% + 14.77px)",
+              width: "15.019px",
+              height: "24.001px",
+            },
+          },
+          {
+            src: "/figma-wedding/dress-mini-3.svg",
+            style: {
+              left: "calc(60% - 13.08px)",
+              top: "calc(40% + 16.31px)",
+              width: "15.019px",
+              height: "24.001px",
+            },
+          },
+          {
+            src: "/figma-wedding/dress-mini-4.svg",
+            style: {
+              left: "calc(60% + 13.13px)",
+              top: "calc(40% + 13.22px)",
+              width: "15.019px",
+              height: "24.001px",
+            },
+          },
+        ].map((item) => (
+          <div
+            key={item.src}
+            className="absolute"
+            style={item.style}
+            aria-hidden
+          >
+            <Image src={item.src} alt="" fill className="object-contain" />
           </div>
+        ))}
+
+        <p
+          className="absolute w-[265px] text-center font-figma-script text-[48px] leading-[0.89] text-[#397c57]"
+          style={{ left: "calc(20% + 108.1px)", top: "calc(50% + 5.5px)", transform: "translateX(-50%)" }}
+        >
+          Мы скажем “да” через
+        </p>
+        <p
+          className="absolute whitespace-nowrap font-display text-[48px] uppercase leading-[1.082] tracking-[7.2px] text-[#397c57]"
+          style={{ left: "calc(50% - 140px)", top: "calc(60% + 4.4px)" }}
+        >
+          {values.join(":")}
+        </p>
+        <div
+          className="absolute grid w-[280px] grid-cols-4 text-center font-figma-script text-[16px] leading-none text-black"
+          style={{ left: "calc(50% - 140px)", top: "calc(65% + 8.85px)" }}
+        >
+          {labels.map((label) => (
+            <span key={label}>{label}</span>
+          ))}
         </div>
+
+        <Image
+          src="/figma-wedding/dress-line.svg"
+          alt=""
+          width={60}
+          height={1}
+          className="absolute h-px w-[60px]"
+          style={{ left: "calc(30% - 22.6px)", top: "calc(20% - 13.2px)" }}
+          aria-hidden
+        />
+        <Image
+          src="/figma-wedding/dress-flower-side.png"
+          alt=""
+          width={175}
+          height={262}
+          className="absolute h-[262px] w-[175px] object-cover"
+          style={{ left: "calc(60% + 23.8px)", top: "calc(40% + 17.6px)" }}
+          aria-hidden
+        />
       </div>
     </section>
   );

@@ -3,6 +3,7 @@ import { DressCodeSection } from "@/components/home/dress-code-section";
 import { FinalRings } from "@/components/home/final-rings";
 import { HeroSection } from "@/components/home/hero-section";
 import { ProgramSection } from "@/components/home/program-section";
+import { VenueDateSection } from "@/components/home/venue-date-section";
 import { WishWallSection } from "@/components/home/wish-wall-section";
 import { RsvpForm } from "@/components/rsvp/rsvp-form";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
@@ -69,6 +70,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   return (
     <div className="wedding-paper overflow-hidden">
       <HeroSection guestName={invite?.inviteName} settings={settings} />
+      <VenueDateSection settings={settings} />
       {sectionOrder.map((key) => {
         if (
           rendered.has(key) ||

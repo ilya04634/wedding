@@ -185,6 +185,64 @@ select {
     font-family: var(--font-caveat), cursive;
   }
 
+  .font-figma-script {
+    font-family: var(--font-marck), var(--font-caveat), cursive;
+  }
+
+  .figma-section {
+    background: #fdf5e0;
+    forced-color-adjust: none;
+  }
+
+  .figma-frame-section {
+    height: 951px;
+    overflow: hidden;
+    background: #fdf5e0;
+    forced-color-adjust: none;
+  }
+
+  .figma-phone-frame {
+    position: relative;
+    margin-inline: auto;
+    width: 402px;
+    height: 951px;
+    max-width: none;
+    overflow: hidden;
+    background: #fdf5e0;
+    forced-color-adjust: none;
+    transform-origin: top center;
+  }
+
+  @media (max-width: 340px) {
+    .figma-frame-section {
+      height: 704px;
+    }
+
+    .figma-phone-frame {
+      transform: scale(0.74);
+    }
+  }
+
+  @media (min-width: 341px) and (max-width: 374px) {
+    .figma-frame-section {
+      height: 846px;
+    }
+
+    .figma-phone-frame {
+      transform: scale(0.89);
+    }
+  }
+
+  @media (min-width: 375px) and (max-width: 401px) {
+    .figma-frame-section {
+      height: 922px;
+    }
+
+    .figma-phone-frame {
+      transform: scale(0.97);
+    }
+  }
+
   .garden-fade {
     animation: garden-fade 0.8s ease both;
   }
