@@ -20,7 +20,7 @@ export function HeroSection({ guestName, settings }: HeroSectionProps) {
         alt=""
         width={740}
         height={423}
-        className="pointer-events-none absolute right-0 top-0 z-0 w-56 opacity-90 mix-blend-multiply sm:w-80"
+        className="pointer-events-none absolute -right-12 top-12 z-0 w-44 opacity-90 mix-blend-multiply sm:-right-8 sm:top-8 sm:w-72 lg:right-2 lg:top-10 lg:w-80"
       />
       <Image
         src="/wedding-design/wildflowers-stem.png"
