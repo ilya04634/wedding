@@ -21,7 +21,7 @@ export function WishWallSection({ guestName, settings }: WishWallSectionProps) {
           Стена пожеланий
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-[#746f66]">
-          Оставьте пару теплых слов для Даши и Ильи. Пожелания появятся на
+          Оставьте пару теплых слов для Ильи и Даши. Пожелания появятся на
           общей доске как маленькие открытки.
         </p>
         <WishWall
