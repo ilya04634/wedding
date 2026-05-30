@@ -6,8 +6,8 @@ function MiniFlower({ className }: { className?: string }) {
       <path
         d="M14 28 C22 17 33 17 42 28 C50 18 62 18 70 28 C78 17 90 17 98 28"
         stroke="currentColor"
-        strokeWidth="1"
         strokeLinecap="round"
+        strokeWidth="1"
       />
       {[20, 42, 64, 86].map((x) => (
         <path
@@ -23,41 +23,39 @@ function MiniFlower({ className }: { className?: string }) {
 
 export function DressCodeSection() {
   return (
-    <section className="wedding-paper relative isolate overflow-hidden px-4 py-20 sm:px-8 sm:py-24">
+    <section className="wedding-paper relative isolate overflow-hidden px-6 py-20 text-[#050500] sm:px-8 sm:py-24">
       <Image
-        src="/wedding-design/wildflowers-corner.png"
+        src="/wedding-design/figma-dress-corner-flower.png"
         alt=""
-        width={675}
-        height={900}
-        className="pointer-events-none absolute -left-20 top-24 z-0 w-36 opacity-30 mix-blend-multiply sm:-left-8 sm:top-0 sm:w-64 sm:opacity-85"
+        width={768}
+        height={1024}
+        className="pointer-events-none absolute -left-12 -top-12 z-0 w-48 opacity-95 mix-blend-multiply sm:left-[18%] sm:top-0 sm:w-64"
       />
-      <Image
-        src="/wedding-design/wildflowers-stem.png"
-        alt=""
-        width={600}
-        height={900}
-        className="pointer-events-none absolute -right-14 bottom-0 z-0 w-32 opacity-35 mix-blend-multiply sm:-right-8 sm:w-56 sm:opacity-85"
-      />
-      <div className="relative z-10 mx-auto max-w-md text-center text-[#24340d]">
-        <div className="text-center">
-          <h2 className="font-display text-4xl uppercase tracking-[0.08em] sm:text-5xl">
+
+      <div className="relative z-10 mx-auto max-w-sm text-left sm:max-w-md">
+        <header className="pt-8 text-center">
+          <h2 className="font-display text-[2.35rem] uppercase leading-none tracking-[0.08em] sm:text-5xl">
             Дресс-код
           </h2>
-          <div className="mt-2 flex items-center justify-center gap-2 text-[#3f8059]">
-            <span className="h-px w-12 bg-[#3f8059]/70" />
-            <span className="font-script text-4xl leading-none sm:text-5xl">
+          <div className="mt-3 flex items-center justify-center gap-2 text-[#397c57]">
+            <span className="h-px w-16 bg-[#397c57]/75" />
+            <span className="font-script text-[3.2rem] leading-none sm:text-6xl">
               dress-code
             </span>
           </div>
+        </header>
+
+        <div className="mx-auto mt-10 max-w-[17rem] sm:max-w-sm">
+          <p className="font-display text-[1.35rem] uppercase leading-[1.12] tracking-[0.04em] sm:text-3xl">
+            Без строгих цветов приходите красивые и счастливые
+          </p>
+          <p className="mt-5 font-display text-[1.25rem] leading-[1.35] tracking-[0.02em] text-[#397c57] sm:text-2xl">
+            Главное настроение дня - легкость, улыбки и ощущение летнего сада.
+          </p>
         </div>
 
-        <div className="mx-auto mt-10 max-w-sm">
-          <p className="font-display text-2xl uppercase leading-8 tracking-[0.04em] text-[#24340d] sm:text-3xl sm:leading-9">
-            Приходите красивые и счастливые
-          </p>
-          <div className="mt-6 flex justify-center text-[#24340d]">
-            <MiniFlower className="h-9 w-32" />
-          </div>
+        <div className="mt-14 flex justify-center text-[#050500]">
+          <MiniFlower className="h-10 w-32" />
         </div>
       </div>
     </section>

@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --background: #fbf3d9;
+  --background: #fdf5e0;
   --foreground: #4f5609;
   --sage: #8a9a7a;
   --peony: #6c7411;
@@ -43,7 +43,7 @@ select {
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #fbf3d9;
+    --background: #fdf5e0;
     --foreground: #4f5609;
     --sage: #8a9a7a;
     --peony: #6c7411;
@@ -53,7 +53,7 @@ select {
 
   html,
   body {
-    background-color: #fbf3d9;
+    background-color: #fdf5e0;
     color: #4f5609;
   }
 }
@@ -182,7 +182,7 @@ select {
   }
 
   .font-script {
-    font-family: var(--font-caveat), cursive;
+    font-family: var(--font-marck-script), var(--font-caveat), cursive;
   }
 
   .garden-fade {
@@ -197,7 +197,7 @@ select {
     background:
       radial-gradient(circle at 18% 12%, rgba(244, 208, 63, 0.1), transparent 18rem),
       radial-gradient(circle at 82% 18%, rgba(138, 154, 122, 0.1), transparent 20rem),
-      linear-gradient(180deg, #fbf3d9 0%, #f8efd4 100%);
+      linear-gradient(180deg, #fdf5e0 0%, #fdf5e0 100%);
     forced-color-adjust: none;
   }
 

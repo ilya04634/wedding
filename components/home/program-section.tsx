@@ -5,78 +5,26 @@ interface ProgramSectionProps {
   settings: SiteSettings;
 }
 
-function RoseAccent({
-  className,
-  rotate = 0,
-}: {
-  className?: string;
-  rotate?: number;
-}) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 72 72"
-      fill="none"
-      style={{ transform: `rotate(${rotate}deg)` }}
-      aria-hidden
-    >
-      <path
-        d="M36 49 C31 43 25 42 23 36 C21 29 28 22 36 22 C45 22 52 30 49 39 C47 45 42 47 36 49 Z"
-        stroke="currentColor"
-        strokeWidth="1.3"
-      />
-      <path
-        d="M35 47 C33 39 36 34 42 31 C38 30 33 31 30 36 C30 31 34 27 39 25"
-        stroke="currentColor"
-        strokeWidth="1.1"
-        strokeLinecap="round"
-      />
-      <path
-        d="M34 49 C29 56 24 59 17 61"
-        stroke="#3f8059"
-        strokeWidth="1.1"
-        strokeLinecap="round"
-      />
-      <path
-        d="M21 58 C17 52 12 51 8 55 C12 60 16 61 21 58 Z"
-        stroke="#3f8059"
-        strokeWidth="1"
-      />
-      <path
-        d="M28 53 C27 47 23 44 18 45 C19 51 23 54 28 53 Z"
-        stroke="#3f8059"
-        strokeWidth="1"
-      />
-    </svg>
-  );
-}
-
-const POSITIONS = [
-  "right-1 top-[13%] text-left sm:right-12",
-  "left-1 top-[34%] text-left sm:left-8",
-  "right-1 top-[58%] text-left sm:right-12",
-  "left-1 top-[82%] text-left sm:left-8",
+const ITEM_POSITIONS = [
+  "left-[50%] top-[18%] max-w-[11.5rem]",
+  "left-[7%] top-[39%] max-w-[11.5rem]",
+  "left-[50%] top-[60%] max-w-[12rem]",
+  "left-[7%] top-[82%] max-w-[11.5rem]",
 ];
 
-const ROSES = [
-  "left-[20%] top-[16%]",
-  "right-[27%] top-[34%]",
-  "left-[31%] top-[55%]",
-  "right-[18%] top-[78%]",
-];
-
-const ILLUSTRATIONS = [
-  "/wedding-design/rings.png",
-  "/wedding-design/wildflowers-stem.png",
-  "/wedding-design/cocktail.png",
-  "/wedding-design/wildflowers-stem.png",
-];
-
-const ILLUSTRATION_POSITIONS = [
-  "left-2 top-[21%] w-16 opacity-80 sm:left-6 sm:w-24",
-  "right-4 top-[40%] w-16 rotate-[18deg] opacity-55 sm:right-12 sm:w-24",
-  "left-0 top-[63%] w-16 opacity-80 sm:left-8 sm:w-24",
-  "right-8 top-[84%] w-14 rotate-[-20deg] opacity-55 sm:w-20",
+const DECORATIONS = [
+  {
+    src: "/wedding-design/figma-program-rings.png",
+    className: "left-[9%] top-[30%] w-20 sm:left-[18%]",
+  },
+  {
+    src: "/wedding-design/figma-program-hourglass.png",
+    className: "right-[9%] top-[43%] w-16 opacity-80 sm:right-[22%]",
+  },
+  {
+    src: "/wedding-design/figma-program-cocktail.png",
+    className: "left-[6%] top-[63%] w-20 sm:left-[19%]",
+  },
 ];
 
 export function ProgramSection({ settings }: ProgramSectionProps) {
@@ -85,80 +33,63 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
   return (
     <section
       id="program"
-      className="wedding-paper relative isolate scroll-mt-24 overflow-hidden px-4 pb-16 pt-8 sm:px-8 sm:py-24"
+      className="wedding-paper relative isolate scroll-mt-24 overflow-hidden px-5 pb-10 pt-16 text-[#050500] sm:px-8 sm:py-24"
     >
       <Image
-        src="/wedding-design/wildflowers-wide.png"
+        src="/wedding-design/figma-program-bouquet.png"
         alt=""
         width={740}
         height={423}
-        className="pointer-events-none absolute right-1 top-6 w-28 opacity-85 mix-blend-multiply sm:right-0 sm:top-0 sm:w-80"
+        className="pointer-events-none absolute -right-10 -top-6 z-0 w-52 rotate-[-2deg] mix-blend-multiply sm:right-[8%] sm:top-0 sm:w-72 lg:right-[18%]"
       />
-      <div className="mx-auto max-w-md sm:max-w-2xl">
-        <div className="text-left sm:text-center">
-          <h2 className="paper-ink">
-            <span className="font-script block text-5xl leading-none sm:text-7xl">
+
+      <div className="relative z-10 mx-auto max-w-md sm:max-w-2xl">
+        <header className="relative pr-20 text-left sm:text-center">
+          <h2 className="text-[#050500]">
+            <span className="font-script block text-[4.2rem] leading-none sm:text-8xl">
               План
             </span>
-            <span className="font-display -mt-2 block text-3xl uppercase tracking-[0.18em] sm:text-5xl">
+            <span className="font-display -mt-4 block text-[2.05rem] uppercase leading-none tracking-[0.12em] sm:text-5xl">
               мероприятия
             </span>
           </h2>
-          <p className="mt-5 max-w-sm font-display text-sm uppercase leading-5 tracking-[0.08em] text-[#24340d]/70 sm:mx-auto sm:text-base">
-            {settings.programDescription}
-          </p>
-        </div>
+        </header>
 
-        <ol className="relative mx-auto mt-6 h-[62rem] max-w-sm sm:mt-10 sm:h-[62rem] sm:max-w-md">
-          <svg
-            className="pointer-events-none absolute inset-y-0 left-1/2 h-full w-full -translate-x-1/2 text-[#3f8059]"
-            viewBox="0 0 360 920"
-            preserveAspectRatio="none"
-            aria-hidden
-          >
-            <path
-              d="M176 0 C150 96 218 148 222 232 C228 346 132 366 128 482 C124 596 220 626 218 724 C216 822 166 842 176 920"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.15"
-              strokeLinecap="round"
-            />
-          </svg>
+        <ol className="relative mx-auto mt-8 h-[52rem] max-w-[24rem] sm:mt-12 sm:h-[64rem] sm:max-w-lg">
+          <Image
+            src="/wedding-design/figma-program-line.svg"
+            alt=""
+            width={270}
+            height={686}
+            className="pointer-events-none absolute left-[16%] top-0 h-full w-[74%] object-fill sm:left-[23%] sm:w-[58%]"
+          />
 
-          {ROSES.map((position, index) => (
-            <RoseAccent
-              key={position}
-              className={`absolute h-14 w-14 text-[#bd7e8b] sm:h-16 sm:w-16 ${position}`}
-              rotate={index % 2 === 0 ? -18 : 22}
+          {DECORATIONS.map((item) => (
+            <Image
+              key={item.src}
+              src={item.src}
+              alt=""
+              width={736}
+              height={736}
+              className={`pointer-events-none absolute z-0 mix-blend-multiply ${item.className}`}
             />
           ))}
 
           {items.map((item, index) => (
             <li
               key={`${item.time}-${item.title}`}
-              className={`absolute z-10 max-w-[8rem] rounded-sm bg-[#fbf3d9]/70 px-1.5 py-1 text-[#24340d] backdrop-blur-[1px] sm:max-w-[11rem] sm:bg-transparent sm:p-0 sm:backdrop-blur-0 ${POSITIONS[index] ?? POSITIONS[index % POSITIONS.length]}`}
+              className={`absolute z-10 ${ITEM_POSITIONS[index] ?? ITEM_POSITIONS[index % ITEM_POSITIONS.length]}`}
             >
-              <p className="font-script text-3xl leading-none sm:text-4xl">
+              <p className="font-script text-[2rem] leading-none sm:text-[2.75rem]">
                 {item.title}
               </p>
-              <p className="mt-2 font-display text-[0.98rem] uppercase leading-[1.16] tracking-[0.07em] sm:text-lg sm:leading-5 sm:tracking-[0.08em]">
+              <p className="font-display mt-1 text-[1rem] uppercase leading-[0.95] tracking-[0.08em] sm:text-xl">
                 {item.description}
               </p>
-              <p className="font-display mt-4 text-2xl italic leading-none sm:mt-5 sm:text-3xl">
+              <p className="font-script mt-4 text-[1.8rem] leading-none sm:text-[2.35rem]">
                 {item.time}
               </p>
             </li>
-          ))}
-
-          {items.map((item, index) => (
-            <Image
-              key={`${item.time}-illustration`}
-              src={ILLUSTRATIONS[index] ?? ILLUSTRATIONS[index % ILLUSTRATIONS.length]}
-              alt=""
-              width={736}
-              height={736}
-              className={`pointer-events-none absolute z-0 mix-blend-multiply ${ILLUSTRATION_POSITIONS[index] ?? ILLUSTRATION_POSITIONS[index % ILLUSTRATION_POSITIONS.length]}`}
-            />
           ))}
         </ol>
       </div>

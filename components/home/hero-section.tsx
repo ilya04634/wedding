@@ -1,6 +1,4 @@
-import { VenueMapLink } from "@/components/home/venue-map-link";
 import type { SiteSettings } from "@/types/settings";
-import { Calendar, Clock } from "lucide-react";
 import Image from "next/image";
 
 interface HeroSectionProps {
@@ -53,54 +51,67 @@ export function HeroSection({ guestName, settings }: HeroSectionProps) {
           {settings.heroText}
         </p>
 
-        <div className="mt-8 grid w-full max-w-4xl gap-5 text-[#24340d] sm:mt-10 sm:gap-6 md:grid-cols-[0.88fr_1.12fr] md:items-center">
-          <div className="paper-card relative mx-auto w-[calc(100%-0.5rem)] max-w-sm px-4 py-6 text-center sm:w-full sm:max-w-none sm:rotate-[-3deg] sm:px-8 sm:py-9">
-            <p className="font-script text-3xl leading-none text-[#24340d] sm:text-4xl">
-              место проведения
-            </p>
-            <p className="font-display mt-1 text-[1.7rem] font-semibold uppercase leading-none text-[#3f8059] sm:text-5xl">
-              {settings.weddingVenue}
-            </p>
-            <p className="mt-5 font-display text-base leading-6 text-[#24340d] sm:text-lg">
-              по адресу
-              <span className="block">{settings.weddingAddressLine}</span>
-            </p>
-            <div className="mt-5">
-              <VenueMapLink
-                address={settings.weddingAddressLine}
-                mapUrl={settings.weddingMapUrl}
-              />
+        <div className="relative mt-10 w-full max-w-[24rem] pb-6 text-[#050500] sm:mt-14 sm:max-w-3xl sm:pb-10">
+          <div className="relative mx-auto h-[27rem] max-w-sm sm:h-[32rem] sm:max-w-xl">
+            <Image
+              src="/wedding-design/figma-venue-photo.png"
+              alt=""
+              width={1440}
+              height={1800}
+              priority
+              className="absolute right-0 top-16 h-[19rem] w-[16rem] object-cover shadow-[0_20px_45px_rgba(52,49,45,0.16)] sm:h-[25rem] sm:w-[20rem]"
+            />
+
+            <div className="paper-card absolute left-1 top-2 w-[16rem] rotate-[-5deg] !bg-[#fffaf0] px-6 py-8 text-center shadow-[0_20px_45px_rgba(52,49,45,0.13)] sm:left-6 sm:w-[20rem] sm:px-8 sm:py-10">
+              <p className="font-script text-3xl leading-none text-[#050500] sm:text-4xl">
+                место проведения
+              </p>
+              <p className="font-display mt-2 text-3xl uppercase leading-none tracking-[0.02em] text-[#397c57] sm:text-5xl">
+                Ресторан
+              </p>
+              <p className="font-display text-[1.7rem] leading-none text-[#397c57] sm:text-4xl">
+                {settings.weddingVenue}
+              </p>
+              <p className="mt-6 font-display text-base leading-6 text-[#050500] sm:text-lg">
+                по адресу
+                <span className="block">{settings.weddingAddressLine}</span>
+              </p>
+              <a
+                href={settings.weddingMapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 inline-flex min-h-10 items-center justify-center bg-[#397c57] px-6 font-display text-sm lowercase tracking-[0.03em] text-[#fffaf0] shadow-[0_12px_24px_rgba(57,124,87,0.2)] transition hover:-translate-y-0.5 hover:bg-[#2f6849]"
+              >
+                посмотреть маршрут
+              </a>
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-[21rem] sm:max-w-sm">
-            <Image
-              src="/wedding-design/venue.jpg"
-              alt=""
-              width={1100}
-              height={1375}
-              priority
-              className="aspect-[4/5] w-full object-cover shadow-[0_22px_60px_rgba(52,49,45,0.16)]"
-            />
-            <Image
-              src="/wedding-design/wildflowers-stem.png"
-              alt=""
-              width={600}
-              height={900}
-              className="pointer-events-none absolute -bottom-14 -right-10 w-36 rotate-[18deg] opacity-90 mix-blend-multiply"
-            />
+          <div className="relative mx-auto -mt-1 max-w-sm text-center sm:-mt-4">
+            <p className="font-script text-4xl leading-none text-[#397c57]">
+              июль 2026
+            </p>
+            <div className="relative mt-5 flex items-center justify-between font-display text-4xl tracking-[0.02em] text-[#193726]">
+              {["19", "20", "21", "22", "23"].map((day) => (
+                <span key={day} className="relative z-10 w-12">
+                  {day}
+                </span>
+              ))}
+              <Image
+                src="/wedding-design/figma-date-heart.png"
+                alt=""
+                width={736}
+                height={736}
+                className="pointer-events-none absolute left-1/2 top-1/2 z-0 w-20 -translate-x-1/2 -translate-y-1/2 opacity-80 mix-blend-multiply"
+              />
+            </div>
+            <p className="font-script mt-4 text-3xl leading-none text-[#397c57]">
+              вторник
+            </p>
+            <p className="font-display mx-auto mt-7 max-w-xs text-base leading-6 tracking-[0.02em] text-[#397c57]">
+              Надеемся, что вы примете наше приглашение, будем вас ждать!
+            </p>
           </div>
-        </div>
-
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 font-display text-lg text-[#24340d] sm:text-2xl">
-          <span className="inline-flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-[#3f8059]" aria-hidden />
-            {settings.weddingDate}
-          </span>
-          <span className="inline-flex items-center gap-2">
-            <Clock className="h-4 w-4 text-[#3f8059]" aria-hidden />
-            {settings.weddingTime}
-          </span>
         </div>
 
         <a
