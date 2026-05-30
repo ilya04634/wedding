@@ -38,7 +38,7 @@ export function DressCodeSection() {
         height={900}
         className="pointer-events-none absolute -right-14 bottom-0 z-0 w-32 opacity-35 mix-blend-multiply sm:-right-8 sm:w-56 sm:opacity-85"
       />
-      <div className="relative z-10 mx-auto max-w-md text-[#24340d]">
+      <div className="relative z-10 mx-auto max-w-md text-center text-[#24340d]">
         <div className="text-center">
           <h2 className="font-display text-4xl uppercase tracking-[0.08em] sm:text-5xl">
             Дресс-код
@@ -51,14 +51,11 @@ export function DressCodeSection() {
           </div>
         </div>
 
-        <div className="mx-auto mt-9 max-w-[18rem] text-left">
-          <p className="font-display text-lg uppercase leading-5 tracking-[0.04em]">
-            Без строгих цветов приходите красивые и счастливые
+        <div className="mx-auto mt-10 max-w-sm">
+          <p className="font-display text-2xl uppercase leading-8 tracking-[0.04em] text-[#24340d] sm:text-3xl sm:leading-9">
+            Приходите красивые и счастливые
           </p>
-          <p className="mt-5 text-xl leading-7 text-[#3f8059]">
-            Главное настроение дня - легкость, улыбки и ощущение летнего сада.
-          </p>
-          <div className="mt-4 flex justify-center text-[#24340d]">
+          <div className="mt-6 flex justify-center text-[#24340d]">
             <MiniFlower className="h-9 w-32" />
           </div>
         </div>

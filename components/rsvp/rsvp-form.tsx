@@ -2,9 +2,7 @@
 
 import { submitRsvp } from "@/actions/rsvp";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { Section } from "@/components/ui/section";
-import { Textarea } from "@/components/ui/textarea";
 import { rsvpFormSchema, type RsvpFormValues } from "@/lib/validations/rsvp";
 import { cn } from "@/lib/utils";
 import type { GuestPerson } from "@/types/guest";
@@ -50,7 +48,6 @@ function getDefaultPeople(
       personType: person.personType,
       status: "confirmed",
       drink: person.personType === "child" ? "not_applicable" : undefined,
-      allergens: "",
     }));
   }
 
@@ -60,7 +57,6 @@ function getDefaultPeople(
       personType: "adult",
       status: "confirmed",
       drink: undefined,
-      allergens: "",
     },
   ];
 }
@@ -100,7 +96,6 @@ export function RsvpForm({
           person.personType === "child" || person.status === "declined"
             ? "not_applicable"
             : person.drink ?? "no_alcohol",
-        allergens: person.allergens?.trim() || undefined,
       })),
     };
 
@@ -151,11 +146,6 @@ export function RsvpForm({
         noValidate
       >
         <input type="hidden" {...register("guestId")} />
-        {guestId ? (
-          <p className="break-words rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs leading-5 text-neutral-600">
-            Персональная ссылка · ID: {guestId}
-          </p>
-        ) : null}
 
         <div className="space-y-5">
           {formPeople.map((person, index) => {
@@ -260,20 +250,6 @@ export function RsvpForm({
                     ) : null}
                   </fieldset>
                 ) : null}
-
-                <div>
-                  <Label htmlFor={`allergens-${index}`}>
-                    Аллергены{" "}
-                    <span className="font-normal text-neutral-500">
-                      (если есть)
-                    </span>
-                  </Label>
-                  <Textarea
-                    id={`allergens-${index}`}
-                    placeholder="Например: орехи, мед, рыба"
-                    {...register(`people.${index}.allergens`)}
-                  />
-                </div>
               </section>
             );
           })}
