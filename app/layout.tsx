@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Caveat, Marck_Script, Montserrat, Playfair_Display } from "next/font/google";
+import { Caveat, Montserrat, Playfair_Display } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -23,12 +23,6 @@ const caveat = Caveat({
   variable: "--font-caveat",
   display: "swap",
 });
-const marckScript = Marck_Script({
-  subsets: ["cyrillic", "latin"],
-  weight: "400",
-  variable: "--font-marck-script",
-  display: "swap",
-});
 const montserrat = Montserrat({
   subsets: ["cyrillic", "latin"],
   variable: "--font-montserrat",
@@ -46,7 +40,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   colorScheme: "light dark",
-  themeColor: "#fdf5e0",
+  themeColor: "#fbf3d9",
 };
 
 export default function RootLayout({
@@ -57,7 +51,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${caveat.variable} ${marckScript.variable} ${montserrat.variable} min-h-screen bg-[#fdf5e0] font-[family-name:var(--font-montserrat)] text-[#4f5609] antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${caveat.variable} ${montserrat.variable} min-h-screen bg-[#fbf3d9] font-[family-name:var(--font-montserrat)] text-[#4f5609] antialiased`}
       >
         {children}
       </body>
