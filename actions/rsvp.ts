@@ -8,6 +8,16 @@ export type SubmitRsvpResult =
   | { ok: true }
   | { ok: false; error: string };
 
+function normalizeDrinkAnswer(
+  drink: RsvpFormData["people"][number]["drink"] | undefined,
+) {
+  if (Array.isArray(drink)) {
+    return drink.map((item) => item.trim()).filter(Boolean).join(", ");
+  }
+
+  return drink?.trim() || "Не указано";
+}
+
 export async function submitRsvp(
   data: RsvpFormData,
 ): Promise<SubmitRsvpResult> {
@@ -28,7 +38,7 @@ export async function submitRsvp(
         drink:
           person.personType === "child" || person.status === "declined"
             ? "not_applicable"
-            : person.drink ?? "no_alcohol",
+            : normalizeDrinkAnswer(person.drink),
       })),
     });
     return { ok: true };

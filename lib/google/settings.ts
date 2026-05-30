@@ -36,6 +36,8 @@ const SETTING_KEYS = [
   "programDescription",
   "programItemsJson",
   "rsvpDescription",
+  "rsvpAlcoholEnabled",
+  "rsvpAlcoholOptions",
   "inviteLabel",
   "inviteBodyText",
   "inviteChildrenPrefix",
@@ -154,6 +156,29 @@ function parseSectionList(value: string | undefined, fallback: string[]): string
     .filter(Boolean);
 }
 
+function parseTextList(value: string | undefined, fallback: string[]): string[] {
+  if (!value?.trim()) return fallback;
+
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) {
+      const items = parsed
+        .map((item) => String(item ?? "").trim())
+        .filter(Boolean);
+      return items.length ? items : fallback;
+    }
+  } catch {
+    // Fall back to newline parsing below.
+  }
+
+  const items = value
+    .split(/\r?\n/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  return items.length ? items : fallback;
+}
+
 function parseWishWallLayout(value: string | undefined): WishWallLayout {
   const layout = value?.trim();
   const allowed: WishWallLayout[] = [
@@ -245,6 +270,14 @@ function settingsFromMap(map: Map<string, string>): SiteSettings {
     programItems: parseProgramItems(map.get("programItemsJson")),
     rsvpDescription:
       map.get("rsvpDescription") || DEFAULT_SITE_SETTINGS.rsvpDescription,
+    rsvpAlcoholEnabled: parseBoolean(
+      map.get("rsvpAlcoholEnabled"),
+      DEFAULT_SITE_SETTINGS.rsvpAlcoholEnabled,
+    ),
+    rsvpAlcoholOptions: parseTextList(
+      map.get("rsvpAlcoholOptions"),
+      DEFAULT_SITE_SETTINGS.rsvpAlcoholOptions,
+    ),
     inviteLabel: map.get("inviteLabel") || DEFAULT_SITE_SETTINGS.inviteLabel,
     inviteBodyText:
       map.get("inviteBodyText") || DEFAULT_SITE_SETTINGS.inviteBodyText,
@@ -347,6 +380,8 @@ export function settingsToFormData(settings: SiteSettings): SiteSettingsFormData
     programDescription: settings.programDescription,
     programItemsJson: serializeProgramItems(settings),
     rsvpDescription: settings.rsvpDescription,
+    rsvpAlcoholEnabled: String(settings.rsvpAlcoholEnabled),
+    rsvpAlcoholOptions: settings.rsvpAlcoholOptions.join("\n"),
     inviteLabel: settings.inviteLabel,
     inviteBodyText: settings.inviteBodyText,
     inviteChildrenPrefix: settings.inviteChildrenPrefix,

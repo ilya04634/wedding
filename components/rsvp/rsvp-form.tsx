@@ -21,21 +21,13 @@ const STATUS_OPTIONS: {
   { value: "declined", label: "Не буду" },
 ];
 
-const DRINK_OPTIONS: {
-  value: NonNullable<RsvpFormValues["people"][number]["drink"]>;
-  label: string;
-}[] = [
-  { value: "wine", label: "Вино" },
-  { value: "champagne", label: "Шампанское" },
-  { value: "strong", label: "Крепкое" },
-  { value: "no_alcohol", label: "Не буду алкоголь" },
-];
-
 interface RsvpFormProps {
   guestId?: string;
   initialName?: string;
   people?: GuestPerson[];
   description: string;
+  alcoholEnabled: boolean;
+  alcoholOptions: string[];
 }
 
 function getDefaultPeople(
@@ -47,7 +39,7 @@ function getDefaultPeople(
       personName: person.personName,
       personType: person.personType,
       status: "confirmed",
-      drink: person.personType === "child" ? "not_applicable" : undefined,
+      drink: person.personType === "child" ? "not_applicable" : [],
     }));
   }
 
@@ -56,7 +48,7 @@ function getDefaultPeople(
       personName: initialName ?? "",
       personType: "adult",
       status: "confirmed",
-      drink: undefined,
+      drink: [],
     },
   ];
 }
@@ -66,6 +58,8 @@ export function RsvpForm({
   initialName,
   people,
   description,
+  alcoholEnabled,
+  alcoholOptions,
 }: RsvpFormProps) {
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -88,14 +82,37 @@ export function RsvpForm({
 
   const onSubmit = async (data: RsvpFormValues) => {
     setSubmitError(null);
+    if (alcoholEnabled) {
+      const missingAlcoholPerson = data.people.find((person) => {
+        if (person.personType === "child" || person.status === "declined") {
+          return false;
+        }
+
+        return !Array.isArray(person.drink) || person.drink.length === 0;
+      });
+
+      if (missingAlcoholPerson) {
+        setSubmitError(
+          `Выберите хотя бы один вариант алкоголя для ${missingAlcoholPerson.personName}.`,
+        );
+        return;
+      }
+    }
+
     const normalized: RsvpFormData = {
       guestId: data.guestId?.trim() || guestId,
       people: data.people.map((person) => ({
         ...person,
         drink:
-          person.personType === "child" || person.status === "declined"
+          !alcoholEnabled ||
+          person.personType === "child" ||
+          person.status === "declined"
             ? "not_applicable"
-            : person.drink ?? "no_alcohol",
+            : Array.isArray(person.drink)
+              ? person.drink
+              : person.drink
+                ? [person.drink]
+                : [],
       })),
     };
 
@@ -204,6 +221,10 @@ export function RsvpForm({
                               setValue(`people.${index}.drink`, "not_applicable", {
                                 shouldValidate: true,
                               });
+                            } else if (alcoholEnabled) {
+                              setValue(`people.${index}.drink`, [], {
+                                shouldValidate: true,
+                              });
                             }
                           }}
                         />
@@ -218,15 +239,15 @@ export function RsvpForm({
                   ) : null}
                 </fieldset>
 
-                {!isChild && !isDeclined ? (
+                {alcoholEnabled && !isChild && !isDeclined ? (
                   <fieldset>
                     <legend className="mb-2 text-sm font-medium text-neutral-800">
                       Алкоголь
                     </legend>
                     <div className="grid gap-2 sm:grid-cols-2">
-                      {DRINK_OPTIONS.map((opt) => (
+                      {alcoholOptions.map((option) => (
                         <label
-                          key={opt.value}
+                          key={option}
                           className={cn(
                             "flex min-h-12 cursor-pointer items-center gap-2 rounded-lg border px-3 py-3 text-sm transition-colors sm:py-2.5",
                             "has-[:checked]:border-neutral-900 has-[:checked]:bg-neutral-50",
@@ -234,12 +255,12 @@ export function RsvpForm({
                           )}
                         >
                           <input
-                            type="radio"
-                            value={opt.value}
+                            type="checkbox"
+                            value={option}
                             className="h-4 w-4 accent-neutral-900"
                             {...register(`people.${index}.drink`)}
                           />
-                          {opt.label}
+                          {option}
                         </label>
                       ))}
                     </div>

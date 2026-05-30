@@ -42,6 +42,13 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   ],
   rsvpDescription:
     "Пожалуйста, заполните анкету до 1 июля 2026. Ответ можно указать отдельно для каждого гостя из приглашения.",
+  rsvpAlcoholEnabled: true,
+  rsvpAlcoholOptions: [
+    "Вино",
+    "Шампанское",
+    "Крепкое",
+    "Не буду алкоголь",
+  ],
   inviteLabel: "Приглашение",
   inviteBodyText: "приглашаем вас разделить с нами день нашей свадьбы",
   inviteChildrenPrefix: "Также будем очень рады видеть:",

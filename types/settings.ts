@@ -35,6 +35,8 @@ export interface SiteSettings {
   programDescription: string;
   programItems: ProgramItem[];
   rsvpDescription: string;
+  rsvpAlcoholEnabled: boolean;
+  rsvpAlcoholOptions: string[];
   inviteLabel: string;
   inviteBodyText: string;
   inviteChildrenPrefix: string;

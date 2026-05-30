@@ -184,6 +184,10 @@ export async function updateSiteSettingsAction(formData: FormData) {
     rsvpDescription:
       getRequiredString(formData, "rsvpDescription") ||
       defaults.rsvpDescription,
+    rsvpAlcoholEnabled: formData.get("rsvpAlcoholEnabled") ? "true" : "false",
+    rsvpAlcoholOptions:
+      getRequiredString(formData, "rsvpAlcoholOptions") ||
+      defaults.rsvpAlcoholOptions,
     inviteLabel:
       getRequiredString(formData, "inviteLabel") || defaults.inviteLabel,
     inviteBodyText:

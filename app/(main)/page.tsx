@@ -51,6 +51,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             initialName={invite?.inviteName}
             people={invite?.people}
             description={settings.rsvpDescription}
+            alcoholEnabled={settings.rsvpAlcoholEnabled}
+            alcoholOptions={settings.rsvpAlcoholOptions}
           />
         </div>
       </section>

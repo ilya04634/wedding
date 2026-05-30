@@ -15,7 +15,7 @@ const PERSON_TYPE_LABELS: Record<RsvpPersonData["personType"], string> = {
   child: "Ребенок",
 };
 
-const DRINK_LABELS: Record<RsvpPersonData["drink"], string> = {
+const LEGACY_DRINK_LABELS: Record<string, string> = {
   wine: "Вино",
   champagne: "Шампанское",
   strong: "Крепкое",
@@ -25,10 +25,17 @@ const DRINK_LABELS: Record<RsvpPersonData["drink"], string> = {
 
 function formatDrink(person: RsvpPersonData): string {
   if (person.personType === "child" || person.status === "declined") {
-    return DRINK_LABELS.not_applicable;
+    return LEGACY_DRINK_LABELS.not_applicable;
   }
 
-  return DRINK_LABELS[person.drink] ?? "";
+  if (Array.isArray(person.drink)) {
+    return person.drink
+      .map((drink) => LEGACY_DRINK_LABELS[drink] ?? drink)
+      .filter(Boolean)
+      .join(", ");
+  }
+
+  return LEGACY_DRINK_LABELS[person.drink] ?? person.drink ?? "";
 }
 
 function formatRows(data: RsvpFormData): string[][] {
