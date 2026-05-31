@@ -10,19 +10,9 @@ function getWeddingDay(settings: SiteSettings) {
   return match ? Number(match[1]) : 21;
 }
 
-function compactAddress(address: string) {
-  const parts = address.split(",").map((part) => part.trim()).filter(Boolean);
-  if (parts.length >= 2) {
-    return `${parts[0].replace(/\s*улица$/i, "")} ${parts[1]}`;
-  }
-
-  return address;
-}
-
 export function VenueDateSection({ settings }: VenueDateSectionProps) {
   const day = getWeddingDay(settings);
   const days = [day - 2, day - 1, day, day + 1, day + 2];
-  const shortAddress = compactAddress(settings.weddingAddressLine);
 
   return (
     <section className="figma-frame-section scroll-mt-24">
@@ -69,20 +59,10 @@ export function VenueDateSection({ settings }: VenueDateSectionProps) {
           место проведения
         </p>
         <p
-          className="absolute z-30 whitespace-nowrap font-display text-[28px] uppercase leading-none tracking-[0.56px] text-[#397c57]"
+          className="absolute z-30 w-[240px] text-center font-display text-[25px] uppercase leading-none tracking-[0.52px] text-[#397c57]"
           style={{
-            left: "calc(40% - 85.07px)",
-            top: "calc(15% - 15.37px)",
-            transform: "rotate(-5.54deg)",
-          }}
-        >
-          Ресторан
-        </p>
-        <p
-          className="absolute z-30 whitespace-nowrap font-display text-[26px] leading-none tracking-[0.52px] text-[#397c57]"
-          style={{
-            left: "calc(40% - 106.01px)",
-            top: "calc(15% + 12.07px)",
+            left: "calc(40% - 119px)",
+            top: "calc(15% - 2px)",
             transform: "rotate(-5.54deg)",
           }}
         >
@@ -97,39 +77,40 @@ export function VenueDateSection({ settings }: VenueDateSectionProps) {
           }}
         >
           <p>по адресу</p>
-          <p>{shortAddress}</p>
+          <p>{settings.weddingAddressLine}</p>
         </div>
         <a
           href={settings.weddingMapUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="absolute z-30 flex h-[27.929px] w-[184px] items-center justify-center bg-[#397c57] font-display text-[14px] tracking-[0.28px] text-white"
+          className="absolute z-30 inline-flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-white/70"
           style={{
-            left: "calc(20% - 10.32px)",
+            left: "calc(40% - 22px)",
             top: "calc(30% + 9.98px)",
             transform: "rotate(-5.54deg)",
           }}
+          aria-label={`Открыть ${settings.weddingAddressLine} в 2ГИС`}
         >
-          посмотреть маршрут
+          <Image
+            src="/2gis-badge.svg"
+            alt="Открыть в 2ГИС"
+            width={32}
+            height={32}
+            className="h-8 w-8"
+          />
         </a>
 
         <p
           className="absolute whitespace-nowrap font-readable-script text-[30px] leading-none text-[#397c57]"
           style={{ left: "calc(50% - 49px)", top: "calc(55% + 10.95px)" }}
         >
-          июль 2026
+          {settings.weddingDate}
         </p>
         <p
           className="absolute whitespace-nowrap font-readable-script text-[30px] leading-none text-[#397c57]"
           style={{ left: "calc(50% - 38px)", top: "calc(65% + 34.85px)" }}
         >
-          вторник
-        </p>
-        <p
-          className="absolute w-[255px] font-display text-[16px] leading-normal tracking-[0.32px] text-[#397c57]"
-          style={{ left: "calc(50% - 127px)", top: "calc(75% + 8.75px)" }}
-        >
-          Надеемся, что вы примете наше приглашение, будем вас ждать!
+          {settings.weddingTime}
         </p>
 
         <Image
