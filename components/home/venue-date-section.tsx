@@ -15,7 +15,7 @@ export function VenueDateSection({ settings }: VenueDateSectionProps) {
   const days = [day - 2, day - 1, day, day + 1, day + 2];
 
   return (
-    <section className="figma-frame-section scroll-mt-24">
+    <section className="figma-frame-section figma-frame-section--venue-date scroll-mt-24">
       <div className="figma-phone-frame text-black">
         <div
           className="absolute z-10 h-[362px] w-[266px] overflow-hidden"
@@ -116,10 +116,10 @@ export function VenueDateSection({ settings }: VenueDateSectionProps) {
         <Image
           src="/figma-export/images/node-159.png"
           alt=""
-          width={104}
-          height={104}
-          className="absolute z-10 h-[104px] w-[104px] object-contain"
-          style={{ left: "calc(50% - 52px)", top: "calc(60% - 27px)" }}
+          width={122}
+          height={122}
+          className="absolute z-10 h-[122px] w-[122px] object-contain"
+          style={{ left: "calc(50% - 61px)", top: "calc(60% - 34px)" }}
           aria-hidden
         />
 

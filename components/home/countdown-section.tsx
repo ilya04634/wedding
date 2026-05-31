@@ -36,7 +36,10 @@ export function CountdownSection() {
   ].map((value) => String(value).padStart(2, "0"));
 
   return (
-    <section id="dress-code" className="figma-frame-section scroll-mt-24">
+    <section
+      id="dress-code"
+      className="figma-frame-section figma-frame-section--countdown scroll-mt-24"
+    >
       <div className="figma-phone-frame text-black">
         <Image
           src="/figma-export/images/node-2.png"
@@ -72,7 +75,7 @@ export function CountdownSection() {
           width={102}
           height={14}
           className="absolute h-[14px] w-[102px]"
-          style={{ left: "calc(40% + 7.2px)", top: "calc(40% + 31.6px)" }}
+          style={{ left: "calc(40% + 7.2px)", top: "calc(31% + 2px)" }}
           aria-hidden
         />
         {[
@@ -80,7 +83,7 @@ export function CountdownSection() {
             src: "/figma-wedding/dress-mini-1.svg",
             style: {
               left: "calc(50% - 16.44px)",
-              top: "calc(40% + 14.6px)",
+              top: "calc(31% - 15px)",
               width: "13.44px",
               height: "17.998px",
             },
@@ -89,7 +92,7 @@ export function CountdownSection() {
             src: "/figma-wedding/dress-mini-2.svg",
             style: {
               left: "calc(50% + 5.54px)",
-              top: "calc(40% + 14.77px)",
+              top: "calc(31% - 15px)",
               width: "15.019px",
               height: "24.001px",
             },
@@ -98,7 +101,7 @@ export function CountdownSection() {
             src: "/figma-wedding/dress-mini-3.svg",
             style: {
               left: "calc(60% - 13.08px)",
-              top: "calc(40% + 16.31px)",
+              top: "calc(31% - 13px)",
               width: "15.019px",
               height: "24.001px",
             },
@@ -107,7 +110,7 @@ export function CountdownSection() {
             src: "/figma-wedding/dress-mini-4.svg",
             style: {
               left: "calc(60% + 13.13px)",
-              top: "calc(40% + 13.22px)",
+              top: "calc(31% - 16px)",
               width: "15.019px",
               height: "24.001px",
             },
@@ -127,7 +130,7 @@ export function CountdownSection() {
           className="absolute w-[265px] text-center font-readable-script text-[48px] leading-[0.89] text-[#397c57]"
           style={{
             left: "calc(20% + 108.1px)",
-            top: "calc(50% + 5.5px)",
+            top: "calc(42% + 0px)",
             transform: "translateX(-50%)",
           }}
         >
@@ -135,7 +138,7 @@ export function CountdownSection() {
         </p>
         <div
           className="absolute grid w-[288px] grid-cols-[58px_18px_58px_18px_58px_18px_58px] items-start text-center font-poltawski text-[48px] uppercase leading-[1.082] text-[#397c57]"
-          style={{ left: "calc(50% - 144px)", top: "calc(60% + 4.4px)" }}
+          style={{ left: "calc(50% - 144px)", top: "calc(52% + 0px)" }}
         >
           <span>{values[0]}</span>
           <span>:</span>
@@ -147,7 +150,7 @@ export function CountdownSection() {
         </div>
         <div
           className="absolute grid w-[280px] grid-cols-4 text-center font-readable-script text-[16px] leading-none text-black"
-          style={{ left: "calc(50% - 140px)", top: "calc(65% + 8.85px)" }}
+          style={{ left: "calc(50% - 140px)", top: "calc(57% + 4px)" }}
         >
           {labels.map((label) => (
             <span key={label}>{label}</span>
@@ -169,7 +172,7 @@ export function CountdownSection() {
           width={175}
           height={262}
           className="absolute h-[262px] w-[175px] object-cover"
-          style={{ left: "calc(60% + 23.8px)", top: "calc(40% + 17.6px)" }}
+          style={{ left: "calc(60% + 23.8px)", top: "calc(34% + 8px)" }}
           aria-hidden
         />
       </div>

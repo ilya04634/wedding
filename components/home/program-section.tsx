@@ -8,24 +8,24 @@ interface ProgramSectionProps {
 
 const itemLayout = [
   {
-    title: { left: "calc(50% - 2px)", top: "calc(25% + 25.25px)" },
-    description: { left: "calc(50% - 2px)", top: "calc(30% + 2.7px)" },
-    time: { left: "calc(50% - 2px)", top: "calc(35% + 11.15px)" },
+    title: { left: "calc(50% - 2px)", top: "calc(25% - 44.75px)" },
+    description: { left: "calc(50% - 2px)", top: "calc(30% - 67.3px)" },
+    time: { left: "calc(50% - 2px)", top: "calc(35% - 58.85px)" },
   },
   {
-    title: { left: "calc(10% + 4.8px)", top: "calc(45% + 31.05px)" },
-    description: { left: "calc(10% + 4.8px)", top: "calc(50% + 15.5px)" },
-    time: { left: "calc(10% + 4.8px)", top: "calc(55% + 16.95px)" },
+    title: { left: "calc(10% + 4.8px)", top: "calc(45% - 38.95px)" },
+    description: { left: "calc(10% + 4.8px)", top: "calc(50% - 54.5px)" },
+    time: { left: "calc(10% + 4.8px)", top: "calc(55% - 53.05px)" },
   },
   {
-    title: { left: "calc(50% - 4px)", top: "calc(65% + 18.85px)" },
-    description: { left: "calc(50% - 4px)", top: "calc(70% - 3.7px)" },
-    time: { left: "calc(50% - 4px)", top: "calc(75% + 4.75px)" },
+    title: { left: "calc(50% - 4px)", top: "calc(65% - 51.15px)" },
+    description: { left: "calc(50% - 4px)", top: "calc(70% - 73.7px)" },
+    time: { left: "calc(50% - 4px)", top: "calc(75% - 65.25px)" },
   },
   {
-    title: { left: "calc(10% + 4.8px)", top: "calc(85% + 21.65px)" },
-    description: { left: "calc(10% + 4.8px)", top: "calc(90% - 0.9px)" },
-    time: { left: "calc(10% + 4.8px)", top: "calc(95% + 7.55px)" },
+    title: { left: "calc(10% + 4.8px)", top: "calc(85% - 48.35px)" },
+    description: { left: "calc(10% + 4.8px)", top: "calc(90% - 70.9px)" },
+    time: { left: "calc(10% + 4.8px)", top: "calc(95% - 62.45px)" },
   },
 ] as const;
 
@@ -34,7 +34,7 @@ const roseDecor = [
     src: "/figma-wedding/program-rose-1.svg",
     wrapper: {
       left: "calc(20% + 4.6px)",
-      top: "calc(30% + 27.71px)",
+      top: "calc(30% - 42.29px)",
       width: "45.202px",
       height: "46.221px",
     },
@@ -44,7 +44,7 @@ const roseDecor = [
     src: "/figma-wedding/program-rose-2.svg",
     wrapper: {
       left: "calc(60% - 9.2px)",
-      top: "calc(45% - 5.95px)",
+      top: "calc(45% - 75.95px)",
       width: "45.202px",
       height: "46.221px",
     },
@@ -54,7 +54,7 @@ const roseDecor = [
     src: "/figma-wedding/program-rose-3.svg",
     wrapper: {
       left: "calc(40% + 18.2px)",
-      top: "calc(60% - 4.6px)",
+      top: "calc(60% - 74.6px)",
       width: "45.202px",
       height: "46.221px",
     },
@@ -64,7 +64,7 @@ const roseDecor = [
     src: "/figma-wedding/program-rose-4.svg",
     wrapper: {
       left: "calc(30% - 10px)",
-      top: "calc(70% + 25.78px)",
+      top: "calc(70% - 44.22px)",
       width: "39.753px",
       height: "43.19px",
     },
@@ -74,7 +74,7 @@ const roseDecor = [
     src: "/figma-wedding/program-rose-5.svg",
     wrapper: {
       left: "calc(70% + 22.61px)",
-      top: "calc(85% + 30.65px)",
+      top: "calc(85% - 39.35px)",
       width: "46.112px",
       height: "44.802px",
     },
@@ -87,7 +87,7 @@ const leafDecor = [
     src: "/figma-wedding/program-leaf-1.svg",
     wrapper: {
       left: "calc(40% - 10.8px)",
-      top: "calc(35% + 26.15px)",
+      top: "calc(35% - 43.85px)",
       width: "24.492px",
       height: "32.483px",
     },
@@ -97,7 +97,7 @@ const leafDecor = [
     src: "/figma-wedding/program-leaf-2.svg",
     wrapper: {
       left: "calc(10% + 4.8px)",
-      top: "calc(30% - 6.3px)",
+      top: "calc(30% - 76.3px)",
       width: "31.566px",
       height: "19.416px",
     },
@@ -107,7 +107,7 @@ const leafDecor = [
     src: "/figma-wedding/program-leaf-3.svg",
     wrapper: {
       left: "calc(60% + 25.8px)",
-      top: "calc(55% - 7.05px)",
+      top: "calc(55% - 77.05px)",
       width: "31.566px",
       height: "19.416px",
     },
@@ -117,7 +117,7 @@ const leafDecor = [
     src: "/figma-wedding/program-leaf-4.svg",
     wrapper: {
       left: "calc(50% + 19.79px)",
-      top: "calc(80% + 22.17px)",
+      top: "calc(80% - 47.83px)",
       width: "13.981px",
       height: "29.465px",
     },
@@ -127,7 +127,7 @@ const leafDecor = [
     src: "/figma-wedding/program-leaf-5.svg",
     wrapper: {
       left: "calc(40% - 19.8px)",
-      top: "calc(80% + 13.2px)",
+      top: "calc(80% - 56.8px)",
       width: "31.306px",
       height: "18.582px",
     },
@@ -137,7 +137,7 @@ const leafDecor = [
     src: "/figma-wedding/program-leaf-6.svg",
     wrapper: {
       left: "calc(80% - 1.6px)",
-      top: "calc(95% + 6.55px)",
+      top: "calc(95% - 63.45px)",
       width: "31.177px",
       height: "29.864px",
     },
@@ -147,7 +147,7 @@ const leafDecor = [
     src: "/figma-wedding/program-leaf-7.svg",
     wrapper: {
       left: "calc(30% - 2.6px)",
-      top: "calc(65% + 7.85px)",
+      top: "calc(65% - 62.15px)",
       width: "26.625px",
       height: "32.389px",
     },
@@ -157,7 +157,7 @@ const leafDecor = [
     src: "/figma-wedding/program-leaf-8.svg",
     wrapper: {
       left: "calc(40% + 17.2px)",
-      top: "calc(40% + 20.6px)",
+      top: "calc(40% - 49.4px)",
       width: "24.492px",
       height: "32.483px",
     },
@@ -213,7 +213,7 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
           className="absolute z-10 max-w-none"
           style={{
             left: "calc(20% - 12.9px)",
-            top: "calc(25% + 16.25px)",
+            top: "calc(25% - 53.75px)",
             width: "269.357px",
             height: "686px",
           }}
@@ -269,7 +269,7 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
         </div>
         <div
           className="absolute z-20 flex h-[93.877px] w-[72.979px] items-center justify-center"
-          style={{ left: "calc(80% - 5.6px)", top: "calc(45% + 24.05px)" }}
+          style={{ left: "calc(80% - 5.6px)", top: "calc(45% - 45.95px)" }}
         >
           <div className="relative h-[84.509px] w-[58.269px] rotate-[-10.73deg] overflow-hidden">
             <Image
@@ -283,7 +283,7 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
         </div>
         <div
           className="absolute z-20 flex h-[75.153px] w-[63.786px] items-center justify-center"
-          style={{ left: "calc(10% - 4.2px)", top: "calc(70% - 2.7px)" }}
+          style={{ left: "calc(10% - 4.2px)", top: "calc(70% - 72.7px)" }}
         >
           <div className="relative h-[69px] w-[56px] rotate-[6.81deg]">
             <Image
@@ -301,7 +301,7 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
           width={80}
           height={81}
           className="absolute z-20 h-[81px] w-[80px] object-cover"
-          style={{ left: "calc(10% + 1.8px)", top: "calc(35% + 31.15px)" }}
+          style={{ left: "calc(10% + 1.8px)", top: "calc(35% - 38.85px)" }}
           aria-hidden
         />
       </div>

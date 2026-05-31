@@ -209,6 +209,14 @@ select {
     forced-color-adjust: none;
   }
 
+  .figma-frame-section--venue-date {
+    height: 690px;
+  }
+
+  .figma-frame-section--countdown {
+    height: 590px;
+  }
+
   .figma-phone-frame {
     position: relative;
     left: 50%;
@@ -228,6 +236,14 @@ select {
       height: 704px;
     }
 
+    .figma-frame-section--venue-date {
+      height: 511px;
+    }
+
+    .figma-frame-section--countdown {
+      height: 437px;
+    }
+
     .figma-phone-frame {
       --figma-frame-scale: 0.74;
     }
@@ -238,6 +254,14 @@ select {
       height: 846px;
     }
 
+    .figma-frame-section--venue-date {
+      height: 614px;
+    }
+
+    .figma-frame-section--countdown {
+      height: 525px;
+    }
+
     .figma-phone-frame {
       --figma-frame-scale: 0.89;
     }
@@ -246,6 +270,14 @@ select {
   @media (min-width: 375px) and (max-width: 401px) {
     .figma-frame-section {
       height: 922px;
+    }
+
+    .figma-frame-section--venue-date {
+      height: 669px;
+    }
+
+    .figma-frame-section--countdown {
+      height: 572px;
     }
 
     .figma-phone-frame {
