@@ -7,7 +7,7 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   heroFamilyName: "Коваль",
   heroDefaultEyebrow: "Приглашаем вас на свадьбу",
   heroPersonalEyebrowTemplate: "{{guestName}}, приглашаем вас на свадьбу",
-  heroSubtitle: "Летняя свадьба в садовом настроении",
+  heroSubtitle: "Летняя свадьба",
   heroText:
     "Будем счастливы разделить с вами день, который станет началом нашей семейной истории.",
   weddingDate: "21 июля 2026",

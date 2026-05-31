@@ -116,10 +116,10 @@ export function VenueDateSection({ settings }: VenueDateSectionProps) {
         <Image
           src="/figma-export/images/node-159.png"
           alt=""
-          width={48}
-          height={48}
-          className="absolute z-10 h-12 w-12 object-contain"
-          style={{ left: "177px", top: "566px" }}
+          width={104}
+          height={104}
+          className="absolute z-10 h-[104px] w-[104px] object-contain"
+          style={{ left: "calc(50% - 52px)", top: "calc(60% - 27px)" }}
           aria-hidden
         />
 

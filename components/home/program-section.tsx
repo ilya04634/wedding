@@ -205,13 +205,6 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
         >
           мероприятия
         </p>
-        <p
-          className="absolute z-30 w-[356px] font-display text-[16px] uppercase leading-[1.22] tracking-[1.44px] text-black/70"
-          style={{ left: "16px", top: "calc(20% + 36px)" }}
-        >
-          {settings.programDescription}
-        </p>
-
         <Image
           src="/figma-export/images/vector-1-57.svg"
           alt=""

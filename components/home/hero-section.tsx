@@ -10,9 +10,13 @@ export function HeroSection({ guestName, settings }: HeroSectionProps) {
   const eyebrow = guestName
     ? settings.heroPersonalEyebrowTemplate.replaceAll("{{guestName}}", guestName)
     : settings.heroDefaultEyebrow;
+  const heroSubtitle =
+    settings.heroSubtitle.trim() === "Летняя свадьба в садовом настроении"
+      ? "Летняя свадьба"
+      : settings.heroSubtitle;
 
   return (
-    <section className="figma-section relative isolate min-h-[calc(100svh-57px)] overflow-hidden px-3 py-10 text-center sm:min-h-[calc(100svh-65px)] sm:px-8 sm:py-16 lg:py-20">
+    <section className="figma-section relative isolate overflow-hidden px-3 pb-10 pt-10 text-center sm:px-8 sm:pb-14 sm:pt-16 lg:pt-20">
       <Image
         src="/figma-export/images/node-185.png"
         alt=""
@@ -43,7 +47,7 @@ export function HeroSection({ guestName, settings }: HeroSectionProps) {
         </div>
 
         <p className="mx-auto mt-5 w-full max-w-[22rem] text-balance px-3 font-display text-[1.55rem] leading-tight text-[#193726] sm:max-w-2xl sm:text-4xl lg:text-5xl">
-          {settings.heroSubtitle}
+          {heroSubtitle}
         </p>
         <p className="mx-auto mt-5 w-full max-w-[22rem] text-balance px-3 text-[0.95rem] leading-7 text-[#3d361f]/75 sm:mt-6 sm:max-w-2xl sm:text-lg sm:leading-8">
           {settings.heroText}
