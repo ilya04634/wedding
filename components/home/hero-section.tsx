@@ -14,18 +14,18 @@ export function HeroSection({ guestName, settings }: HeroSectionProps) {
   return (
     <section className="figma-section relative isolate min-h-[calc(100svh-57px)] overflow-hidden px-3 py-10 text-center sm:min-h-[calc(100svh-65px)] sm:px-8 sm:py-16 lg:py-20">
       <Image
-        src="/wedding-design/wildflowers-wide.png"
+        src="/figma-export/images/node-185.png"
         alt=""
-        width={740}
-        height={423}
-        className="pointer-events-none absolute -right-14 top-14 z-0 w-44 opacity-85 mix-blend-multiply sm:-right-8 sm:top-8 sm:w-72 lg:right-2 lg:top-10 lg:w-80"
+        width={239}
+        height={219}
+        className="pointer-events-none absolute -right-8 top-14 z-0 w-36 opacity-85 mix-blend-multiply sm:-right-4 sm:top-8 sm:w-48 lg:right-2 lg:top-10"
       />
       <Image
-        src="/wedding-design/wildflowers-stem.png"
+        src="/figma-export/images/node-2.png"
         alt=""
-        width={600}
-        height={900}
-        className="pointer-events-none absolute -bottom-12 -left-16 z-0 w-44 rotate-[-14deg] opacity-65 mix-blend-multiply sm:w-64"
+        width={300}
+        height={300}
+        className="pointer-events-none absolute -bottom-12 -left-16 z-0 w-48 rotate-[-14deg] opacity-60 mix-blend-multiply sm:w-64"
       />
 
       <div className="garden-fade relative z-10 mx-auto flex max-w-5xl flex-col items-center">
@@ -33,19 +33,19 @@ export function HeroSection({ guestName, settings }: HeroSectionProps) {
           {eyebrow}
         </p>
 
-        <div className="mt-7 max-w-full sm:mt-8">
+        <div className="mt-7 flex max-w-full flex-col items-center sm:mt-8">
           <p className="font-display text-[2.45rem] font-semibold uppercase tracking-[0.2em] text-[#193726] sm:text-6xl sm:tracking-[0.28em]">
             {settings.heroFamilyName}
           </p>
-          <h1 className="font-figma-script mt-1 text-balance text-[3.45rem] leading-[0.86] text-[#397c57] min-[360px]:text-[4.25rem] sm:text-8xl lg:text-9xl">
+          <h1 className="font-readable-script mt-1 w-full min-w-0 max-w-[20rem] text-balance text-[3rem] leading-[0.92] text-[#397c57] min-[360px]:text-[3.3rem] sm:max-w-3xl sm:text-7xl lg:text-8xl">
             {settings.coupleNames}
           </h1>
         </div>
 
-        <p className="mx-auto mt-5 max-w-2xl text-balance font-display text-2xl leading-tight text-[#193726] sm:text-4xl lg:text-5xl">
+        <p className="mx-auto mt-5 w-full max-w-[22rem] text-balance px-3 font-display text-[1.55rem] leading-tight text-[#193726] sm:max-w-2xl sm:text-4xl lg:text-5xl">
           {settings.heroSubtitle}
         </p>
-        <p className="mx-auto mt-5 max-w-2xl text-balance text-[0.95rem] leading-7 text-[#3d361f]/75 sm:mt-6 sm:text-lg sm:leading-8">
+        <p className="mx-auto mt-5 w-full max-w-[22rem] text-balance px-3 text-[0.95rem] leading-7 text-[#3d361f]/75 sm:mt-6 sm:max-w-2xl sm:text-lg sm:leading-8">
           {settings.heroText}
         </p>
 

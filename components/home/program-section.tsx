@@ -205,9 +205,15 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
         >
           мероприятия
         </p>
+        <p
+          className="absolute z-30 w-[356px] font-display text-[16px] uppercase leading-[1.22] tracking-[1.44px] text-black/70"
+          style={{ left: "16px", top: "calc(20% + 36px)" }}
+        >
+          {settings.programDescription}
+        </p>
 
         <Image
-          src="/figma-wedding/program-line.svg"
+          src="/figma-export/images/vector-1-57.svg"
           alt=""
           width={269}
           height={686}
@@ -255,15 +261,15 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
         })}
 
         <div
-          className="absolute z-20 flex h-[431.823px] w-[506.492px] items-center justify-center"
-          style={{ left: "calc(30% - 9.6px)", top: "-134px" }}
+          className="absolute z-20 flex h-[168px] w-[168px] items-center justify-center"
+          style={{ left: "222px", top: "78px" }}
         >
-          <div className="relative h-[251px] w-[440px] rotate-[-28.78deg]">
+          <div className="relative h-full w-full">
             <Image
-              src="/figma-wedding/program-flower-wide.png"
+              src="/figma-export/images/node-154.png"
               alt=""
               fill
-              className="object-cover"
+              className="object-contain object-right-top"
               aria-hidden
             />
           </div>
@@ -274,11 +280,10 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
         >
           <div className="relative h-[84.509px] w-[58.269px] rotate-[-10.73deg] overflow-hidden">
             <Image
-              src="/figma-wedding/program-hourglass.png"
+              src="/figma-export/images/node-155.png"
               alt=""
-              width={448}
-              height={738}
-              className="absolute left-[-110.6%] top-[-324.2%] h-[873.06%] w-[768.21%] max-w-none"
+              fill
+              className="object-contain"
               aria-hidden
             />
           </div>
@@ -289,16 +294,16 @@ export function ProgramSection({ settings }: ProgramSectionProps) {
         >
           <div className="relative h-[69px] w-[56px] rotate-[6.81deg]">
             <Image
-              src="/figma-wedding/program-cocktail.png"
+              src="/figma-export/images/image-13-156.png"
               alt=""
               fill
-              className="object-cover"
+              className="object-contain"
               aria-hidden
             />
           </div>
         </div>
         <Image
-          src="/figma-wedding/program-rings.png"
+          src="/figma-export/images/node-157.png"
           alt=""
           width={80}
           height={81}

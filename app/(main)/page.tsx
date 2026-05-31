@@ -40,11 +40,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         className="wedding-paper relative scroll-mt-24 overflow-hidden px-3 py-14 sm:px-8 sm:py-20"
       >
         <Image
-          src="/wedding-design/wildflowers-wide.png"
+          src="/figma-export/images/node-185.png"
           alt=""
-          width={740}
-          height={423}
-          className="pointer-events-none absolute right-0 top-0 w-56 opacity-75 mix-blend-multiply sm:w-72"
+          width={239}
+          height={219}
+          className="pointer-events-none absolute right-0 top-0 w-44 opacity-75 mix-blend-multiply sm:w-56"
         />
         <div className="paper-card relative z-10 mx-auto max-w-3xl p-3 sm:p-8">
           <RsvpForm

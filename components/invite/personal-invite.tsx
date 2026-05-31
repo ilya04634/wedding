@@ -163,18 +163,18 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
       <div className="absolute inset-0 bg-[#fdf5e0]/34" aria-hidden />
       <div className="absolute inset-x-0 bottom-0 h-[44%] bg-gradient-to-t from-[#fdf5e0] via-[#fdf5e0]/92 to-transparent" aria-hidden />
       <Image
-        src="/wedding-design/wildflowers-wide.png"
+        src="/figma-export/images/node-185.png"
         alt=""
-        width={740}
-        height={423}
-        className="pointer-events-none absolute right-0 top-0 z-[1] w-48 opacity-80 mix-blend-multiply sm:w-72"
+        width={239}
+        height={219}
+        className="pointer-events-none absolute right-0 top-0 z-[1] w-36 opacity-85 mix-blend-multiply sm:w-48"
       />
       <Image
-        src="/wedding-design/wildflowers-stem.png"
+        src="/figma-export/images/node-2.png"
         alt=""
-        width={600}
-        height={900}
-        className="pointer-events-none absolute -bottom-12 -left-12 z-[1] w-44 rotate-[-12deg] opacity-80 mix-blend-multiply sm:w-60"
+        width={300}
+        height={300}
+        className="pointer-events-none absolute -bottom-10 -left-16 z-[1] w-48 rotate-[-12deg] opacity-70 mix-blend-multiply sm:w-64"
       />
 
       <section

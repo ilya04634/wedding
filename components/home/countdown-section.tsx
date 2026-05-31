@@ -39,7 +39,7 @@ export function CountdownSection() {
     <section id="dress-code" className="figma-frame-section scroll-mt-24">
       <div className="figma-phone-frame text-black">
         <Image
-          src="/figma-wedding/dress-flower-corner.png"
+          src="/figma-export/images/node-2.png"
           alt=""
           width={163}
           height={247}
@@ -67,7 +67,7 @@ export function CountdownSection() {
         </p>
 
         <Image
-          src="/figma-wedding/dress-divider.svg"
+          src="/figma-export/images/vector-27-9.svg"
           alt=""
           width={102}
           height={14}
@@ -155,7 +155,7 @@ export function CountdownSection() {
         </div>
 
         <Image
-          src="/figma-wedding/dress-line.svg"
+          src="/figma-export/images/line-1-44.svg"
           alt=""
           width={60}
           height={1}
@@ -164,7 +164,7 @@ export function CountdownSection() {
           aria-hidden
         />
         <Image
-          src="/figma-wedding/dress-flower-side.png"
+          src="/figma-export/images/node-45.png"
           alt=""
           width={175}
           height={262}

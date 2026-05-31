@@ -11,11 +11,11 @@ export default async function UploadPage() {
     return (
       <div className="figma-section relative isolate min-h-[100dvh] overflow-hidden px-3 pb-14 pt-6 sm:px-4 sm:pb-16 sm:pt-8">
         <Image
-          src="/wedding-design/wildflowers-wide.png"
+          src="/figma-export/images/node-185.png"
           alt=""
-          width={740}
-          height={423}
-          className="pointer-events-none absolute right-0 top-0 w-56 opacity-85 mix-blend-multiply"
+          width={239}
+          height={219}
+          className="pointer-events-none absolute right-0 top-0 w-44 opacity-85 mix-blend-multiply"
         />
         <section className="mx-auto max-w-2xl px-4 py-20 text-center text-[#24340d]">
           <p className="font-figma-script text-5xl leading-none text-[#397c57]">
@@ -38,18 +38,18 @@ export default async function UploadPage() {
   return (
     <div className="figma-section relative isolate min-h-[100dvh] overflow-hidden px-3 pb-14 pt-10 text-[#24340d] sm:px-4 sm:pb-16 sm:pt-12">
       <Image
-        src="/wedding-design/wildflowers-wide.png"
+        src="/figma-export/images/node-185.png"
         alt=""
-        width={740}
-        height={423}
-        className="pointer-events-none absolute right-0 top-0 w-56 opacity-85 mix-blend-multiply sm:w-72"
+        width={239}
+        height={219}
+        className="pointer-events-none absolute right-0 top-0 w-44 opacity-85 mix-blend-multiply sm:w-56"
       />
       <Image
-        src="/wedding-design/wildflowers-stem.png"
+        src="/figma-export/images/node-2.png"
         alt=""
-        width={600}
-        height={900}
-        className="pointer-events-none absolute -bottom-10 -left-12 w-44 rotate-[-12deg] opacity-80 mix-blend-multiply sm:w-60"
+        width={300}
+        height={300}
+        className="pointer-events-none absolute -bottom-10 -left-16 w-48 rotate-[-12deg] opacity-70 mix-blend-multiply sm:w-64"
       />
       <section className="relative z-10 mx-auto max-w-2xl text-center">
         <p className="font-figma-script text-5xl leading-none text-[#397c57] sm:text-6xl">

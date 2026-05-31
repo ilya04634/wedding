@@ -32,7 +32,7 @@ export function VenueDateSection({ settings }: VenueDateSectionProps) {
           style={{ left: "calc(20% + 9.72px)", top: "calc(10% + 6.13px)" }}
         >
           <Image
-            src="/figma-wedding/venue-photo.png"
+            src="/figma-export/images/node-160.png"
             alt=""
             fill
             className="scale-[1.22] object-cover object-[52%_44%]"
@@ -132,22 +132,15 @@ export function VenueDateSection({ settings }: VenueDateSectionProps) {
           Надеемся, что вы примете наше приглашение, будем вас ждать!
         </p>
 
-        <svg
-          className="absolute z-10 h-[72px] w-[72px] text-[#f7a6b4]"
-          viewBox="0 0 96 82"
-          fill="none"
-          style={{ left: "164px", top: "560px" }}
+        <Image
+          src="/figma-export/images/node-159.png"
+          alt=""
+          width={48}
+          height={48}
+          className="absolute z-10 h-12 w-12 object-contain"
+          style={{ left: "177px", top: "566px" }}
           aria-hidden
-        >
-          <path
-            d="M48 72 C28 55 13 42 13 25 C13 13 22 6 33 6 C40 6 45 10 48 16 C51 10 56 6 63 6 C74 6 83 13 83 25 C83 42 68 55 48 72 Z"
-            stroke="currentColor"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity="0.72"
-          />
-        </svg>
+        />
 
         {days.map((date, index) => {
           const isActive = date === day;
@@ -177,7 +170,7 @@ export function VenueDateSection({ settings }: VenueDateSectionProps) {
         >
           <div className="relative h-[178.54px] w-[204.944px] rotate-[-12.64deg]">
             <Image
-              src="/figma-wedding/venue-flowers.png"
+              src="/figma-export/images/node-185.png"
               alt=""
               fill
               className="object-bottom"
@@ -191,10 +184,10 @@ export function VenueDateSection({ settings }: VenueDateSectionProps) {
           aria-hidden
         >
           <Image
-            src="/figma-wedding/venue-roses.png"
+            src="/figma-export/images/garden-party-diy-o-1-186.png"
             alt=""
             fill
-            className="scale-[5.75] object-cover object-[48%_46%]"
+            className="object-contain"
           />
         </div>
         <div
@@ -204,10 +197,10 @@ export function VenueDateSection({ settings }: VenueDateSectionProps) {
         >
           <div className="relative h-[65px] w-[63px] -scale-y-100 rotate-[-138.26deg] overflow-hidden">
             <Image
-              src="/figma-wedding/venue-roses.png"
+              src="/figma-export/images/garden-party-diy-o-2-187.png"
               alt=""
               fill
-              className="scale-[5.75] object-cover object-[48%_46%]"
+              className="object-contain"
             />
           </div>
         </div>
