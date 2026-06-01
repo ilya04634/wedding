@@ -25,11 +25,37 @@ function formatVenueAddress(address: string) {
     .trim();
 }
 
+function getWeddingMonthYear(settings: SiteSettings) {
+  const match = settings.weddingDate.match(
+    /\b\d{1,2}\s+([А-Яа-яЁё]+)\s+(\d{4})\b/,
+  );
+  if (!match) return settings.weddingDate;
+
+  const months: Record<string, string> = {
+    января: "январь",
+    февраля: "февраль",
+    марта: "март",
+    апреля: "апрель",
+    мая: "май",
+    июня: "июнь",
+    июля: "июль",
+    августа: "август",
+    сентября: "сентябрь",
+    октября: "октябрь",
+    ноября: "ноябрь",
+    декабря: "декабрь",
+  };
+
+  const month = months[match[1].toLowerCase()] ?? match[1].toLowerCase();
+  return `${month} ${match[2]}`;
+}
+
 export function VenueDateSection({ settings }: VenueDateSectionProps) {
   const day = getWeddingDay(settings);
   const days = [day - 2, day - 1, day, day + 1, day + 2];
   const venueName = formatVenueName(settings.weddingVenue);
   const venueAddress = formatVenueAddress(settings.weddingAddressLine);
+  const weddingMonthYear = getWeddingMonthYear(settings);
 
   return (
     <section className="figma-frame-section figma-frame-section--venue-date scroll-mt-24">
@@ -69,7 +95,7 @@ export function VenueDateSection({ settings }: VenueDateSectionProps) {
         </div>
 
         <p
-          className="absolute z-30 w-[218px] text-center font-readable-script text-[24px] leading-[0.89] text-black"
+          className="absolute z-30 w-[218px] text-center font-figma-script text-[24px] leading-[0.89] text-black"
           style={{
             left: "calc(40% - 7px)",
             top: "calc(10% + 3px)",
@@ -125,16 +151,24 @@ export function VenueDateSection({ settings }: VenueDateSectionProps) {
         </a>
 
         <p
-          className="absolute whitespace-nowrap font-readable-script text-[30px] leading-none text-[#397c57]"
-          style={{ left: "calc(50% - 49px)", top: "calc(55% + 10.95px)" }}
+          className="absolute whitespace-nowrap font-figma-script text-[30px] leading-none text-[#397c57]"
+          style={{
+            left: "50%",
+            top: "calc(55% + 10.95px)",
+            transform: "translateX(-50%)",
+          }}
         >
-          {settings.weddingDate}
+          {weddingMonthYear}
         </p>
         <p
-          className="absolute whitespace-nowrap font-readable-script text-[30px] leading-none text-[#397c57]"
-          style={{ left: "calc(50% - 38px)", top: "calc(65% + 34.85px)" }}
+          className="absolute whitespace-nowrap font-figma-script text-[30px] leading-none text-[#397c57]"
+          style={{
+            left: "50%",
+            top: "calc(65% + 34.85px)",
+            transform: "translateX(-50%)",
+          }}
         >
-          {settings.weddingTime}
+          вторник
         </p>
 
         <Image
@@ -184,8 +218,8 @@ export function VenueDateSection({ settings }: VenueDateSectionProps) {
           </div>
         </div>
         <div
-          className="absolute z-20 h-[50px] w-[48px] overflow-hidden"
-          style={{ left: "calc(10% + 3.8px)", top: "calc(45% + 25.05px)" }}
+          className="absolute z-20 h-[60px] w-[58px] overflow-hidden"
+          style={{ left: "calc(10% + 3.8px)", top: "calc(45% + 11px)" }}
           aria-hidden
         >
           <Image
@@ -196,11 +230,11 @@ export function VenueDateSection({ settings }: VenueDateSectionProps) {
           />
         </div>
         <div
-          className="absolute z-20 flex h-[90.444px] w-[90.283px] items-center justify-center"
-          style={{ left: "calc(20% - 28.04px)", top: "calc(45% + 35.33px)" }}
+          className="absolute z-20 flex h-[112px] w-[112px] items-center justify-center"
+          style={{ left: "calc(20% - 27px)", top: "calc(45% + 28px)" }}
           aria-hidden
         >
-          <div className="relative h-[65px] w-[63px] -scale-y-100 rotate-[-138.26deg] overflow-hidden">
+          <div className="relative h-[82px] w-[80px] -scale-y-100 rotate-[-138.26deg] overflow-hidden">
             <Image
               src="/figma-export/images/garden-party-diy-o-2-187.png"
               alt=""
