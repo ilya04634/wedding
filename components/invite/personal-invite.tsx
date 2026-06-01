@@ -2,6 +2,7 @@
 
 import type { GuestInvite } from "@/types/guest";
 import type { SiteSettings } from "@/types/settings";
+import { applyInformalTone } from "@/lib/invite/tone";
 import { ArrowRight, Calendar, MapPin, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -122,7 +123,10 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
   const backgroundUrl = `/api/invite-bg/${encodeURIComponent(invite.id)}`;
   const detailsUrl = `/?guestId=${encodeURIComponent(invite.id)}`;
   const rsvpUrl = `${detailsUrl}#rsvp`;
-  const inviteBodyText = invite.inviteText || settings.inviteBodyText;
+  const inviteBodyText = applyInformalTone(
+    invite.inviteText || settings.inviteBodyText,
+    invite.informalTone,
+  );
   const [isOpened, setIsOpened] = useState(false);
   const [isOpening, setIsOpening] = useState(false);
 

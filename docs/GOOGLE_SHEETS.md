@@ -5,7 +5,7 @@
 Первая строка должна быть заголовками:
 
 ```text
-id | invite_name | person_name | invite_text | person_type | child_age | prompt | bg_url | invite_url | status
+id | invite_name | person_name | invite_text | person_type | child_age | prompt | no_declension | informal_tone | invite_url
 ```
 
 Колонки:
@@ -19,8 +19,9 @@ id | invite_name | person_name | invite_text | person_type | child_age | prompt 
 | `child_age` | Возраст ребенка, можно оставить пустым. |
 | `prompt` | Дополнение к промту генерации фона. Можно оставить пустым. |
 | `invite_text` | Индивидуальный текст на персональном приглашении. Если пусто, используется общий текст из Settings. |
-| `bg_url` | Оставить пустым. Заполнится после генерации. |
-| `status` | Оставить пустым. Заполнится `pending`, `done` или `error`. |
+| `no_declension` | `TRUE`, если имя в превью ссылки не нужно склонять. |
+| `informal_tone` | `TRUE`, если в приглашении нужно обращаться на `ты`, а не на `вы`. |
+| `invite_url` | Публичная ссылка, которую можно отправить гостям. |
 
 Пример пары:
 
@@ -291,7 +292,7 @@ storage.
 The `Guests` sheet can include an optional `prompt` column:
 
 ```text
-id | invite_name | person_name | invite_text | person_type | child_age | prompt | bg_url | invite_url | status
+id | invite_name | person_name | invite_text | person_type | child_age | prompt | no_declension | informal_tone | invite_url
 ```
 
 If `prompt` is empty, the invite background uses the default prompt from
@@ -305,6 +306,10 @@ one invite. If it is empty, the site uses `inviteBodyText` from Settings. In
 `/admin`, the per-invite text editor saves this value to every row with the same
 `id`.
 
+Set `informal_tone` to `TRUE` for invites that should use informal wording:
+`вас/вам/вы` becomes `тебя/тебе/ты` on the personal invite and personalized
+main-page greeting.
+
 In addition, the site automatically derives a stable visual variant from each
 invite `id`: flower type, accent palette, composition, light, and texture. This
 keeps the overall wedding style consistent while making backgrounds different
@@ -316,7 +321,7 @@ automatic variant, as an extra accent.
 For easier data entry, helpers can fill only:
 
 ```text
-invite_name | person_name | invite_text | person_type | child_age | prompt
+invite_name | person_name | invite_text | person_type | child_age | prompt | no_declension | informal_tone
 ```
 
 Then open `/admin` and click `Заполнить пустые id`. The site will generate ids

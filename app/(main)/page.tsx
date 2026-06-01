@@ -69,7 +69,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   return (
     <div className="wedding-paper overflow-hidden">
-      <HeroSection guestName={invite?.inviteName} settings={settings} />
+      <HeroSection
+        guestName={invite?.inviteName}
+        informalTone={invite?.informalTone}
+        settings={settings}
+      />
       <VenueDateSection settings={settings} />
       {sectionOrder.map((key) => {
         if (

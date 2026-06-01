@@ -9,6 +9,7 @@ export interface GuestPerson {
   prompt: string | null;
   inviteText: string | null;
   noDeclension: boolean;
+  informalTone: boolean;
   bgUrl: string | null;
   inviteUrl: string | null;
   status: string | null;
@@ -22,6 +23,7 @@ export interface GuestInvite {
   prompt: string | null;
   inviteText: string | null;
   noDeclension: boolean;
+  informalTone: boolean;
   bgUrl: string | null;
   inviteUrl: string | null;
   status: string | null;

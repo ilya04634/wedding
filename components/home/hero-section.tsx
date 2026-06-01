@@ -1,15 +1,24 @@
 import type { SiteSettings } from "@/types/settings";
+import { applyInformalTone } from "@/lib/invite/tone";
 import Image from "next/image";
 
 interface HeroSectionProps {
   guestName?: string;
+  informalTone?: boolean;
   settings: SiteSettings;
 }
 
-export function HeroSection({ guestName, settings }: HeroSectionProps) {
-  const eyebrow = guestName
-    ? settings.heroPersonalEyebrowTemplate.replaceAll("{{guestName}}", guestName)
-    : settings.heroDefaultEyebrow;
+export function HeroSection({
+  guestName,
+  informalTone = false,
+  settings,
+}: HeroSectionProps) {
+  const eyebrow = applyInformalTone(
+    guestName
+      ? settings.heroPersonalEyebrowTemplate.replaceAll("{{guestName}}", guestName)
+      : settings.heroDefaultEyebrow,
+    informalTone,
+  );
   const heroSubtitle =
     settings.heroSubtitle.trim() === "Летняя свадьба в садовом настроении"
       ? "Летняя свадьба"

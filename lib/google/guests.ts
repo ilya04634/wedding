@@ -13,6 +13,7 @@ const GUEST_COLUMNS = [
   "child_age",
   "prompt",
   "no_declension",
+  "informal_tone",
   "name",
   "bg_url",
   "invite_url",
@@ -42,6 +43,7 @@ export interface GuestPersonUpdate {
   prompt: string;
   inviteText: string;
   noDeclension: boolean;
+  informalTone: boolean;
   bgUrl: string;
   inviteUrl: string;
   status: string;
@@ -160,6 +162,7 @@ function rowToGuestPerson(
     prompt: getCell(row, columnIndex, "prompt") || null,
     inviteText: getCell(row, columnIndex, "invite_text") || null,
     noDeclension: parseBooleanCell(getCell(row, columnIndex, "no_declension")),
+    informalTone: parseBooleanCell(getCell(row, columnIndex, "informal_tone")),
     bgUrl: getCell(row, columnIndex, "bg_url") || null,
     inviteUrl: getCell(row, columnIndex, "invite_url") || null,
     status: getCell(row, columnIndex, "status") || null,
@@ -348,6 +351,7 @@ function peopleGroupToInvite(id: string, invitePeople: GuestPerson[]): GuestInvi
     inviteText:
       invitePeople.find((person) => person.inviteText)?.inviteText ?? null,
     noDeclension: invitePeople.some((person) => person.noDeclension),
+    informalTone: invitePeople.some((person) => person.informalTone),
     bgUrl: invitePeople.find((person) => person.bgUrl)?.bgUrl ?? null,
     inviteUrl: invitePeople.find((person) => person.inviteUrl)?.inviteUrl ?? null,
     status:
@@ -505,11 +509,18 @@ export async function updateGuestPerson(update: GuestPersonUpdate): Promise<void
     ["prompt", update.prompt],
     ["invite_text", update.inviteText],
     ["no_declension", update.noDeclension ? "true" : ""],
+    ["informal_tone", update.informalTone ? "true" : ""],
     ["invite_url", update.inviteUrl],
   ];
 
   let nextHeaderCount = headerCount;
-  for (const key of ["prompt", "invite_text", "no_declension", "invite_url"] as const) {
+  for (const key of [
+    "prompt",
+    "invite_text",
+    "no_declension",
+    "informal_tone",
+    "invite_url",
+  ] as const) {
     const index = await ensureGuestColumn(
       sheetName,
       columnIndex,
