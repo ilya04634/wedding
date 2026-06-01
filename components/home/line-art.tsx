@@ -24,32 +24,24 @@ export function FlowerLineArt({ className }: LineArtProps) {
 export function RingsLineArt({ className }: LineArtProps) {
   return (
     <svg
-      viewBox="0 0 100 50"
+      viewBox="0 0 340 150"
       fill="none"
       className={className}
       aria-hidden
     >
-      <path
-        d="M10 25Q20 20 30 25"
+      <g
         stroke="currentColor"
-        strokeWidth="1.2"
+        strokeWidth="3.4"
         strokeLinecap="round"
         strokeLinejoin="round"
-      />
-      <path
-        d="M30 25C30 10 48 10 50 25C52 40 70 40 70 25C70 10 52 10 50 25C48 40 30 40 30 25Z"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M70 25Q80 30 90 25"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      >
+        <path d="M3 76H86C101 76 110 64 114 49C123 16 163 8 201 27C226 39 245 59 258 78C266 60 282 46 302 47C325 48 338 76 329 103C318 136 278 152 241 135C213 122 201 96 210 75C218 57 237 62 258 78" />
+        <path d="M116 47C137 -4 230 19 258 78C273 109 251 134 211 122C178 112 137 93 119 69C114 62 113 54 116 47Z" />
+        <path d="M105 66C126 41 174 40 214 63C242 79 259 101 249 116C236 137 184 113 151 90C128 74 110 71 105 66Z" />
+        <path d="M254 64C273 37 309 39 322 64C337 94 316 133 280 139C245 144 218 122 219 91C219 71 234 58 254 64Z" />
+        <path d="M238 100C251 78 281 55 301 67C323 81 310 120 275 129C248 136 226 125 219 105" />
+        <path d="M258 78C276 71 296 70 312 78H337" />
+      </g>
     </svg>
   );
 }
