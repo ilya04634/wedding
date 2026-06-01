@@ -11,9 +11,12 @@
  * 5. Reload the sheet. Use menu: Wedding -> Open generator panel.
  *
  * Guests headers expected:
- * id | invite_name | person_name | invite_text | person_type | child_age | prompt | bg_url | invite_url | status
+ * id | invite_name | person_name | invite_text | person_type | child_age | prompt | no_declension | invite_url
  *
- * bg_url is a technical Google Drive image URL.
+ * InviteMeta headers expected:
+ * id | bg_url | status | updated_at
+ *
+ * bg_url/status are technical fields stored in InviteMeta.
  * invite_url is the public site URL you send to guests.
  */
 
@@ -21,6 +24,7 @@ const WEBHOOK_URL = "";
 const WEBHOOK_SECRET = "";
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwU3iGa-i1A1lMyuQwL2AWpBy8OGKkAxVFQATUkNZ0wNvAot5lYLQB8cJDzC3pnJQMo/exec";
 const GUESTS_SHEET_NAME = "Guests";
+const INVITE_META_SHEET_NAME = "InviteMeta";
 
 function onOpen() {
   SpreadsheetApp.getUi()
@@ -95,7 +99,7 @@ function openBackgroundGeneratorPanel() {
           escapeHtml(selectedInviteId) +
           "</a></p>"
         : '<p>Select a Guests row to get a selected invite link.</p>') +
-      '<p style="color:#666;font-size:12px">bg_url is the Drive image. invite_url is the link to send to guests.</p>' +
+      '<p style="color:#666;font-size:12px">invite_url is the link to send to guests. Technical bg_url/status are stored in InviteMeta.</p>' +
       "</div>",
   )
     .setWidth(420)
@@ -127,6 +131,36 @@ function getRequiredColumn(headerMap, name) {
   return headerMap[name];
 }
 
+function getCell(row, column) {
+  return column ? row[column - 1] : "";
+}
+
+function getInviteMetaMap(spreadsheet) {
+  const sheet = spreadsheet.getSheetByName(INVITE_META_SHEET_NAME);
+  if (!sheet || sheet.getLastRow() < 2) return {};
+
+  const headerMap = getHeaderMap(sheet);
+  const idColumn = headerMap.id || null;
+  if (!idColumn) return {};
+
+  const bgUrlColumn = headerMap.bg_url || null;
+  const statusColumn = headerMap.status || null;
+  const values = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn()).getValues();
+  const map = {};
+
+  values.forEach(function (row) {
+    const id = String(getCell(row, idColumn) || "").trim();
+    if (!id) return;
+
+    map[id] = {
+      bgUrl: getCell(row, bgUrlColumn),
+      status: getCell(row, statusColumn),
+    };
+  });
+
+  return map;
+}
+
 function shouldCallWebhook(bgUrl, inviteUrl, status) {
   const normalizedStatus = String(status || "").trim().toLowerCase();
   if (normalizedStatus === "pending") return false;
@@ -146,10 +180,11 @@ function getPendingInviteIds(spreadsheet) {
 
   const headerMap = getHeaderMap(sheet);
   const idColumn = getRequiredColumn(headerMap, "id");
-  const bgUrlColumn = getRequiredColumn(headerMap, "bg_url");
+  const bgUrlColumn = headerMap.bg_url || null;
   const inviteUrlColumn = headerMap.invite_url || null;
-  const statusColumn = getRequiredColumn(headerMap, "status");
+  const statusColumn = headerMap.status || null;
   const lastRow = sheet.getLastRow();
+  const inviteMetaMap = getInviteMetaMap(spreadsheet);
 
   if (lastRow < 2) return [];
 
@@ -159,9 +194,10 @@ function getPendingInviteIds(spreadsheet) {
 
   values.forEach(function (row) {
     const id = String(row[idColumn - 1] || "").trim();
-    const bgUrl = row[bgUrlColumn - 1];
-    const inviteUrl = inviteUrlColumn ? row[inviteUrlColumn - 1] : "";
-    const status = row[statusColumn - 1];
+    const meta = inviteMetaMap[id] || {};
+    const bgUrl = meta.bgUrl || getCell(row, bgUrlColumn);
+    const inviteUrl = getCell(row, inviteUrlColumn);
+    const status = meta.status || getCell(row, statusColumn);
 
     if (id && !seen[id] && shouldCallWebhook(bgUrl, inviteUrl, status)) {
       seen[id] = true;
@@ -237,7 +273,7 @@ function generateOneInviteBackgroundForSpreadsheet(spreadsheetId, guestId) {
 
 /**
  * Optional installable trigger:
- * on edit, if a row gets an id and still has empty bg_url/status,
+ * on edit, if a row gets an id and still has no generated invite background,
  * generate this invite background.
  */
 function onGuestsSheetEdit(e) {
@@ -249,14 +285,16 @@ function onGuestsSheetEdit(e) {
 
   const headerMap = getHeaderMap(sheet);
   const idColumn = getRequiredColumn(headerMap, "id");
-  const bgUrlColumn = getRequiredColumn(headerMap, "bg_url");
+  const bgUrlColumn = headerMap.bg_url || null;
   const inviteUrlColumn = headerMap.invite_url || null;
-  const statusColumn = getRequiredColumn(headerMap, "status");
+  const statusColumn = headerMap.status || null;
 
   const id = String(sheet.getRange(row, idColumn).getValue() || "").trim();
-  const bgUrl = sheet.getRange(row, bgUrlColumn).getValue();
+  const inviteMetaMap = getInviteMetaMap(SpreadsheetApp.getActive());
+  const meta = inviteMetaMap[id] || {};
+  const bgUrl = meta.bgUrl || (bgUrlColumn ? sheet.getRange(row, bgUrlColumn).getValue() : "");
   const inviteUrl = inviteUrlColumn ? sheet.getRange(row, inviteUrlColumn).getValue() : "";
-  const status = sheet.getRange(row, statusColumn).getValue();
+  const status = meta.status || (statusColumn ? sheet.getRange(row, statusColumn).getValue() : "");
 
   if (!id || !shouldCallWebhook(bgUrl, inviteUrl, status)) return;
   triggerBackgroundGeneration(id);
