@@ -10,9 +10,26 @@ function getWeddingDay(settings: SiteSettings) {
   return match ? Number(match[1]) : 21;
 }
 
+function formatVenueName(venue: string) {
+  return venue.trim().toLowerCase() === "jannat regency"
+    ? "Jannat Regency"
+    : venue.trim();
+}
+
+function formatVenueAddress(address: string) {
+  return address
+    .replace(/улица/gi, "")
+    .replace(/,\s*Бишкек/gi, "")
+    .replace(/,/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 export function VenueDateSection({ settings }: VenueDateSectionProps) {
   const day = getWeddingDay(settings);
   const days = [day - 2, day - 1, day, day + 1, day + 2];
+  const venueName = formatVenueName(settings.weddingVenue);
+  const venueAddress = formatVenueAddress(settings.weddingAddressLine);
 
   return (
     <section className="figma-frame-section figma-frame-section--venue-date scroll-mt-24">
@@ -38,8 +55,12 @@ export function VenueDateSection({ settings }: VenueDateSectionProps) {
         </div>
 
         <div
-          className="absolute z-30 flex h-[24.856px] w-[16.937px] items-center justify-center"
-          style={{ left: "calc(40% + 0.2px)", top: "calc(25% + 26.25px)" }}
+          className="absolute z-30 flex h-[22px] w-[18px] items-center justify-center"
+          style={{
+            left: "calc(40% - 8px)",
+            top: "calc(25% + 22px)",
+            transform: "rotate(-5.54deg)",
+          }}
           aria-hidden
         >
           <div className="relative h-full w-full -scale-y-100 rotate-[174.46deg]">
@@ -48,56 +69,59 @@ export function VenueDateSection({ settings }: VenueDateSectionProps) {
         </div>
 
         <p
-          className="absolute z-30 whitespace-nowrap font-readable-script text-[24px] leading-[0.89] text-black"
+          className="absolute z-30 w-[218px] text-center font-readable-script text-[24px] leading-[0.89] text-black"
           style={{
-            left: "calc(10% + 103.7px)",
-            top: "calc(10% + 11.36px)",
+            left: "calc(40% - 7px)",
+            top: "calc(10% + 3px)",
             transform: "translateX(-50%) rotate(-5.54deg)",
-            width: "218px",
           }}
         >
           место проведения
         </p>
         <p
-          className="absolute z-30 w-[240px] text-center font-display text-[25px] uppercase leading-none tracking-[0.52px] text-[#397c57]"
+          className="absolute z-30 w-[218px] text-center font-display text-[28px] uppercase leading-none tracking-[0.04em] text-[#397c57]"
           style={{
-            left: "calc(40% - 119px)",
-            top: "calc(15% - 2px)",
-            transform: "rotate(-5.54deg)",
+            left: "calc(40% - 7px)",
+            top: "calc(15% - 12px)",
+            transform: "translateX(-50%) rotate(-5.54deg)",
           }}
         >
-          {settings.weddingVenue}
+          Ресторан
+        </p>
+        <p
+          className="absolute z-30 w-[218px] text-center font-display text-[29px] leading-none tracking-[0.02em] text-[#397c57]"
+          style={{
+            left: "calc(40% - 7px)",
+            top: "calc(15% + 20px)",
+            transform: "translateX(-50%) rotate(-5.54deg)",
+          }}
+        >
+          {venueName}
         </p>
         <div
-          className="absolute z-30 w-[218px] text-center font-display text-[17px] leading-normal tracking-[0.34px] text-black"
+          className="absolute z-30 w-[210px] text-center font-display text-[17px] leading-[1.45] tracking-[0.02em] text-black"
           style={{
-            left: "calc(40% - 6.22px)",
-            top: "calc(20% + 8.57px)",
+            left: "calc(40% - 7px)",
+            top: "calc(20% + 17px)",
             transform: "translateX(-50%) rotate(-5.54deg)",
           }}
         >
           <p>по адресу</p>
-          <p>{settings.weddingAddressLine}</p>
+          <p>{venueAddress}</p>
         </div>
         <a
           href={settings.weddingMapUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="absolute z-30 inline-flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-white/70"
+          className="absolute z-30 inline-flex h-[34px] w-[214px] items-center justify-center bg-[#397c57] px-5 font-display text-[16px] leading-none tracking-[0.02em] text-[#fffaf0] shadow-[0_8px_16px_rgba(57,124,87,0.18)] transition-colors hover:bg-[#2f6848]"
           style={{
-            left: "calc(40% - 22px)",
-            top: "calc(30% + 9.98px)",
-            transform: "rotate(-5.54deg)",
+            left: "calc(40% - 7px)",
+            top: "calc(30% + 6px)",
+            transform: "translateX(-50%) rotate(-5.54deg)",
           }}
-          aria-label={`Открыть ${settings.weddingAddressLine} в 2ГИС`}
+          aria-label={`Открыть маршрут: ${settings.weddingAddressLine}`}
         >
-          <Image
-            src="/2gis-badge.svg"
-            alt="Открыть в 2ГИС"
-            width={32}
-            height={32}
-            className="h-8 w-8"
-          />
+          посмотреть маршрут
         </a>
 
         <p

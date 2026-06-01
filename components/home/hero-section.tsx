@@ -41,7 +41,7 @@ export function HeroSection({ guestName, settings }: HeroSectionProps) {
           <p className="font-display text-[2.45rem] font-semibold uppercase tracking-[0.2em] text-[#193726] sm:text-6xl sm:tracking-[0.28em]">
             {settings.heroFamilyName}
           </p>
-          <h1 className="font-readable-script mt-1 w-full min-w-0 max-w-[20rem] text-balance text-[3rem] leading-[0.92] text-[#397c57] min-[360px]:text-[3.3rem] sm:max-w-3xl sm:text-7xl lg:text-8xl">
+          <h1 className="font-figma-script mt-1 w-full min-w-0 max-w-[20rem] text-balance text-[3rem] leading-[0.92] text-[#397c57] min-[360px]:text-[3.3rem] sm:max-w-3xl sm:text-7xl lg:text-8xl">
             {settings.coupleNames}
           </h1>
         </div>

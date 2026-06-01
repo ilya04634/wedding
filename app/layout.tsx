@@ -1,10 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import {
   Caveat,
-  Great_Vibes,
   Marck_Script,
   Montserrat,
-  Playfair_Display,
   Poltawski_Nowy,
 } from "next/font/google";
 import localFont from "next/font/local";
@@ -20,8 +18,19 @@ const geistMono = localFont({
   variable: "--font-geist-mono",
   weight: "100 900",
 });
-const playfair = Playfair_Display({
-  subsets: ["cyrillic", "latin"],
+const playfair = localFont({
+  src: [
+    {
+      path: "./fonts/PlayfairDisplay-VariableFont_wght.ttf",
+      weight: "400 900",
+      style: "normal",
+    },
+    {
+      path: "./fonts/PlayfairDisplay-Italic-VariableFont_wght.ttf",
+      weight: "400 900",
+      style: "italic",
+    },
+  ],
   variable: "--font-playfair",
   display: "swap",
 });
@@ -36,10 +45,11 @@ const marck = Marck_Script({
   weight: "400",
   display: "swap",
 });
-const greatVibes = Great_Vibes({
-  subsets: ["latin"],
+const greatVibes = localFont({
+  src: "./fonts/GreatVibes-Regular.ttf",
   variable: "--font-great-vibes",
   weight: "400",
+  style: "normal",
   display: "swap",
 });
 const poltawski = Poltawski_Nowy({
