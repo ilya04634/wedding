@@ -19,8 +19,18 @@ const GUEST_COLUMNS = [
   "status",
 ] as const;
 
+const INVITE_META_SHEET_NAME = "InviteMeta";
+const INVITE_META_COLUMNS = ["id", "bg_url", "status", "updated_at"] as const;
+
 type GuestColumn = (typeof GUEST_COLUMNS)[number];
 type ColumnIndex = Partial<Record<GuestColumn, number>>;
+type InviteMetaColumn = (typeof INVITE_META_COLUMNS)[number];
+type InviteMetaColumnIndex = Partial<Record<InviteMetaColumn, number>>;
+
+interface InviteMeta {
+  bgUrl: string | null;
+  status: string | null;
+}
 
 export interface GuestPersonUpdate {
   sheetRow: number;
@@ -179,15 +189,96 @@ function buildColumnIndex(headerRow: unknown[]): ColumnIndex {
     columnIndex.name = 1;
   }
 
-  if (columnIndex.bg_url === undefined) {
-    columnIndex.bg_url = 2;
-  }
+  return columnIndex;
+}
 
-  if (columnIndex.status === undefined) {
-    columnIndex.status = 3;
-  }
+function buildInviteMetaColumnIndex(headerRow: unknown[]): InviteMetaColumnIndex {
+  const columnIndex: InviteMetaColumnIndex = {};
+
+  headerRow.forEach((cell, index) => {
+    const key = normalizeHeader(String(cell));
+    if ((INVITE_META_COLUMNS as readonly string[]).includes(key)) {
+      columnIndex[key as InviteMetaColumn] = index;
+    }
+  });
 
   return columnIndex;
+}
+
+function getMetaCell(
+  row: string[],
+  columnIndex: InviteMetaColumnIndex,
+  key: InviteMetaColumn,
+) {
+  const index = columnIndex[key];
+  return index === undefined ? "" : row[index]?.trim() ?? "";
+}
+
+async function ensureInviteMetaSheet(): Promise<void> {
+  const sheets = getSheetsClient();
+  const spreadsheetId = getGoogleSpreadsheetId();
+
+  const spreadsheet = await sheets.spreadsheets.get({ spreadsheetId });
+  const exists = spreadsheet.data.sheets?.some(
+    (sheet) => sheet.properties?.title === INVITE_META_SHEET_NAME,
+  );
+
+  if (!exists) {
+    await sheets.spreadsheets.batchUpdate({
+      spreadsheetId,
+      requestBody: {
+        requests: [
+          {
+            addSheet: {
+              properties: {
+                title: INVITE_META_SHEET_NAME,
+              },
+            },
+          },
+        ],
+      },
+    });
+  }
+
+  await sheets.spreadsheets.values.update({
+    spreadsheetId,
+    range: `${INVITE_META_SHEET_NAME}!A1:D1`,
+    valueInputOption: "USER_ENTERED",
+    requestBody: { values: [Array.from(INVITE_META_COLUMNS)] },
+  });
+}
+
+async function fetchInviteMetaMap(): Promise<Map<string, InviteMeta>> {
+  const sheets = getSheetsClient();
+
+  try {
+    const response = await sheets.spreadsheets.values.get({
+      spreadsheetId: getGoogleSpreadsheetId(),
+      range: `${INVITE_META_SHEET_NAME}!A:D`,
+    });
+
+    const rows = response.data.values;
+    if (!rows?.length) return new Map();
+
+    const [headerRow, ...dataRows] = rows;
+    const columnIndex = buildInviteMetaColumnIndex(headerRow);
+    const map = new Map<string, InviteMeta>();
+
+    dataRows.forEach((row) => {
+      const values = row.map(String);
+      const id = getMetaCell(values, columnIndex, "id");
+      if (!id) return;
+
+      map.set(id.toLowerCase(), {
+        bgUrl: getMetaCell(values, columnIndex, "bg_url") || null,
+        status: getMetaCell(values, columnIndex, "status") || null,
+      });
+    });
+
+    return map;
+  } catch {
+    return new Map();
+  }
 }
 
 async function fetchGuestRows(): Promise<{
@@ -215,7 +306,19 @@ async function fetchGuestRows(): Promise<{
     )
     .filter((person): person is GuestPerson => person !== null);
 
-  return { people, columnIndex, headerCount: headerRow.length };
+  const inviteMeta = await fetchInviteMetaMap();
+  const peopleWithMeta = people.map((person) => {
+    const meta = person.id ? inviteMeta.get(person.id.toLowerCase()) : null;
+    if (!meta) return person;
+
+    return {
+      ...person,
+      bgUrl: meta.bgUrl ?? person.bgUrl,
+      status: meta.status ?? person.status,
+    };
+  });
+
+  return { people: peopleWithMeta, columnIndex, headerCount: headerRow.length };
 }
 
 function peopleToInvite(id: string, people: GuestPerson[]): GuestInvite | null {
@@ -402,9 +505,7 @@ export async function updateGuestPerson(update: GuestPersonUpdate): Promise<void
     ["prompt", update.prompt],
     ["invite_text", update.inviteText],
     ["no_declension", update.noDeclension ? "true" : ""],
-    ["bg_url", update.bgUrl],
     ["invite_url", update.inviteUrl],
-    ["status", update.status],
   ];
 
   let nextHeaderCount = headerCount;
@@ -473,7 +574,7 @@ export async function updateInviteBackground(
 ): Promise<void> {
   const sheets = getSheetsClient();
   const sheetName = getGuestsSheetName();
-  const { people, columnIndex } = await fetchGuestRows();
+  const { people, columnIndex, headerCount } = await fetchGuestRows();
   const matchingPeople = people.filter(
     (person) => person.id.toLowerCase() === id.toLowerCase(),
   );
@@ -482,45 +583,46 @@ export async function updateInviteBackground(
     throw new Error(`Invite not found: ${id}`);
   }
 
-  if (columnIndex.bg_url === undefined || columnIndex.status === undefined) {
-    throw new Error("Guests sheet must contain bg_url and status columns");
-  }
-
-  const bgUrlColumn = columnLetter(columnIndex.bg_url);
-  const statusColumn = columnLetter(columnIndex.status);
-  const inviteUrlColumn =
-    columnIndex.invite_url === undefined
+  const inviteUrlIndex =
+    inviteUrl === undefined
       ? null
-      : columnLetter(columnIndex.invite_url);
+      : await ensureGuestColumn(sheetName, columnIndex, headerCount, "invite_url");
+  const inviteUrlColumn =
+    inviteUrlIndex === null ? null : columnLetter(inviteUrlIndex);
 
-  await Promise.all(
-    matchingPeople.map((person) =>
-      sheets.spreadsheets.values.batchUpdate({
-        spreadsheetId: getGoogleSpreadsheetId(),
-        requestBody: {
-          valueInputOption: "USER_ENTERED",
-          data: [
-            {
-              range: `${sheetName}!${bgUrlColumn}${person.sheetRow}`,
-              values: [[bgUrl]],
-            },
-            {
-              range: `${sheetName}!${statusColumn}${person.sheetRow}`,
-              values: [[status]],
-            },
-            ...(inviteUrlColumn && inviteUrl !== undefined
-              ? [
-                  {
-                    range: `${sheetName}!${inviteUrlColumn}${person.sheetRow}`,
-                    values: [[inviteUrl]],
-                  },
-                ]
-              : []),
-          ],
-        },
-      }),
-    ),
+  await ensureInviteMetaSheet();
+  const metaResponse = await sheets.spreadsheets.values.get({
+    spreadsheetId: getGoogleSpreadsheetId(),
+    range: `${INVITE_META_SHEET_NAME}!A:D`,
+  });
+  const metaRows = metaResponse.data.values ?? [];
+  const [, ...metaDataRows] = metaRows;
+  const existingMetaIndex = metaDataRows.findIndex(
+    (row) => String(row[0] ?? "").trim().toLowerCase() === id.toLowerCase(),
   );
+  const metaRow = existingMetaIndex === -1 ? metaRows.length + 1 : existingMetaIndex + 2;
+  const updatedAt = new Date().toISOString();
+
+  const updates = [
+    {
+      range: `${INVITE_META_SHEET_NAME}!A${metaRow}:D${metaRow}`,
+      values: [[id, bgUrl, status, updatedAt]],
+    },
+    ...(inviteUrlColumn && inviteUrl !== undefined
+      ? matchingPeople.map((person) => ({
+          range: `${sheetName}!${inviteUrlColumn}${person.sheetRow}`,
+          values: [[inviteUrl]],
+        }))
+      : []),
+  ];
+
+  await sheets.spreadsheets.values.batchUpdate({
+    spreadsheetId: getGoogleSpreadsheetId(),
+    requestBody: {
+      valueInputOption: "USER_ENTERED",
+      data: updates,
+    },
+  });
 }
 
 export const updateGuestBackground = updateInviteBackground;

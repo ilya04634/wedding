@@ -222,17 +222,6 @@ export function AdminInviteList({ invites }: AdminInviteListProps) {
                       />
                     </div>
 
-                    <div>
-                      <Label htmlFor={`status-${person.sheetRow}`}>
-                        status
-                      </Label>
-                      <Input
-                        id={`status-${person.sheetRow}`}
-                        name="status"
-                        defaultValue={person.status ?? ""}
-                      />
-                    </div>
-
                     <label className="flex items-center gap-2 rounded-md border border-neutral-200 px-3 py-2 text-sm lg:col-span-2">
                       <input
                         type="checkbox"
@@ -250,15 +239,6 @@ export function AdminInviteList({ invites }: AdminInviteListProps) {
                         name="prompt"
                         defaultValue={person.prompt ?? invite.prompt ?? ""}
                         className="min-h-24 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
-                      />
-                    </div>
-
-                    <div className="sm:col-span-2 lg:col-span-8">
-                      <Label htmlFor={`bgUrl-${person.sheetRow}`}>bg_url</Label>
-                      <Input
-                        id={`bgUrl-${person.sheetRow}`}
-                        name="bgUrl"
-                        defaultValue={person.bgUrl ?? ""}
                       />
                     </div>
 
