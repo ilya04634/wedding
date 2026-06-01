@@ -131,12 +131,12 @@ export function RsvpForm({
       <Section
         id="rsvp"
         title="Спасибо!"
-        description="Ваш ответ сохранен. До встречи на празднике!"
+        description="Ваш ответ сохранен. Теперь можно спокойно изучить сайт: программу дня, пожелания и загрузку фото и видео."
       >
         <div className="flex flex-col items-center gap-3 rounded-xl border border-neutral-200 bg-neutral-50 py-10 text-center">
           <CheckCircle2 className="h-10 w-10 text-neutral-700" aria-hidden />
           <p className="text-sm text-neutral-600">
-            Мы получили анкету по каждому гостю из приглашения.
+            Мы получили анкету по каждому гостю из приглашения. До встречи на празднике!
           </p>
           <Button
             type="button"
