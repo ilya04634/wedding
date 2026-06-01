@@ -1,6 +1,8 @@
 import { toAccusativeInviteName } from "@/lib/invite/russian-accusative";
 import { getSiteUrl } from "@/lib/invite/url";
 
+const INVITE_OG_IMAGE_VERSION = "v2";
+
 export function getInvitePreviewName(invite: {
   inviteName: string;
   noDeclension?: boolean;
@@ -15,7 +17,7 @@ export function encodeInviteOgImageName(value: string) {
 }
 
 export function buildInviteOgImageUrl(previewName: string) {
-  return `${getSiteUrl()}/api/og/invite-image/${encodeInviteOgImageName(
+  return `${getSiteUrl()}/api/og/invite-image/${INVITE_OG_IMAGE_VERSION}-${encodeInviteOgImageName(
     previewName,
   )}/image.png`;
 }
