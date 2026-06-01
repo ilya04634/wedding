@@ -1,5 +1,3 @@
-import { getInviteById } from "@/lib/google/guests";
-import { toAccusativeInviteName } from "@/lib/invite/russian-accusative";
 import { renderInviteOgImage } from "@/app/api/og/invite/og-image";
 
 export const dynamic = "force-dynamic";
@@ -8,13 +6,18 @@ interface InviteOgImageRouteProps {
   params: { id: string };
 }
 
-export async function GET(_request: Request, { params }: InviteOgImageRouteProps) {
-  const invite = await getInviteById(params.id);
-  const inviteName = invite
-    ? invite.noDeclension
-      ? invite.inviteName
-      : toAccusativeInviteName(invite.inviteName)
-    : "дорогих гостей";
+function decodeOgImageName(value: string) {
+  try {
+    return (
+      Buffer.from(decodeURIComponent(value), "base64url")
+        .toString("utf8")
+        .trim() || "дорогих гостей"
+    );
+  } catch {
+    return "дорогих гостей";
+  }
+}
 
-  return renderInviteOgImage({ inviteName });
+export async function GET(_request: Request, { params }: InviteOgImageRouteProps) {
+  return renderInviteOgImage({ inviteName: decodeOgImageName(params.id) });
 }
