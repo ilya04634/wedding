@@ -87,6 +87,7 @@ export async function updateGuestPersonAction(formData: FormData) {
     childAge: getRequiredString(formData, "childAge"),
     prompt: getRequiredString(formData, "prompt"),
     inviteText: getRequiredString(formData, "inviteText"),
+    noDeclension: formData.get("noDeclension") === "on",
     bgUrl: getRequiredString(formData, "bgUrl"),
     inviteUrl: getRequiredString(formData, "inviteUrl"),
     status: getRequiredString(formData, "status"),

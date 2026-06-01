@@ -233,6 +233,16 @@ export function AdminInviteList({ invites }: AdminInviteListProps) {
                       />
                     </div>
 
+                    <label className="flex items-center gap-2 rounded-md border border-neutral-200 px-3 py-2 text-sm lg:col-span-2">
+                      <input
+                        type="checkbox"
+                        name="noDeclension"
+                        defaultChecked={person.noDeclension}
+                        className="h-4 w-4 accent-neutral-900"
+                      />
+                      Не склонять имя в превью
+                    </label>
+
                     <div className="sm:col-span-2 lg:col-span-8">
                       <Label htmlFor={`prompt-${person.sheetRow}`}>prompt</Label>
                       <textarea

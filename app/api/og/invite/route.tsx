@@ -7,8 +7,11 @@ export const runtime = "edge";
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const rawName = searchParams.get("name")?.trim();
+  const shouldDecline = searchParams.get("decline") !== "0";
   const inviteName = rawName
-    ? toAccusativeInviteName(rawName)
+    ? shouldDecline
+      ? toAccusativeInviteName(rawName)
+      : rawName
     : "дорогих гостей";
   const title = `Приглашаем ${inviteName}`;
 

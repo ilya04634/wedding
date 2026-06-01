@@ -8,6 +8,7 @@ export interface GuestPerson {
   childAge: string | null;
   prompt: string | null;
   inviteText: string | null;
+  noDeclension: boolean;
   bgUrl: string | null;
   inviteUrl: string | null;
   status: string | null;
@@ -20,6 +21,7 @@ export interface GuestInvite {
   people: GuestPerson[];
   prompt: string | null;
   inviteText: string | null;
+  noDeclension: boolean;
   bgUrl: string | null;
   inviteUrl: string | null;
   status: string | null;

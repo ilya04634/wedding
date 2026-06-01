@@ -17,14 +17,16 @@ export async function generateMetadata({
 }: InvitePageProps): Promise<Metadata> {
   const invite = await getInviteById(params.id);
   if (!invite) return { title: "Приглашение" };
-  const previewName = toAccusativeInviteName(invite.inviteName);
+  const previewName = invite.noDeclension
+    ? invite.inviteName
+    : toAccusativeInviteName(invite.inviteName);
   const title = `Приглашаем ${previewName}`;
   const description = `Илья и Дарья приглашают ${previewName} на свадьбу`;
   const siteUrl = getSiteUrl();
   const inviteUrl = `${siteUrl}/i/${encodeURIComponent(params.id)}`;
   const imageUrl = `${siteUrl}/api/og/invite?name=${encodeURIComponent(
     invite.inviteName,
-  )}&v=3`;
+  )}&decline=${invite.noDeclension ? "0" : "1"}&v=4`;
 
   return {
     title,

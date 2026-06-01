@@ -12,6 +12,7 @@ const GUEST_COLUMNS = [
   "person_type",
   "child_age",
   "prompt",
+  "no_declension",
   "name",
   "bg_url",
   "invite_url",
@@ -30,6 +31,7 @@ export interface GuestPersonUpdate {
   childAge: string;
   prompt: string;
   inviteText: string;
+  noDeclension: boolean;
   bgUrl: string;
   inviteUrl: string;
   status: string;
@@ -62,6 +64,11 @@ function formatInviteName(names: string[]): string {
 
 function normalizePersonType(value: string | undefined): GuestPersonType {
   return value?.trim().toLowerCase() === "child" ? "child" : "adult";
+}
+
+function parseBooleanCell(value: string | undefined): boolean {
+  const normalized = value?.trim().toLowerCase() ?? "";
+  return ["1", "true", "yes", "y", "да", "д", "истина"].includes(normalized);
 }
 
 function transliterateForSlug(value: string) {
@@ -142,6 +149,7 @@ function rowToGuestPerson(
     childAge: getCell(row, columnIndex, "child_age") || null,
     prompt: getCell(row, columnIndex, "prompt") || null,
     inviteText: getCell(row, columnIndex, "invite_text") || null,
+    noDeclension: parseBooleanCell(getCell(row, columnIndex, "no_declension")),
     bgUrl: getCell(row, columnIndex, "bg_url") || null,
     inviteUrl: getCell(row, columnIndex, "invite_url") || null,
     status: getCell(row, columnIndex, "status") || null,
@@ -236,6 +244,7 @@ function peopleGroupToInvite(id: string, invitePeople: GuestPerson[]): GuestInvi
     prompt: invitePeople.find((person) => person.prompt)?.prompt ?? null,
     inviteText:
       invitePeople.find((person) => person.inviteText)?.inviteText ?? null,
+    noDeclension: invitePeople.some((person) => person.noDeclension),
     bgUrl: invitePeople.find((person) => person.bgUrl)?.bgUrl ?? null,
     inviteUrl: invitePeople.find((person) => person.inviteUrl)?.inviteUrl ?? null,
     status:
@@ -392,13 +401,14 @@ export async function updateGuestPerson(update: GuestPersonUpdate): Promise<void
     ["child_age", update.childAge],
     ["prompt", update.prompt],
     ["invite_text", update.inviteText],
+    ["no_declension", update.noDeclension ? "true" : ""],
     ["bg_url", update.bgUrl],
     ["invite_url", update.inviteUrl],
     ["status", update.status],
   ];
 
   let nextHeaderCount = headerCount;
-  for (const key of ["prompt", "invite_text", "invite_url"] as const) {
+  for (const key of ["prompt", "invite_text", "no_declension", "invite_url"] as const) {
     const index = await ensureGuestColumn(
       sheetName,
       columnIndex,
