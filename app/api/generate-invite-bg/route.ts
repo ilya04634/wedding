@@ -8,6 +8,7 @@
 
 import { getInviteById, updateInviteBackground } from "@/lib/google/guests";
 import { resolveInviteBackground } from "@/lib/invite/background-service";
+import { getInvitePreviewName, warmInviteOgImage } from "@/lib/invite/og-preview";
 import { buildPublicInviteUrl } from "@/lib/invite/url";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -49,11 +50,14 @@ export async function POST(request: NextRequest) {
   }
 
   const inviteUrl = buildPublicInviteUrl(invite.id);
+  const previewName = getInvitePreviewName(invite);
 
   if (invite.bgUrl && invite.status === "done") {
     if (invite.inviteUrl !== inviteUrl) {
       await updateInviteBackground(invite.id, invite.bgUrl, "done", inviteUrl);
     }
+
+    await warmInviteOgImage(previewName);
 
     return NextResponse.json({
       ok: true,
@@ -88,6 +92,7 @@ export async function POST(request: NextRequest) {
     stage = "sheet-update-done";
     console.log("[generate-invite-bg] stage", stage, { guestId: invite.id });
     await updateInviteBackground(invite.id, bgUrl, "done", inviteUrl);
+    await warmInviteOgImage(previewName);
 
     return NextResponse.json({
       ok: true,

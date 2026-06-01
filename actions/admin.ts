@@ -15,6 +15,7 @@ import {
   type GuestPersonUpdate,
 } from "@/lib/google/guests";
 import { resolveInviteBackground } from "@/lib/invite/background-service";
+import { getInvitePreviewName, warmInviteOgImage } from "@/lib/invite/og-preview";
 import { buildPublicInviteUrl } from "@/lib/invite/url";
 import {
   settingsToFormData,
@@ -138,9 +139,11 @@ export async function generateInviteBackgroundAction(formData: FormData) {
   }
 
   const inviteUrl = buildPublicInviteUrl(invite.id);
+  const previewName = getInvitePreviewName(invite);
 
   if (invite.bgUrl && invite.status === "done") {
     await updateInviteBackground(invite.id, invite.bgUrl, "done", inviteUrl);
+    await warmInviteOgImage(previewName);
     revalidatePath("/admin");
     revalidatePath(`/i/${invite.id}`);
     revalidatePath(`/?guestId=${invite.id}`);
@@ -155,6 +158,7 @@ export async function generateInviteBackgroundAction(formData: FormData) {
   await updateInviteBackground(invite.id, "", "pending");
   const { bgUrl } = await resolveInviteBackground(invite, openaiKey);
   await updateInviteBackground(invite.id, bgUrl, "done", inviteUrl);
+  await warmInviteOgImage(previewName);
 
   revalidatePath("/admin");
   revalidatePath(`/i/${invite.id}`);
@@ -180,6 +184,7 @@ export async function generateMissingInviteBackgroundsAction() {
 
   for (const invite of targets) {
     const inviteUrl = buildPublicInviteUrl(invite.id);
+    const previewName = getInvitePreviewName(invite);
 
     if (invite.bgUrl && invite.status === "done") {
       await updateInviteBackground(invite.id, invite.bgUrl, "done", inviteUrl);
@@ -189,6 +194,7 @@ export async function generateMissingInviteBackgroundsAction() {
       await updateInviteBackground(invite.id, bgUrl, "done", inviteUrl);
     }
 
+    await warmInviteOgImage(previewName);
     revalidatePath(`/i/${invite.id}`);
     revalidatePath(`/?guestId=${invite.id}`);
   }

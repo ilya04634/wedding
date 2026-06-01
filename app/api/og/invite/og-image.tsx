@@ -230,6 +230,9 @@ export function renderInviteOgImage({ inviteName }: InviteOgImageOptions) {
       </div>
     ),
     {
+      headers: {
+        "Cache-Control": "public, immutable, no-transform, max-age=31536000",
+      },
       width: 1200,
       height: 1200,
     },

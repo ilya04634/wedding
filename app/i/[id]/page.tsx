@@ -1,8 +1,11 @@
 import { PersonalInvite } from "@/components/invite/personal-invite";
 import { getInviteById } from "@/lib/google/guests";
 import { getSiteSettings } from "@/lib/google/settings";
-import { toAccusativeInviteName } from "@/lib/invite/russian-accusative";
-import { getSiteUrl } from "@/lib/invite/url";
+import {
+  buildInviteOgImageUrl,
+  getInvitePreviewName,
+} from "@/lib/invite/og-preview";
+import { buildPublicInviteUrl } from "@/lib/invite/url";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -17,14 +20,11 @@ export async function generateMetadata({
 }: InvitePageProps): Promise<Metadata> {
   const invite = await getInviteById(params.id);
   if (!invite) return { title: "Приглашение" };
-  const previewName = invite.noDeclension
-    ? invite.inviteName
-    : toAccusativeInviteName(invite.inviteName);
+  const previewName = getInvitePreviewName(invite);
   const title = `Приглашаем ${previewName}`;
   const description = `Илья и Дарья приглашают ${previewName} на свадьбу`;
-  const siteUrl = getSiteUrl();
-  const inviteUrl = `${siteUrl}/i/${encodeURIComponent(params.id)}`;
-  const imageUrl = `${siteUrl}/og/invite-preview-v1.png`;
+  const inviteUrl = buildPublicInviteUrl(params.id);
+  const imageUrl = buildInviteOgImageUrl(previewName);
 
   return {
     title,
@@ -44,7 +44,7 @@ export async function generateMetadata({
           url: imageUrl,
           secureUrl: imageUrl,
           width: 1200,
-          height: 630,
+          height: 1200,
           type: "image/png",
           alt: title,
         },
