@@ -1,5 +1,6 @@
 import {
   fillMissingGuestIdsAction,
+  generateMissingInviteBackgroundsAction,
   loginAdmin,
   logoutAdmin,
   updateSiteSettingsAction,
@@ -142,11 +143,23 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           Если фон уже готов, кнопка генерации только дозапишет `invite_url` и не
           потратит OpenAI-кредиты.
         </p>
-        <form action={fillMissingGuestIdsAction} className="mt-4">
-          <Button type="submit" variant="secondary">
-            Заполнить пустые id
-          </Button>
-        </form>
+        <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+          <form action={generateMissingInviteBackgroundsAction}>
+            <Button type="submit">
+              Заполнить id и сгенерировать все недостающие фоны
+            </Button>
+          </form>
+          <form action={fillMissingGuestIdsAction}>
+            <Button type="submit" variant="secondary">
+              Заполнить пустые id
+            </Button>
+          </form>
+        </div>
+        <p className="mt-2 text-xs text-neutral-500">
+          Новая кнопка пропускает приглашения со статусом pending и не тратит
+          OpenAI, если фон уже готов — в этом случае она только дозапишет ссылку
+          приглашения.
+        </p>
       </section>
 
       <section className="mt-8">

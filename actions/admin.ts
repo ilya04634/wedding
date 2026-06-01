@@ -8,6 +8,7 @@ import {
 import {
   fillMissingGuestIds,
   getInviteById,
+  listInvites,
   updateInviteText,
   updateGuestPerson,
   updateInviteBackground,
@@ -39,6 +40,19 @@ function getEnabledSectionsString(formData: FormData, fallback: string) {
     .map((value) => String(value).trim())
     .filter(Boolean)
     .join("\n");
+}
+
+function shouldGenerateInviteBackground(invite: {
+  id: string;
+  bgUrl: string | null;
+  inviteUrl: string | null;
+  status: string | null;
+}) {
+  const normalizedStatus = invite.status?.trim().toLowerCase() ?? "";
+  if (!invite.id || normalizedStatus === "pending") return false;
+  if (!invite.bgUrl) return true;
+  if (normalizedStatus !== "done") return true;
+  return !invite.inviteUrl;
 }
 
 export async function loginAdmin(formData: FormData) {
@@ -144,6 +158,41 @@ export async function generateInviteBackgroundAction(formData: FormData) {
   revalidatePath("/admin");
   revalidatePath(`/i/${invite.id}`);
   revalidatePath(`/?guestId=${invite.id}`);
+}
+
+export async function generateMissingInviteBackgroundsAction() {
+  assertAdminAuthenticated();
+
+  await fillMissingGuestIds();
+  const invites = await listInvites();
+  const targets = invites.filter(shouldGenerateInviteBackground);
+
+  if (!targets.length) {
+    revalidatePath("/admin");
+    return;
+  }
+
+  const openaiKey = process.env.OPENAI_API_KEY?.trim();
+  if (!openaiKey && targets.some((invite) => !invite.bgUrl)) {
+    throw new Error("OPENAI_API_KEY is not configured");
+  }
+
+  for (const invite of targets) {
+    const inviteUrl = buildPublicInviteUrl(invite.id);
+
+    if (invite.bgUrl && invite.status === "done") {
+      await updateInviteBackground(invite.id, invite.bgUrl, "done", inviteUrl);
+    } else {
+      await updateInviteBackground(invite.id, "", "pending");
+      const { bgUrl } = await resolveInviteBackground(invite, openaiKey!);
+      await updateInviteBackground(invite.id, bgUrl, "done", inviteUrl);
+    }
+
+    revalidatePath(`/i/${invite.id}`);
+    revalidatePath(`/?guestId=${invite.id}`);
+  }
+
+  revalidatePath("/admin");
 }
 
 export async function updateSiteSettingsAction(formData: FormData) {
