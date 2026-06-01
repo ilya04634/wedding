@@ -24,9 +24,9 @@ export async function generateMetadata({
   const description = `Илья и Дарья приглашают ${previewName} на свадьбу`;
   const siteUrl = getSiteUrl();
   const inviteUrl = `${siteUrl}/i/${encodeURIComponent(params.id)}`;
-  const imageUrl = `${siteUrl}/api/og/invite?name=${encodeURIComponent(
-    invite.inviteName,
-  )}&decline=${invite.noDeclension ? "0" : "1"}&v=4`;
+  const imageUrl = `${siteUrl}/api/og/invite-image/${encodeURIComponent(
+    invite.id,
+  )}/image.png`;
 
   return {
     title,
@@ -44,8 +44,10 @@ export async function generateMetadata({
       images: [
         {
           url: imageUrl,
+          secureUrl: imageUrl,
           width: 1200,
           height: 1200,
+          type: "image/png",
           alt: title,
         },
       ],
