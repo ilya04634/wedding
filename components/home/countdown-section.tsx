@@ -46,7 +46,7 @@ export function CountdownSection() {
           alt=""
           width={163}
           height={247}
-          className="absolute left-[-35px] top-[-53px] h-[247px] w-[163px] object-bottom"
+          className="absolute left-[-58px] top-[4px] h-[247px] w-[163px] object-contain"
           aria-hidden
         />
 
@@ -171,8 +171,8 @@ export function CountdownSection() {
           alt=""
           width={175}
           height={262}
-          className="absolute h-[262px] w-[175px] object-cover"
-          style={{ left: "calc(60% + 23.8px)", top: "calc(34% + 8px)" }}
+          className="absolute h-[262px] w-[175px] object-contain"
+          style={{ left: "calc(60% + 12px)", top: "calc(34% - 12px)" }}
           aria-hidden
         />
       </div>

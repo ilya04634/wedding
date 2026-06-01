@@ -205,7 +205,7 @@ export function VenueDateSection({ settings }: VenueDateSectionProps) {
 
         <div
           className="absolute z-10 flex h-[219.057px] w-[239.043px] items-center justify-center"
-          style={{ left: "calc(60% - 5.2px)", top: "calc(60% + 3.4px)" }}
+          style={{ left: "calc(60% - 5.2px)", top: "calc(49% + 6px)" }}
         >
           <div className="relative h-[178.54px] w-[204.944px] rotate-[-12.64deg]">
             <Image
