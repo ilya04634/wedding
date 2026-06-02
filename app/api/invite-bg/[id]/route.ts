@@ -4,6 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
+const IMAGE_CACHE_CONTROL = "public, max-age=300, stale-while-revalidate=3600";
+
 interface InviteBackgroundRouteProps {
   params: { id: string };
 }
@@ -25,12 +27,28 @@ export async function GET(
     );
   }
 
-  const image = await downloadDriveImage(fileId);
+  try {
+    const image = await downloadDriveImage(fileId);
 
-  return new NextResponse(image.buffer, {
-    headers: {
-      "Content-Type": image.mimeType,
-      "Cache-Control": "public, max-age=300, stale-while-revalidate=3600",
-    },
-  });
+    return new NextResponse(image.buffer, {
+      headers: {
+        "Content-Type": image.mimeType,
+        "Cache-Control": IMAGE_CACHE_CONTROL,
+      },
+    });
+  } catch (error) {
+    console.error("[invite-bg] Drive API download failed", {
+      inviteId: params.id,
+      fileId,
+      error,
+    });
+
+    const fallbackUrl = new URL("https://drive.google.com/uc");
+    fallbackUrl.searchParams.set("export", "view");
+    fallbackUrl.searchParams.set("id", fileId);
+
+    const response = NextResponse.redirect(fallbackUrl, 302);
+    response.headers.set("Cache-Control", IMAGE_CACHE_CONTROL);
+    return response;
+  }
 }
