@@ -34,6 +34,20 @@ function formatCountTemplate(template: string, count: number) {
   return template.replaceAll("{{count}}", String(count));
 }
 
+function getBackgroundVersion(bgUrl: string | null) {
+  if (!bgUrl) return "";
+
+  const filePathMatch = bgUrl.match(/\/file\/d\/([^/]+)/);
+  if (filePathMatch?.[1]) return filePathMatch[1];
+
+  try {
+    const parsed = new URL(bgUrl);
+    return parsed.searchParams.get("id") || String(bgUrl.length);
+  } catch {
+    return String(bgUrl.length);
+  }
+}
+
 function EnvelopeSeal() {
   return (
     <svg viewBox="0 0 96 96" className="h-20 w-20" aria-hidden>
@@ -120,7 +134,10 @@ function EnvelopeGate({
 export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
   const hasBackground = Boolean(invite.bgUrl);
   const childrenLine = getChildrenLine(invite, settings);
-  const backgroundUrl = `/api/invite-bg/${encodeURIComponent(invite.id)}`;
+  const backgroundVersion = getBackgroundVersion(invite.bgUrl);
+  const backgroundUrl = `/api/invite-bg/${encodeURIComponent(invite.id)}${
+    backgroundVersion ? `?v=${encodeURIComponent(backgroundVersion)}` : ""
+  }`;
   const detailsUrl = `/?guestId=${encodeURIComponent(invite.id)}`;
   const inviteBodyText = applyInformalTone(
     invite.inviteText || settings.inviteBodyText,
