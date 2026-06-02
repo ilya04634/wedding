@@ -122,7 +122,6 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
   const childrenLine = getChildrenLine(invite, settings);
   const backgroundUrl = `/api/invite-bg/${encodeURIComponent(invite.id)}`;
   const detailsUrl = `/?guestId=${encodeURIComponent(invite.id)}`;
-  const rsvpUrl = `${detailsUrl}#rsvp`;
   const inviteBodyText = applyInformalTone(
     invite.inviteText || settings.inviteBodyText,
     invite.informalTone,
@@ -248,12 +247,6 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
           >
             {settings.invitePrimaryButtonLabel}
             <ArrowRight className="h-4 w-4" aria-hidden />
-          </Link>
-          <Link
-            href={rsvpUrl}
-            className="inline-flex min-h-12 items-center justify-center border border-[#3f8059]/45 bg-[#fbf3d9]/75 px-5 py-3 font-display text-sm font-semibold uppercase tracking-[0.08em] text-[#24340d] transition-colors hover:bg-white/80 sm:px-6"
-          >
-            {settings.inviteRsvpButtonLabel}
           </Link>
           <p className="mx-auto max-w-sm text-xs leading-5 text-[#24340d]/70 sm:text-sm">
             Пожалуйста, обязательно заполните анкету — так мы сможем всё
