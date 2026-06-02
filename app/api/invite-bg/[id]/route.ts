@@ -1,5 +1,9 @@
 import { getInviteById } from "@/lib/google/guests";
-import { downloadDriveImage, extractDriveFileId } from "@/lib/google/drive-image";
+import {
+  downloadDriveImage,
+  downloadPublicDriveImage,
+  extractDriveFileId,
+} from "@/lib/google/drive-image";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -43,12 +47,26 @@ export async function GET(
       error,
     });
 
-    const fallbackUrl = new URL("https://drive.google.com/uc");
-    fallbackUrl.searchParams.set("export", "view");
-    fallbackUrl.searchParams.set("id", fileId);
+    try {
+      const image = await downloadPublicDriveImage(fileId);
 
-    const response = NextResponse.redirect(fallbackUrl, 302);
-    response.headers.set("Cache-Control", IMAGE_CACHE_CONTROL);
-    return response;
+      return new NextResponse(image.buffer, {
+        headers: {
+          "Content-Type": image.mimeType,
+          "Cache-Control": IMAGE_CACHE_CONTROL,
+        },
+      });
+    } catch (fallbackError) {
+      console.error("[invite-bg] Public Drive download failed", {
+        inviteId: params.id,
+        fileId,
+        fallbackError,
+      });
+
+      return NextResponse.json(
+        { error: "Could not load invite background" },
+        { status: 502 },
+      );
+    }
   }
 }

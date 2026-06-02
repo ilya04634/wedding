@@ -35,3 +35,24 @@ export async function downloadDriveImage(fileId: string) {
     mimeType: String(response.headers["content-type"] || "image/png"),
   };
 }
+
+export async function downloadPublicDriveImage(fileId: string) {
+  const url = new URL("https://drive.google.com/uc");
+  url.searchParams.set("export", "download");
+  url.searchParams.set("id", fileId);
+
+  const response = await fetch(url, { redirect: "follow" });
+  if (!response.ok) {
+    throw new Error(`Public Drive download failed: ${response.status}`);
+  }
+
+  const mimeType = response.headers.get("content-type") || "image/png";
+  if (!mimeType.startsWith("image/")) {
+    throw new Error(`Public Drive download returned ${mimeType}`);
+  }
+
+  return {
+    buffer: Buffer.from(await response.arrayBuffer()),
+    mimeType,
+  };
+}
