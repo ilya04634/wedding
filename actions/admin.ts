@@ -14,6 +14,7 @@ import {
   updateInviteBackground,
   type GuestPersonUpdate,
 } from "@/lib/google/guests";
+import { syncBackgroundPoolFromInvites } from "@/lib/google/background-pool";
 import { resolveInviteBackground } from "@/lib/invite/background-service";
 import { getInvitePreviewName, warmInviteOgImage } from "@/lib/invite/og-preview";
 import { buildPublicInviteUrl } from "@/lib/invite/url";
@@ -166,6 +167,14 @@ export async function syncRsvpGuestNamesAction() {
 
   const invites = await listInvites();
   await syncRsvpGuestNamesFromInvites(invites);
+  revalidatePath("/admin");
+}
+
+export async function syncBackgroundPoolAction() {
+  assertAdminAuthenticated();
+
+  const invites = await listInvites();
+  await syncBackgroundPoolFromInvites(invites);
   revalidatePath("/admin");
 }
 

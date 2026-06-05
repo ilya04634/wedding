@@ -4,6 +4,7 @@ import {
   loginAdmin,
   logoutAdmin,
   setInviteBackgroundGenerationAction,
+  syncBackgroundPoolAction,
   syncRsvpGuestNamesAction,
   updateSiteSettingsAction,
 } from "@/actions/admin";
@@ -159,6 +160,11 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           <form action={syncRsvpGuestNamesAction}>
             <Button type="submit" variant="secondary">
               Обновить имена в RSVP из Guests
+            </Button>
+          </form>
+          <form action={syncBackgroundPoolAction}>
+            <Button type="submit" variant="secondary">
+              Синхронизировать BackgroundPool
             </Button>
           </form>
           <form action={setInviteBackgroundGenerationAction}>
