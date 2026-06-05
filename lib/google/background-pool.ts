@@ -1,8 +1,13 @@
 import "server-only";
 
 import type { GuestInvite } from "@/types/guest";
-import { getGoogleSpreadsheetId } from "./auth";
-import { getDriveClient } from "./drive-client";
+import { getGoogleSpreadsheetId, getInviteBgFolderId } from "./auth";
+import { buildDriveImageViewUrl } from "./drive";
+import {
+  getDriveClient,
+  getServiceAccountDriveClient,
+  shouldFallbackToServiceAccount,
+} from "./drive-client";
 import { extractDriveFileId } from "./drive-image";
 import { getSheetsClient } from "./sheets-client";
 
@@ -34,6 +39,13 @@ interface PoolRow {
   usedCount: number;
   maxUses: number;
   status: string;
+}
+
+interface DriveBackgroundFile {
+  bgUrl: string;
+  createdAt: string;
+  fileId: string;
+  name: string;
 }
 
 export interface BackgroundPoolClaim {
@@ -228,6 +240,48 @@ function formatUsageNotes(labels: string[]) {
   return `Используется: ${labels.join("; ")}`;
 }
 
+async function listDriveBackgroundFilesWithClient(
+  drive: ReturnType<typeof getDriveClient>,
+): Promise<DriveBackgroundFile[]> {
+  const folderId = getInviteBgFolderId();
+  const files: DriveBackgroundFile[] = [];
+  let pageToken: string | undefined;
+
+  do {
+    const response = await drive.files.list({
+      fields: "nextPageToken, files(id, name, createdTime)",
+      includeItemsFromAllDrives: true,
+      pageSize: 1000,
+      pageToken,
+      q: `'${folderId.replace(/'/g, "\\'")}' in parents and trashed = false and mimeType contains 'image/'`,
+      supportsAllDrives: true,
+    });
+
+    response.data.files?.forEach((file) => {
+      if (!file.id) return;
+      files.push({
+        bgUrl: buildDriveImageViewUrl(file.id),
+        createdAt: file.createdTime ?? nowIso(),
+        fileId: file.id,
+        name: file.name ?? file.id,
+      });
+    });
+
+    pageToken = response.data.nextPageToken ?? undefined;
+  } while (pageToken);
+
+  return files;
+}
+
+async function listDriveBackgroundFiles(): Promise<DriveBackgroundFile[]> {
+  try {
+    return await listDriveBackgroundFilesWithClient(getDriveClient());
+  } catch (error) {
+    if (!shouldFallbackToServiceAccount(error)) throw error;
+    return listDriveBackgroundFilesWithClient(getServiceAccountDriveClient());
+  }
+}
+
 async function isDriveBackgroundAvailable(bgUrl: string) {
   const fileId = extractDriveFileId(bgUrl);
   if (!fileId) return false;
@@ -267,8 +321,102 @@ async function isDriveBackgroundAvailable(bgUrl: string) {
 
 export interface SyncBackgroundPoolResult {
   added: number;
+  clearedMissingInvites: string[];
   missing: number;
+  reassignments: { bgUrl: string; inviteId: string }[];
   updated: number;
+}
+
+function buildAvailabilityMap(rows: PoolRow[], driveFiles: DriveBackgroundFile[]) {
+  const map = new Map<string, boolean>();
+
+  rows.forEach((row) => {
+    map.set(normalizeBgUrl(row.bgUrl), false);
+  });
+
+  driveFiles.forEach((file) => {
+    map.set(normalizeBgUrl(file.bgUrl), true);
+  });
+
+  return map;
+}
+
+function buildActiveBackgroundCandidates({
+  driveFiles,
+  rows,
+  usageByBgUrl,
+}: {
+  driveFiles: DriveBackgroundFile[];
+  rows: PoolRow[];
+  usageByBgUrl: ReturnType<typeof buildUsageByBgUrl>;
+}) {
+  const maxUsesByBgUrl = new Map(
+    rows.map((row) => [normalizeBgUrl(row.bgUrl), row.maxUses]),
+  );
+  const inactiveBgUrls = new Set(
+    rows
+      .filter((row) => !["", "active"].includes(row.status.toLowerCase()))
+      .map((row) => normalizeBgUrl(row.bgUrl)),
+  );
+
+  return driveFiles
+    .map((file, index) => {
+      const bgUrl = normalizeBgUrl(file.bgUrl);
+      return {
+        bgUrl,
+        index,
+        maxUses: maxUsesByBgUrl.get(bgUrl) ?? getDefaultMaxUses(),
+        usedCount: usageByBgUrl.get(bgUrl)?.count ?? 0,
+      };
+    })
+    .filter((candidate) => !inactiveBgUrls.has(candidate.bgUrl));
+}
+
+function planMissingInviteRepairs({
+  availabilityByBgUrl,
+  candidates,
+  invites,
+}: {
+  availabilityByBgUrl: Map<string, boolean>;
+  candidates: ReturnType<typeof buildActiveBackgroundCandidates>;
+  invites: GuestInvite[];
+}) {
+  const reassignments: { bgUrl: string; inviteId: string }[] = [];
+  const clearedMissingInvites: string[] = [];
+  const nextUsedCounts = new Map(
+    candidates.map((candidate) => [candidate.bgUrl, candidate.usedCount]),
+  );
+
+  invites.forEach((invite) => {
+    const currentBgUrl = normalizeBgUrl(invite.bgUrl ?? "");
+    if (!invite.id || !currentBgUrl) return;
+    if (availabilityByBgUrl.get(currentBgUrl)) return;
+
+    const candidate = candidates
+      .filter((item) => item.bgUrl !== currentBgUrl)
+      .filter(
+        (item) => (nextUsedCounts.get(item.bgUrl) ?? 0) < item.maxUses,
+      )
+      .sort(
+        (a, b) =>
+          (nextUsedCounts.get(a.bgUrl) ?? 0) -
+            (nextUsedCounts.get(b.bgUrl) ?? 0) ||
+          a.index - b.index,
+      )[0];
+
+    if (!candidate) {
+      clearedMissingInvites.push(invite.id);
+      return;
+    }
+
+    nextUsedCounts.set(
+      candidate.bgUrl,
+      (nextUsedCounts.get(candidate.bgUrl) ?? 0) + 1,
+    );
+    reassignments.push({ bgUrl: candidate.bgUrl, inviteId: invite.id });
+  });
+
+  return { clearedMissingInvites, reassignments };
 }
 
 export async function syncBackgroundPoolFromInvites(
@@ -278,6 +426,17 @@ export async function syncBackgroundPoolFromInvites(
   const spreadsheetId = getGoogleSpreadsheetId();
   const { rows, columnIndex } = await getPoolRows();
   const usageByBgUrl = buildUsageByBgUrl(invites);
+  const driveFiles = await listDriveBackgroundFiles();
+  const availabilityByBgUrl = buildAvailabilityMap(rows, driveFiles);
+  const repairPlan = planMissingInviteRepairs({
+    availabilityByBgUrl,
+    candidates: buildActiveBackgroundCandidates({
+      driveFiles,
+      rows,
+      usageByBgUrl,
+    }),
+    invites,
+  });
   const existingBgUrls = new Set(rows.map((row) => normalizeBgUrl(row.bgUrl)));
   const timestamp = nowIso();
   const usedCountColumn = columnLetter(requireColumn(columnIndex, "used_count"));
@@ -291,7 +450,8 @@ export async function syncBackgroundPoolFromInvites(
   for (const row of rows) {
     const bgUrl = normalizeBgUrl(row.bgUrl);
     const usage = usageByBgUrl.get(bgUrl);
-    const isAvailable = await isDriveBackgroundAvailable(bgUrl);
+    const isAvailable =
+      availabilityByBgUrl.get(bgUrl) ?? (await isDriveBackgroundAvailable(bgUrl));
     const nextStatus = isAvailable
       ? row.status.toLowerCase() === "missing"
         ? "active"
@@ -323,7 +483,8 @@ export async function syncBackgroundPoolFromInvites(
   for (const [bgUrl, usage] of Array.from(usageByBgUrl.entries())) {
     if (existingBgUrls.has(bgUrl)) continue;
 
-    const isAvailable = await isDriveBackgroundAvailable(bgUrl);
+    const isAvailable =
+      availabilityByBgUrl.get(bgUrl) ?? (await isDriveBackgroundAvailable(bgUrl));
     if (!isAvailable) missing += 1;
 
     inserts.push([
@@ -339,6 +500,24 @@ export async function syncBackgroundPoolFromInvites(
       formatUsageNotes(usage.labels),
     ]);
   }
+
+  driveFiles.forEach((file) => {
+    const bgUrl = normalizeBgUrl(file.bgUrl);
+    if (existingBgUrls.has(bgUrl) || usageByBgUrl.has(bgUrl)) return;
+
+    inserts.push([
+      `pool-${Date.now()}-${inserts.length + 1}-${file.fileId.replace(/[^a-zA-Z0-9_-]/g, "_")}`,
+      bgUrl,
+      DEFAULT_STYLE_KEY,
+      "0",
+      String(getDefaultMaxUses()),
+      "active",
+      file.createdAt,
+      "",
+      "",
+      "",
+    ]);
+  });
 
   if (updates.length) {
     await sheets.spreadsheets.values.batchUpdate({
@@ -364,7 +543,9 @@ export async function syncBackgroundPoolFromInvites(
 
   return {
     added: inserts.length,
+    clearedMissingInvites: repairPlan.clearedMissingInvites,
     missing,
+    reassignments: repairPlan.reassignments,
     updated: rows.length,
   };
 }

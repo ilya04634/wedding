@@ -174,7 +174,30 @@ export async function syncBackgroundPoolAction() {
   assertAdminAuthenticated();
 
   const invites = await listInvites();
-  await syncBackgroundPoolFromInvites(invites);
+  const result = await syncBackgroundPoolFromInvites(invites);
+
+  for (const reassignment of result.reassignments) {
+    await updateInviteBackground(
+      reassignment.inviteId,
+      reassignment.bgUrl,
+      "done",
+      buildPublicInviteUrl(reassignment.inviteId),
+    );
+  }
+
+  for (const inviteId of result.clearedMissingInvites) {
+    await updateInviteBackground(
+      inviteId,
+      "",
+      "missing",
+      buildPublicInviteUrl(inviteId),
+    );
+  }
+
+  if (result.reassignments.length || result.clearedMissingInvites.length) {
+    await syncBackgroundPoolFromInvites(await listInvites());
+  }
+
   revalidatePath("/admin");
 }
 
