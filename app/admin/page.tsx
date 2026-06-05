@@ -3,6 +3,7 @@ import {
   generateMissingInviteBackgroundsAction,
   loginAdmin,
   logoutAdmin,
+  setInviteBackgroundGenerationAction,
   updateSiteSettingsAction,
 } from "@/actions/admin";
 import { AdminInviteList } from "@/components/admin/invite-list";
@@ -154,7 +155,27 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               Заполнить пустые id
             </Button>
           </form>
+          <form action={setInviteBackgroundGenerationAction}>
+            <input
+              type="hidden"
+              name="enabled"
+              value={
+                settings.inviteBackgroundGenerationEnabled ? "false" : "true"
+              }
+            />
+            <Button type="submit" variant="secondary">
+              {settings.inviteBackgroundGenerationEnabled
+                ? "Выключить генерацию новых фонов"
+                : "Включить генерацию новых фонов"}
+            </Button>
+          </form>
         </div>
+        <p className="mt-2 text-xs font-medium text-neutral-700">
+          Режим фонов:{" "}
+          {settings.inviteBackgroundGenerationEnabled
+            ? "можно генерировать новые и брать из пула"
+            : "только распределять готовые из BackgroundPool"}
+        </p>
         <p className="mt-2 text-xs text-neutral-500">
           Новая кнопка пропускает приглашения со статусом pending и не тратит
           OpenAI, если фон уже готов — в этом случае она только дозапишет ссылку
@@ -365,6 +386,16 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             <Label htmlFor="inviteMissingBackgroundText">Текст без фона приглашения</Label>
             <Input id="inviteMissingBackgroundText" name="inviteMissingBackgroundText" defaultValue={settingsForm.inviteMissingBackgroundText} />
           </div>
+          <label className="flex items-center gap-2 rounded-md border border-neutral-200 px-3 py-2 text-sm sm:col-span-2">
+            <input
+              type="checkbox"
+              name="inviteBackgroundGenerationEnabled"
+              defaultChecked={settings.inviteBackgroundGenerationEnabled}
+              className="h-4 w-4 accent-neutral-900"
+            />
+            Разрешить генерацию новых фонов. Если выключить, фоны будут только
+            распределяться из BackgroundPool.
+          </label>
           </SettingsGroup>
 
           <SettingsGroup title="Дата, время и место">

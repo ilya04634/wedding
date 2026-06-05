@@ -7,6 +7,7 @@
  */
 
 import { getInviteById, updateInviteBackground } from "@/lib/google/guests";
+import { getSiteSettings } from "@/lib/google/settings";
 import { resolveInviteBackground } from "@/lib/invite/background-service";
 import { getInvitePreviewName, warmInviteOgImage } from "@/lib/invite/og-preview";
 import { buildPublicInviteUrl } from "@/lib/invite/url";
@@ -51,6 +52,8 @@ export async function POST(request: NextRequest) {
 
   const inviteUrl = buildPublicInviteUrl(invite.id);
   const previewName = getInvitePreviewName(invite);
+  const settings = await getSiteSettings();
+  const allowGeneration = settings.inviteBackgroundGenerationEnabled;
 
   if (invite.bgUrl && invite.status === "done") {
     if (invite.inviteUrl !== inviteUrl) {
@@ -70,7 +73,7 @@ export async function POST(request: NextRequest) {
   }
 
   const openaiKey = process.env.OPENAI_API_KEY?.trim();
-  if (!openaiKey) {
+  if (allowGeneration && !openaiKey) {
     return NextResponse.json(
       { error: "OPENAI_API_KEY is not configured" },
       { status: 503 },
@@ -82,11 +85,17 @@ export async function POST(request: NextRequest) {
     console.log("[generate-invite-bg] stage", stage, { guestId: invite.id });
     await updateInviteBackground(invite.id, "", "pending");
 
-    stage = invite.prompt?.trim()
-      ? "openai-generate-and-drive-upload"
-      : "pool-or-openai-generate-and-drive-upload";
+    stage = !allowGeneration
+      ? "background-pool-only"
+      : invite.prompt?.trim()
+        ? "openai-generate-and-drive-upload"
+        : "pool-or-openai-generate-and-drive-upload";
     console.log("[generate-invite-bg] stage", stage, { guestId: invite.id });
-    const background = await resolveInviteBackground(invite, openaiKey);
+    const background = await resolveInviteBackground(invite, {
+      allowGeneration,
+      forcePool: !allowGeneration,
+      openaiApiKey: openaiKey,
+    });
     const bgUrl = background.bgUrl;
 
     stage = "sheet-update-done";

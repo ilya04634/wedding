@@ -44,6 +44,7 @@ export interface SiteSettings {
   invitePrimaryButtonLabel: string;
   inviteRsvpButtonLabel: string;
   inviteMissingBackgroundText: string;
+  inviteBackgroundGenerationEnabled: boolean;
   footerText: string;
   uploadLinkEnabled: boolean;
   uploadLinkLabel: string;

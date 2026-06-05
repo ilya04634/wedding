@@ -45,6 +45,7 @@ const SETTING_KEYS = [
   "invitePrimaryButtonLabel",
   "inviteRsvpButtonLabel",
   "inviteMissingBackgroundText",
+  "inviteBackgroundGenerationEnabled",
   "footerText",
   "uploadLinkEnabled",
   "uploadLinkLabel",
@@ -296,6 +297,10 @@ function settingsFromMap(map: Map<string, string>): SiteSettings {
     inviteMissingBackgroundText:
       map.get("inviteMissingBackgroundText") ||
       DEFAULT_SITE_SETTINGS.inviteMissingBackgroundText,
+    inviteBackgroundGenerationEnabled: parseBoolean(
+      map.get("inviteBackgroundGenerationEnabled"),
+      DEFAULT_SITE_SETTINGS.inviteBackgroundGenerationEnabled,
+    ),
     footerText: map.get("footerText") || DEFAULT_SITE_SETTINGS.footerText,
     uploadLinkEnabled: parseBoolean(
       map.get("uploadLinkEnabled"),
@@ -389,6 +394,9 @@ export function settingsToFormData(settings: SiteSettings): SiteSettingsFormData
     invitePrimaryButtonLabel: settings.invitePrimaryButtonLabel,
     inviteRsvpButtonLabel: settings.inviteRsvpButtonLabel,
     inviteMissingBackgroundText: settings.inviteMissingBackgroundText,
+    inviteBackgroundGenerationEnabled: String(
+      settings.inviteBackgroundGenerationEnabled,
+    ),
     footerText: settings.footerText,
     uploadLinkEnabled: String(settings.uploadLinkEnabled),
     uploadLinkLabel: settings.uploadLinkLabel,

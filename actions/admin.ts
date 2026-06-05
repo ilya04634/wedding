@@ -18,6 +18,7 @@ import { resolveInviteBackground } from "@/lib/invite/background-service";
 import { getInvitePreviewName, warmInviteOgImage } from "@/lib/invite/og-preview";
 import { buildPublicInviteUrl } from "@/lib/invite/url";
 import {
+  getSiteSettings,
   settingsToFormData,
   updateSiteSettings,
   type SiteSettingsFormData,
@@ -48,12 +49,40 @@ function shouldGenerateInviteBackground(invite: {
   bgUrl: string | null;
   inviteUrl: string | null;
   status: string | null;
+  statusUpdatedAt?: string | null;
 }) {
   const normalizedStatus = invite.status?.trim().toLowerCase() ?? "";
-  if (!invite.id || normalizedStatus === "pending") return false;
+  if (!invite.id) return false;
+  if (normalizedStatus === "pending" && !isStalePending(invite.statusUpdatedAt)) {
+    return false;
+  }
   if (!invite.bgUrl) return true;
   if (normalizedStatus !== "done") return true;
   return !invite.inviteUrl;
+}
+
+function isStalePending(updatedAt?: string | null) {
+  if (!updatedAt) return true;
+
+  const timestamp = new Date(updatedAt).getTime();
+  if (!Number.isFinite(timestamp)) return true;
+
+  return Date.now() - timestamp > 15 * 60 * 1000;
+}
+
+async function getBackgroundGenerationOptions() {
+  const settings = await getSiteSettings();
+  const allowGeneration = settings.inviteBackgroundGenerationEnabled;
+  const openaiKey = process.env.OPENAI_API_KEY?.trim();
+
+  if (allowGeneration && !openaiKey) {
+    throw new Error("OPENAI_API_KEY is not configured");
+  }
+
+  return {
+    allowGeneration,
+    openaiKey,
+  };
 }
 
 export async function loginAdmin(formData: FormData) {
@@ -151,14 +180,20 @@ export async function generateInviteBackgroundAction(formData: FormData) {
     return;
   }
 
-  const openaiKey = process.env.OPENAI_API_KEY?.trim();
-  if (!openaiKey) {
-    throw new Error("OPENAI_API_KEY is not configured");
-  }
+  const { allowGeneration, openaiKey } = await getBackgroundGenerationOptions();
 
-  await updateInviteBackground(invite.id, "", "pending");
-  const { bgUrl } = await resolveInviteBackground(invite, openaiKey);
-  await updateInviteBackground(invite.id, bgUrl, "done", inviteUrl);
+  try {
+    await updateInviteBackground(invite.id, "", "pending");
+    const { bgUrl } = await resolveInviteBackground(invite, {
+      allowGeneration,
+      forcePool: !allowGeneration,
+      openaiApiKey: openaiKey,
+    });
+    await updateInviteBackground(invite.id, bgUrl, "done", inviteUrl);
+  } catch (error) {
+    await updateInviteBackground(invite.id, "", "error").catch(() => {});
+    throw error;
+  }
   await warmInviteOgImage(previewName);
 
   revalidatePath("/admin");
@@ -178,28 +213,49 @@ export async function generateMissingInviteBackgroundsAction() {
     return;
   }
 
-  const openaiKey = process.env.OPENAI_API_KEY?.trim();
-  if (!openaiKey && targets.some((invite) => !invite.bgUrl)) {
-    throw new Error("OPENAI_API_KEY is not configured");
-  }
+  const { allowGeneration, openaiKey } = await getBackgroundGenerationOptions();
 
   for (const invite of targets) {
     const inviteUrl = buildPublicInviteUrl(invite.id);
     const previewName = getInvitePreviewName(invite);
 
-    if (invite.bgUrl && invite.status === "done") {
-      await updateInviteBackground(invite.id, invite.bgUrl, "done", inviteUrl);
-    } else {
-      await updateInviteBackground(invite.id, "", "pending");
-      const { bgUrl } = await resolveInviteBackground(invite, openaiKey!);
-      await updateInviteBackground(invite.id, bgUrl, "done", inviteUrl);
-    }
+    try {
+      if (invite.bgUrl && invite.status === "done") {
+        await updateInviteBackground(invite.id, invite.bgUrl, "done", inviteUrl);
+      } else {
+        await updateInviteBackground(invite.id, "", "pending");
+        const { bgUrl } = await resolveInviteBackground(invite, {
+          allowGeneration,
+          forcePool: !allowGeneration,
+          openaiApiKey: openaiKey,
+        });
+        await updateInviteBackground(invite.id, bgUrl, "done", inviteUrl);
+      }
 
-    await warmInviteOgImage(previewName);
-    revalidatePath(`/i/${invite.id}`);
-    revalidatePath(`/?guestId=${invite.id}`);
+      await warmInviteOgImage(previewName);
+      revalidatePath(`/i/${invite.id}`);
+      revalidatePath(`/?guestId=${invite.id}`);
+    } catch (error) {
+      console.error("[admin generateMissingInviteBackgroundsAction]", {
+        id: invite.id,
+        error,
+      });
+      await updateInviteBackground(invite.id, "", "error").catch(() => {});
+    }
   }
 
+  revalidatePath("/admin");
+}
+
+export async function setInviteBackgroundGenerationAction(formData: FormData) {
+  assertAdminAuthenticated();
+
+  const settings = await getSiteSettings();
+  const data = settingsToFormData(settings);
+  data.inviteBackgroundGenerationEnabled =
+    formData.get("enabled") === "true" ? "true" : "false";
+
+  await updateSiteSettings(data);
   revalidatePath("/admin");
 }
 
@@ -264,6 +320,11 @@ export async function updateSiteSettingsAction(formData: FormData) {
     inviteMissingBackgroundText:
       getRequiredString(formData, "inviteMissingBackgroundText") ||
       defaults.inviteMissingBackgroundText,
+    inviteBackgroundGenerationEnabled: formData.get(
+      "inviteBackgroundGenerationEnabled",
+    )
+      ? "true"
+      : "false",
     footerText: getRequiredString(formData, "footerText") || defaults.footerText,
     uploadLinkEnabled: formData.get("uploadLinkEnabled") ? "true" : "false",
     uploadLinkLabel:

@@ -13,6 +13,7 @@ export interface GuestPerson {
   bgUrl: string | null;
   inviteUrl: string | null;
   status: string | null;
+  statusUpdatedAt: string | null;
   sheetRow: number;
 }
 
@@ -27,4 +28,5 @@ export interface GuestInvite {
   bgUrl: string | null;
   inviteUrl: string | null;
   status: string | null;
+  statusUpdatedAt: string | null;
 }

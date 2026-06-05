@@ -57,6 +57,7 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   inviteRsvpButtonLabel: "Перейти сразу к анкете",
   inviteMissingBackgroundText:
     "Персональный фон появится здесь после генерации.",
+  inviteBackgroundGenerationEnabled: true,
   footerText: "С любовью",
   uploadLinkEnabled: false,
   uploadLinkLabel: "Загрузить фото и видео",

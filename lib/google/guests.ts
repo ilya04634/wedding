@@ -31,6 +31,7 @@ type InviteMetaColumnIndex = Partial<Record<InviteMetaColumn, number>>;
 interface InviteMeta {
   bgUrl: string | null;
   status: string | null;
+  updatedAt: string | null;
 }
 
 export interface GuestPersonUpdate {
@@ -166,6 +167,7 @@ function rowToGuestPerson(
     bgUrl: getCell(row, columnIndex, "bg_url") || null,
     inviteUrl: getCell(row, columnIndex, "invite_url") || null,
     status: getCell(row, columnIndex, "status") || null,
+    statusUpdatedAt: null,
     sheetRow,
   };
 }
@@ -275,6 +277,7 @@ async function fetchInviteMetaMap(): Promise<Map<string, InviteMeta>> {
       map.set(id.toLowerCase(), {
         bgUrl: getMetaCell(values, columnIndex, "bg_url") || null,
         status: getMetaCell(values, columnIndex, "status") || null,
+        updatedAt: getMetaCell(values, columnIndex, "updated_at") || null,
       });
     });
 
@@ -318,6 +321,7 @@ async function fetchGuestRows(): Promise<{
       ...person,
       bgUrl: meta.bgUrl ?? person.bgUrl,
       status: meta.status ?? person.status,
+      statusUpdatedAt: meta.updatedAt,
     };
   });
 
@@ -357,6 +361,9 @@ function peopleGroupToInvite(id: string, invitePeople: GuestPerson[]): GuestInvi
     status:
       invitePeople.find((person) => person.status === "done")?.status ??
       invitePeople.find((person) => person.status)?.status ??
+      null,
+    statusUpdatedAt:
+      invitePeople.find((person) => person.statusUpdatedAt)?.statusUpdatedAt ??
       null,
   };
 }

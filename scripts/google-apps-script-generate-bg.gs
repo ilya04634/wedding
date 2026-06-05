@@ -145,6 +145,7 @@ function getInviteMetaMap(spreadsheet) {
 
   const bgUrlColumn = headerMap.bg_url || null;
   const statusColumn = headerMap.status || null;
+  const updatedAtColumn = headerMap.updated_at || null;
   const values = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn()).getValues();
   const map = {};
 
@@ -155,15 +156,25 @@ function getInviteMetaMap(spreadsheet) {
     map[id] = {
       bgUrl: getCell(row, bgUrlColumn),
       status: getCell(row, statusColumn),
+      updatedAt: getCell(row, updatedAtColumn),
     };
   });
 
   return map;
 }
 
-function shouldCallWebhook(bgUrl, inviteUrl, status) {
+function isStalePending(updatedAt) {
+  if (!updatedAt) return true;
+
+  const timestamp = new Date(updatedAt).getTime();
+  if (!timestamp || isNaN(timestamp)) return true;
+
+  return Date.now() - timestamp > 15 * 60 * 1000;
+}
+
+function shouldCallWebhook(bgUrl, inviteUrl, status, updatedAt) {
   const normalizedStatus = String(status || "").trim().toLowerCase();
-  if (normalizedStatus === "pending") return false;
+  if (normalizedStatus === "pending" && !isStalePending(updatedAt)) return false;
   if (!inviteUrl) return true;
   return !bgUrl && normalizedStatus !== "done";
 }
@@ -198,8 +209,9 @@ function getPendingInviteIds(spreadsheet) {
     const bgUrl = meta.bgUrl || getCell(row, bgUrlColumn);
     const inviteUrl = getCell(row, inviteUrlColumn);
     const status = meta.status || getCell(row, statusColumn);
+    const updatedAt = meta.updatedAt || "";
 
-    if (id && !seen[id] && shouldCallWebhook(bgUrl, inviteUrl, status)) {
+    if (id && !seen[id] && shouldCallWebhook(bgUrl, inviteUrl, status, updatedAt)) {
       seen[id] = true;
       ids.push(id);
     }
@@ -295,8 +307,9 @@ function onGuestsSheetEdit(e) {
   const bgUrl = meta.bgUrl || (bgUrlColumn ? sheet.getRange(row, bgUrlColumn).getValue() : "");
   const inviteUrl = inviteUrlColumn ? sheet.getRange(row, inviteUrlColumn).getValue() : "";
   const status = meta.status || (statusColumn ? sheet.getRange(row, statusColumn).getValue() : "");
+  const updatedAt = meta.updatedAt || "";
 
-  if (!id || !shouldCallWebhook(bgUrl, inviteUrl, status)) return;
+  if (!id || !shouldCallWebhook(bgUrl, inviteUrl, status, updatedAt)) return;
   triggerBackgroundGeneration(id);
 }
 
