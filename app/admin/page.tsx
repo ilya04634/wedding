@@ -4,6 +4,7 @@ import {
   loginAdmin,
   logoutAdmin,
   setInviteBackgroundGenerationAction,
+  syncRsvpGuestNamesAction,
   updateSiteSettingsAction,
 } from "@/actions/admin";
 import { AdminInviteList } from "@/components/admin/invite-list";
@@ -153,6 +154,11 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           <form action={fillMissingGuestIdsAction}>
             <Button type="submit" variant="secondary">
               Заполнить пустые id
+            </Button>
+          </form>
+          <form action={syncRsvpGuestNamesAction}>
+            <Button type="submit" variant="secondary">
+              Обновить имена в RSVP из Guests
             </Button>
           </form>
           <form action={setInviteBackgroundGenerationAction}>

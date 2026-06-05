@@ -23,6 +23,7 @@ import {
   updateSiteSettings,
   type SiteSettingsFormData,
 } from "@/lib/google/settings";
+import { syncRsvpGuestNamesFromInvites } from "@/lib/google/sheets";
 import { DEFAULT_SITE_SETTINGS } from "@/lib/settings/defaults";
 import type { GuestPersonType } from "@/types/guest";
 import { revalidatePath } from "next/cache";
@@ -157,6 +158,14 @@ export async function fillMissingGuestIdsAction() {
   assertAdminAuthenticated();
 
   await fillMissingGuestIds();
+  revalidatePath("/admin");
+}
+
+export async function syncRsvpGuestNamesAction() {
+  assertAdminAuthenticated();
+
+  const invites = await listInvites();
+  await syncRsvpGuestNamesFromInvites(invites);
   revalidatePath("/admin");
 }
 

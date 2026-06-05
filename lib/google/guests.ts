@@ -140,6 +140,11 @@ function slugifyInviteId(value: string) {
   return slug || "invite";
 }
 
+function buildInviteGroupKey(inviteName: string) {
+  const normalized = inviteName.trim().toLowerCase();
+  return normalized ? `invite:${normalized}` : "";
+}
+
 function getCell(row: string[], columnIndex: ColumnIndex, key: GuestColumn) {
   const index = columnIndex[key];
   return index === undefined ? "" : row[index]?.trim() ?? "";
@@ -450,28 +455,78 @@ export async function fillMissingGuestIds(): Promise<number> {
   const idIndex = requireColumn(columnIndex, "id");
   const idColumn = columnLetter(idIndex);
   const usedIds = new Set<string>();
-  const groupIds = new Map<string, string>();
+  const existingIdsByInviteGroup = new Map<string, string>();
+  const existingPersonNamesByInviteGroup = new Map<string, Set<string>>();
 
   dataRows.forEach((row) => {
+    const values = row.map(String);
     const id = String(row[idIndex] ?? "").trim();
-    if (id) usedIds.add(id.toLowerCase());
+    if (!id) return;
+
+    usedIds.add(id.toLowerCase());
+
+    const inviteName = getCell(values, columnIndex, "invite_name");
+    const groupKey = buildInviteGroupKey(inviteName);
+    if (groupKey && !existingIdsByInviteGroup.has(groupKey)) {
+      existingIdsByInviteGroup.set(groupKey, id);
+    }
+    if (groupKey) {
+      const personName = (
+        getCell(values, columnIndex, "person_name") ||
+        getCell(values, columnIndex, "name")
+      )
+        .trim()
+        .toLowerCase();
+      const names = existingPersonNamesByInviteGroup.get(groupKey) ?? new Set();
+      if (personName) names.add(personName);
+      existingPersonNamesByInviteGroup.set(groupKey, names);
+    }
   });
+
+  let previousGeneratedInviteGroupKey = "";
+  let previousGeneratedId = "";
+  let previousGeneratedPersonName = "";
 
   const updates = dataRows.flatMap((row, index) => {
     const values = row.map(String);
     const currentId = getCell(values, columnIndex, "id");
-    if (currentId) return [];
+    if (currentId) {
+      previousGeneratedInviteGroupKey = "";
+      previousGeneratedId = "";
+      previousGeneratedPersonName = "";
+      return [];
+    }
 
     const inviteName = getCell(values, columnIndex, "invite_name");
     const personName =
       getCell(values, columnIndex, "person_name") ||
       getCell(values, columnIndex, "name");
-    const groupKey = (inviteName || personName).trim().toLowerCase();
-    if (!groupKey) return [];
+    const sourceName = inviteName || personName;
+    if (!sourceName.trim()) return [];
 
-    let nextId = groupIds.get(groupKey);
+    const inviteGroupKey = buildInviteGroupKey(inviteName);
+    const normalizedPersonName = personName.trim().toLowerCase();
+    const hasExistingSamePerson =
+      inviteGroupKey &&
+      existingPersonNamesByInviteGroup
+        .get(inviteGroupKey)
+        ?.has(normalizedPersonName);
+    let nextId =
+      inviteGroupKey && !hasExistingSamePerson
+        ? existingIdsByInviteGroup.get(inviteGroupKey) || ""
+        : "";
+
+    if (
+      !nextId &&
+      inviteGroupKey &&
+      inviteGroupKey === previousGeneratedInviteGroupKey &&
+      normalizedPersonName !== previousGeneratedPersonName
+    ) {
+      nextId = previousGeneratedId;
+    }
+
     if (!nextId) {
-      const baseId = slugifyInviteId(inviteName || personName);
+      const baseId = slugifyInviteId(sourceName);
       nextId = baseId;
       let suffix = 2;
 
@@ -481,8 +536,11 @@ export async function fillMissingGuestIds(): Promise<number> {
       }
 
       usedIds.add(nextId.toLowerCase());
-      groupIds.set(groupKey, nextId);
     }
+
+    previousGeneratedInviteGroupKey = inviteGroupKey;
+    previousGeneratedId = nextId;
+    previousGeneratedPersonName = normalizedPersonName;
 
     return [
       {

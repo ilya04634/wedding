@@ -1,5 +1,6 @@
 import "server-only";
 
+import type { GuestInvite, GuestPerson } from "@/types/guest";
 import type { RsvpFormData, RsvpPersonData } from "@/types/rsvp";
 import { getGoogleSpreadsheetId, getRsvpSheetName } from "./auth";
 import { getSheetsClient } from "./sheets-client";
@@ -39,6 +40,15 @@ function formatDrink(person: RsvpPersonData): string {
 }
 
 function formatInternalPersonName(person: RsvpPersonData): string {
+  return [person.personName, person.adminLabel]
+    .map((part) => part?.trim())
+    .filter(Boolean)
+    .join(" ");
+}
+
+function formatGuestInternalPersonName(
+  person: Pick<GuestPerson, "personName" | "adminLabel">,
+): string {
   return [person.personName, person.adminLabel]
     .map((part) => part?.trim())
     .filter(Boolean)
@@ -101,6 +111,127 @@ async function fetchExistingRsvpRows(): Promise<Map<string, number>> {
   });
 
   return existing;
+}
+
+interface RsvpNameCandidate {
+  aliases: Set<string>;
+  name: string;
+}
+
+export interface SyncRsvpGuestNamesResult {
+  skipped: number;
+  unchanged: number;
+  updated: number;
+}
+
+function buildRsvpNameCandidates(
+  invites: GuestInvite[],
+): Map<string, RsvpNameCandidate[]> {
+  const candidatesByInviteId = new Map<string, RsvpNameCandidate[]>();
+
+  invites.forEach((invite) => {
+    if (!invite.id) return;
+
+    candidatesByInviteId.set(
+      normalizeKey(invite.id),
+      invite.people.map((person) => {
+        const plainName = person.personName.trim();
+        const name = formatGuestInternalPersonName(person) || plainName;
+        const aliases = new Set(
+          [plainName, name].filter(Boolean).map((alias) => normalizeKey(alias)),
+        );
+
+        return { aliases, name };
+      }),
+    );
+  });
+
+  return candidatesByInviteId;
+}
+
+function resolveSyncedRsvpName(
+  currentName: string,
+  candidates: RsvpNameCandidate[],
+): string | null {
+  const normalizedName = normalizeKey(currentName);
+  const exactMatches = candidates.filter((candidate) =>
+    candidate.aliases.has(normalizedName),
+  );
+
+  if (exactMatches.length === 1) {
+    return exactMatches[0].name;
+  }
+
+  if (candidates.length === 1) {
+    return candidates[0].name;
+  }
+
+  return null;
+}
+
+export async function syncRsvpGuestNamesFromInvites(
+  invites: GuestInvite[],
+): Promise<SyncRsvpGuestNamesResult> {
+  const sheets = getSheetsClient();
+  const sheetName = getRsvpSheetName();
+  const candidatesByInviteId = buildRsvpNameCandidates(invites);
+
+  const response = await sheets.spreadsheets.values.get({
+    spreadsheetId: getGoogleSpreadsheetId(),
+    range: `${sheetName}!A:G`,
+  });
+
+  const rows = response.data.values ?? [];
+  const updates: { range: string; values: string[][] }[] = [];
+  let skipped = 0;
+  let unchanged = 0;
+
+  rows.slice(1).forEach((row, index) => {
+    const inviteId = String(row[1] ?? "").trim();
+    const currentName = String(row[2] ?? "").trim();
+    if (!inviteId || !currentName) {
+      skipped += 1;
+      return;
+    }
+
+    const candidates = candidatesByInviteId.get(normalizeKey(inviteId));
+    if (!candidates?.length) {
+      skipped += 1;
+      return;
+    }
+
+    const nextName = resolveSyncedRsvpName(currentName, candidates);
+    if (!nextName) {
+      skipped += 1;
+      return;
+    }
+
+    if (nextName === currentName) {
+      unchanged += 1;
+      return;
+    }
+
+    updates.push({
+      range: `${sheetName}!C${index + 2}`,
+      values: [[nextName]],
+    });
+  });
+
+  if (updates.length) {
+    await sheets.spreadsheets.values.batchUpdate({
+      spreadsheetId: getGoogleSpreadsheetId(),
+      requestBody: {
+        valueInputOption: "USER_ENTERED",
+        data: updates,
+      },
+    });
+  }
+
+  return {
+    skipped,
+    unchanged,
+    updated: updates.length,
+  };
 }
 
 export async function upsertRsvpRows(data: RsvpFormData): Promise<void> {
