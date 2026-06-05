@@ -6,6 +6,7 @@ export type DrinkPreference = string;
 
 export interface RsvpPersonData {
   personName: string;
+  adminLabel?: string;
   personType: GuestPersonType;
   status: RsvpStatus;
   drink: DrinkPreference | DrinkPreference[] | "not_applicable";

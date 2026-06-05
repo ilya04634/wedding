@@ -38,13 +38,20 @@ function formatDrink(person: RsvpPersonData): string {
   return LEGACY_DRINK_LABELS[person.drink] ?? person.drink ?? "";
 }
 
+function formatInternalPersonName(person: RsvpPersonData): string {
+  return [person.personName, person.adminLabel]
+    .map((part) => part?.trim())
+    .filter(Boolean)
+    .join(" ");
+}
+
 function formatRows(data: RsvpFormData): string[][] {
   const timestamp = new Date().toISOString();
 
   return data.people.map((person) => [
     timestamp,
     data.guestId?.trim() || "",
-    person.personName,
+    formatInternalPersonName(person),
     PERSON_TYPE_LABELS[person.personType],
     STATUS_LABELS[person.status],
     formatDrink(person),

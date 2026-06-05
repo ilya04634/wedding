@@ -5,7 +5,7 @@
 Первая строка должна быть заголовками:
 
 ```text
-id | invite_name | person_name | invite_text | person_type | child_age | prompt | no_declension | informal_tone | invite_url
+id | invite_name | person_name | admin_label | invite_text | person_type | child_age | prompt | no_declension | informal_tone | invite_url
 ```
 
 Колонки:
@@ -15,6 +15,7 @@ id | invite_name | person_name | invite_text | person_type | child_age | prompt 
 | `id` | Общий alias приглашения. Одинаковый у всех людей из одной пары/семьи/группы. |
 | `invite_name` | Обращение на приглашении: `Татьяна и Дмитрий`, `Иван и Мария с детьми`. Можно повторить во всех строках группы. |
 | `person_name` | Имя конкретного человека для RSVP. |
+| `admin_label` | Внутренняя добавка к имени для RSVP и админки. Гостям не показывается. Например: `Коваль`, `Дубай`, `работа`. |
 | `person_type` | `adult` для взрослых, `child` для детей. |
 | `child_age` | Возраст ребенка, можно оставить пустым. |
 | `prompt` | Дополнение к промту генерации фона. Можно оставить пустым. |
@@ -292,7 +293,7 @@ storage.
 The `Guests` sheet can include an optional `prompt` column:
 
 ```text
-id | invite_name | person_name | invite_text | person_type | child_age | prompt | no_declension | informal_tone | invite_url
+id | invite_name | person_name | admin_label | invite_text | person_type | child_age | prompt | no_declension | informal_tone | invite_url
 ```
 
 If `prompt` is empty, the invite background uses the default prompt from
@@ -321,7 +322,7 @@ automatic variant, as an extra accent.
 For easier data entry, helpers can fill only:
 
 ```text
-invite_name | person_name | invite_text | person_type | child_age | prompt | no_declension | informal_tone
+invite_name | person_name | admin_label | invite_text | person_type | child_age | prompt | no_declension | informal_tone
 ```
 
 Then open `/admin` and click `Заполнить пустые id`. The site will generate ids

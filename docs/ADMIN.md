@@ -27,6 +27,7 @@ ADMIN_PASSWORD=ваш_пароль
   - `id`
   - `invite_name`
   - `person_name`
+  - `admin_label`
   - `person_type`
   - `child_age`
   - `prompt`

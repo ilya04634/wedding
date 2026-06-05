@@ -113,6 +113,7 @@ export async function updateGuestPersonAction(formData: FormData) {
     id: getRequiredString(formData, "id"),
     inviteName: getRequiredString(formData, "inviteName"),
     personName: getRequiredString(formData, "personName"),
+    adminLabel: getRequiredString(formData, "adminLabel"),
     personType: personType === "child" ? "child" : ("adult" as GuestPersonType),
     childAge: getRequiredString(formData, "childAge"),
     prompt: getRequiredString(formData, "prompt"),

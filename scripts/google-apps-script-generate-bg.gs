@@ -11,7 +11,7 @@
  * 5. Reload the sheet. Use menu: Wedding -> Open generator panel.
  *
  * Guests headers expected:
- * id | invite_name | person_name | invite_text | person_type | child_age | prompt | no_declension | informal_tone | invite_url
+ * id | invite_name | person_name | admin_label | invite_text | person_type | child_age | prompt | no_declension | informal_tone | invite_url
  *
  * InviteMeta headers expected:
  * id | bg_url | status | updated_at

@@ -37,6 +37,7 @@ function getDefaultPeople(
   if (people?.length) {
     return people.map((person) => ({
       personName: person.personName,
+      adminLabel: person.adminLabel ?? "",
       personType: person.personType,
       status: "confirmed",
       drink: person.personType === "child" ? "not_applicable" : [],
@@ -177,6 +178,10 @@ export function RsvpForm({
                 <input
                   type="hidden"
                   {...register(`people.${index}.personName`)}
+                />
+                <input
+                  type="hidden"
+                  {...register(`people.${index}.adminLabel`)}
                 />
                 <input
                   type="hidden"

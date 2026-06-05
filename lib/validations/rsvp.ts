@@ -16,6 +16,7 @@ export const drinkAnswerSchema = z.union([
 
 export const rsvpPersonSchema = z.object({
   personName: z.string().trim().min(1, "Укажите имя гостя"),
+  adminLabel: z.string().trim().optional(),
   personType: z.enum(["adult", "child"]),
   status: rsvpStatusSchema,
   drink: drinkAnswerSchema.optional(),

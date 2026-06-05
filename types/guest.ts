@@ -4,6 +4,7 @@ export interface GuestPerson {
   id: string;
   inviteName: string | null;
   personName: string;
+  adminLabel: string | null;
   personType: GuestPersonType;
   childAge: string | null;
   prompt: string | null;

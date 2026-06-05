@@ -23,6 +23,7 @@ function getSearchText(invite: GuestInvite) {
     invite.inviteName,
     invite.status,
     invite.people.map((person) => person.personName).join(" "),
+    invite.people.map((person) => person.adminLabel).join(" "),
   ]
     .filter(Boolean)
     .join(" ")
@@ -193,6 +194,23 @@ export function AdminInviteList({ invites }: AdminInviteListProps) {
                         name="personName"
                         defaultValue={person.personName}
                         required
+                      />
+                      {person.adminLabel ? (
+                        <p className="mt-1 text-xs text-neutral-500">
+                          Для нас: {person.personName} {person.adminLabel}
+                        </p>
+                      ) : null}
+                    </div>
+
+                    <div>
+                      <Label htmlFor={`adminLabel-${person.sheetRow}`}>
+                        admin_label
+                      </Label>
+                      <Input
+                        id={`adminLabel-${person.sheetRow}`}
+                        name="adminLabel"
+                        defaultValue={person.adminLabel ?? ""}
+                        placeholder="Коваль, Дубай, работа"
                       />
                     </div>
 

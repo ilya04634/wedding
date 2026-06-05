@@ -8,6 +8,7 @@ const GUEST_COLUMNS = [
   "id",
   "invite_name",
   "person_name",
+  "admin_label",
   "invite_text",
   "person_type",
   "child_age",
@@ -39,6 +40,7 @@ export interface GuestPersonUpdate {
   id: string;
   inviteName: string;
   personName: string;
+  adminLabel: string;
   personType: GuestPersonType;
   childAge: string;
   prompt: string;
@@ -158,6 +160,7 @@ function rowToGuestPerson(
     id,
     inviteName: getCell(row, columnIndex, "invite_name") || null,
     personName,
+    adminLabel: getCell(row, columnIndex, "admin_label") || null,
     personType: normalizePersonType(getCell(row, columnIndex, "person_type")),
     childAge: getCell(row, columnIndex, "child_age") || null,
     prompt: getCell(row, columnIndex, "prompt") || null,
@@ -511,6 +514,7 @@ export async function updateGuestPerson(update: GuestPersonUpdate): Promise<void
     ["id", update.id],
     ["invite_name", update.inviteName],
     ["person_name", update.personName],
+    ["admin_label", update.adminLabel],
     ["person_type", update.personType],
     ["child_age", update.childAge],
     ["prompt", update.prompt],
@@ -523,6 +527,7 @@ export async function updateGuestPerson(update: GuestPersonUpdate): Promise<void
   let nextHeaderCount = headerCount;
   for (const key of [
     "prompt",
+    "admin_label",
     "invite_text",
     "no_declension",
     "informal_tone",
