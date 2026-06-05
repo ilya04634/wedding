@@ -102,8 +102,17 @@ export async function POST(request: NextRequest) {
 
   if (!response.ok) {
     const message = await response.text();
+    const isServiceAccountQuotaError = message.includes(
+      "Service Accounts do not have storage quota",
+    );
+
     return NextResponse.json(
-      { error: "Failed to create upload session", message },
+      {
+        error: isServiceAccountQuotaError
+          ? "Google Drive OAuth refresh token is invalid, and service account fallback cannot upload to a regular My Drive folder. Update GOOGLE_DRIVE_REFRESH_TOKEN in Vercel or move FOLDER_ID to a Google Shared Drive."
+          : "Failed to create upload session",
+        message,
+      },
       { status: 502 },
     );
   }

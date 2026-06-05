@@ -8,6 +8,19 @@ import {
   shouldFallbackToServiceAccount,
 } from "./drive-client";
 
+function isServiceAccountQuotaError(error: unknown) {
+  return (
+    error instanceof Error &&
+    error.message.includes("Service Accounts do not have storage quota")
+  );
+}
+
+function buildDriveAuthRecoveryError() {
+  return new Error(
+    "Google Drive OAuth refresh token is invalid, and service account fallback cannot upload to a regular My Drive folder. Update GOOGLE_DRIVE_REFRESH_TOKEN in Vercel or move INVITE_BG_FOLDER_ID to a Google Shared Drive.",
+  );
+}
+
 export function buildDriveImageViewUrl(fileId: string): string {
   return `https://drive.google.com/uc?export=view&id=${fileId}`;
 }
@@ -56,6 +69,14 @@ export async function uploadPublicImage(
     return await uploadWithDriveClient(getDriveClient());
   } catch (error) {
     if (!shouldFallbackToServiceAccount(error)) throw error;
-    return uploadWithDriveClient(getServiceAccountDriveClient());
+    try {
+      return await uploadWithDriveClient(getServiceAccountDriveClient());
+    } catch (fallbackError) {
+      if (isServiceAccountQuotaError(fallbackError)) {
+        throw buildDriveAuthRecoveryError();
+      }
+
+      throw fallbackError;
+    }
   }
 }
