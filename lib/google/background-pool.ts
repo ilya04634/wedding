@@ -39,6 +39,10 @@ export interface BackgroundPoolClaim {
   maxUses: number;
 }
 
+interface ClaimReusableBackgroundOptions {
+  ignoreMaxUses?: boolean;
+}
+
 function getDefaultMaxUses() {
   const raw = Number(process.env.BACKGROUND_POOL_MAX_USES ?? 4);
   return Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 4;
@@ -183,15 +187,17 @@ async function getPoolRows(): Promise<{
 
 export async function claimReusableBackgroundFromPool(
   styleKey = DEFAULT_STYLE_KEY,
+  options: ClaimReusableBackgroundOptions = {},
 ): Promise<BackgroundPoolClaim | null> {
   const { rows, columnIndex } = await getPoolRows();
   const normalizedStyleKey = styleKey.trim() || DEFAULT_STYLE_KEY;
+  const ignoreMaxUses = options.ignoreMaxUses ?? false;
   const candidate = rows
     .filter(
       (row) =>
         row.status.toLowerCase() === "active" &&
         row.styleKey === normalizedStyleKey &&
-        row.usedCount < row.maxUses,
+        (ignoreMaxUses || row.usedCount < row.maxUses),
     )
     .sort((a, b) => a.usedCount - b.usedCount || a.sheetRow - b.sheetRow)[0];
 

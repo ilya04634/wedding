@@ -33,9 +33,12 @@ export async function resolveInviteBackground(
   const customPrompt = invite.prompt?.trim();
   const allowGeneration = options.allowGeneration ?? true;
   const shouldTryPool = options.forcePool || !customPrompt;
+  const ignorePoolMaxUses = Boolean(options.forcePool && !allowGeneration);
 
   if (shouldTryPool) {
-    const pooled = await claimReusableBackgroundFromPool();
+    const pooled = await claimReusableBackgroundFromPool(undefined, {
+      ignoreMaxUses: ignorePoolMaxUses,
+    });
     if (pooled) {
       return {
         bgUrl: pooled.bgUrl,
