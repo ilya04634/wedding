@@ -1,5 +1,5 @@
 import { getGoogleDriveFolderId } from "@/lib/google/auth";
-import { getDriveAuthClient } from "@/lib/google/drive-client";
+import { getDriveAccessTokenWithFallback } from "@/lib/google/drive-client";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -61,10 +61,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const auth = getDriveAuthClient();
-  const accessToken = await auth.getAccessToken();
-  const token =
-    typeof accessToken === "string" ? accessToken : accessToken?.token;
+  const token = await getDriveAccessTokenWithFallback().catch(() => null);
 
   if (!token) {
     return NextResponse.json(
