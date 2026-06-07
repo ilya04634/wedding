@@ -134,6 +134,9 @@ export function VenueDateSection({ settings }: VenueDateSectionProps) {
         >
           <p>по адресу</p>
           <p>{venueAddress}</p>
+          <p className="mt-1 font-figma-script text-[24px] leading-none text-[#397c57]">
+            начало в {settings.weddingTime}
+          </p>
         </div>
         <a
           href={settings.weddingMapUrl}
@@ -142,7 +145,7 @@ export function VenueDateSection({ settings }: VenueDateSectionProps) {
           className="absolute z-30 inline-flex h-[34px] w-[214px] items-center justify-center bg-[#397c57] px-5 font-display text-[16px] leading-none tracking-[0.02em] text-[#fffaf0] shadow-[0_8px_16px_rgba(57,124,87,0.18)] transition-colors hover:bg-[#2f6848]"
           style={{
             left: "calc(40% - 7px)",
-            top: "calc(30% + 6px)",
+            top: "calc(34% + 6px)",
             transform: "translateX(-50%) rotate(-5.54deg)",
           }}
           aria-label={`Открыть маршрут: ${settings.weddingAddressLine}`}
