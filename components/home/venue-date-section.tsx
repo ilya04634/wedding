@@ -77,7 +77,7 @@ export function VenueDateSection({ settings }: VenueDateSectionProps) {
           className="absolute z-20 flex h-[303.227px] w-[253.765px] items-center justify-center"
           style={{ left: "calc(10% - 11.2px)", top: "calc(10% - 16.1px)" }}
         >
-          <div className="h-[282.572px] w-[227.536px] rotate-[-5.54deg] bg-[#fffaed] shadow-[0_18px_38px_rgba(52,49,45,0.08)]" />
+          <div className="h-[266px] w-[227.536px] rotate-[-5.54deg] bg-[#fffaed] shadow-[0_18px_38px_rgba(52,49,45,0.08)]" />
         </div>
 
         <div
@@ -145,7 +145,7 @@ export function VenueDateSection({ settings }: VenueDateSectionProps) {
           className="absolute z-30 inline-flex h-[34px] w-[214px] items-center justify-center bg-[#397c57] px-5 font-display text-[16px] leading-none tracking-[0.02em] text-[#fffaf0] shadow-[0_8px_16px_rgba(57,124,87,0.18)] transition-colors hover:bg-[#2f6848]"
           style={{
             left: "calc(40% - 7px)",
-            top: "calc(34% + 6px)",
+            top: "calc(31% + 10px)",
             transform: "translateX(-50%) rotate(-5.54deg)",
           }}
           aria-label={`Открыть маршрут: ${settings.weddingAddressLine}`}
