@@ -4,7 +4,6 @@ import type { GuestInvite } from "@/types/guest";
 import type { SiteSettings } from "@/types/settings";
 import { applyInformalTone } from "@/lib/invite/tone";
 import { ArrowRight, Calendar, MapPin, Users } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -182,21 +181,6 @@ export function PersonalInvite({ invite, settings }: PersonalInviteProps) {
 
       <div className="absolute inset-0 bg-[#fdf5e0]/34" aria-hidden />
       <div className="absolute inset-x-0 bottom-0 h-[44%] bg-gradient-to-t from-[#fdf5e0] via-[#fdf5e0]/92 to-transparent" aria-hidden />
-      <Image
-        src="/figma-export/images/node-185.png"
-        alt=""
-        width={239}
-        height={219}
-        className="pointer-events-none absolute right-0 top-0 z-[1] w-36 opacity-85 mix-blend-multiply sm:w-48"
-      />
-      <Image
-        src="/figma-export/images/node-2.png"
-        alt=""
-        width={300}
-        height={300}
-        className="pointer-events-none absolute -bottom-10 -left-16 z-[1] w-48 rotate-[-12deg] opacity-70 mix-blend-multiply sm:w-64"
-      />
-
       <section
         className={`relative z-10 mx-auto flex min-h-[100dvh] max-w-3xl flex-col justify-between px-4 py-6 text-center transition duration-700 sm:px-8 sm:py-10 ${
           isOpened
