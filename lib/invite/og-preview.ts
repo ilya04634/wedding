@@ -6,7 +6,37 @@ const INVITE_OG_IMAGE_VERSION = "v2";
 export function getInvitePreviewName(invite: {
   inviteName: string;
   noDeclension?: boolean;
+  people?: {
+    noDeclension?: boolean;
+    personName: string;
+    personType?: string;
+  }[];
 }) {
+  const people = invite.people ?? [];
+  const visiblePeople = people.filter((person) => person.personType !== "child");
+  const names = (visiblePeople.length ? visiblePeople : people)
+    .map((person) => person.personName.trim())
+    .filter(Boolean);
+
+  if (names.length) {
+    const declinedNames = (visiblePeople.length ? visiblePeople : people)
+      .filter((person) => person.personName.trim())
+      .map((person) =>
+        person.noDeclension
+          ? person.personName.trim()
+          : toAccusativeInviteName(person.personName.trim()),
+      );
+
+    if (declinedNames.length === 1) return declinedNames[0];
+    if (declinedNames.length === 2) {
+      return `${declinedNames[0]} и ${declinedNames[1]}`;
+    }
+
+    return `${declinedNames.slice(0, -1).join(", ")} и ${
+      declinedNames[declinedNames.length - 1]
+    }`;
+  }
+
   return invite.noDeclension
     ? invite.inviteName
     : toAccusativeInviteName(invite.inviteName);
