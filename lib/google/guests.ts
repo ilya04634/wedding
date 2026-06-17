@@ -362,7 +362,7 @@ function peopleGroupToInvite(id: string, invitePeople: GuestPerson[]): GuestInvi
     prompt: invitePeople.find((person) => person.prompt)?.prompt ?? null,
     inviteText:
       invitePeople.find((person) => person.inviteText)?.inviteText ?? null,
-    noDeclension: invitePeople.some((person) => person.noDeclension),
+    noDeclension: invitePeople.every((person) => person.noDeclension),
     informalTone: invitePeople.some((person) => person.informalTone),
     bgUrl: invitePeople.find((person) => person.bgUrl)?.bgUrl ?? null,
     inviteUrl: invitePeople.find((person) => person.inviteUrl)?.inviteUrl ?? null,
