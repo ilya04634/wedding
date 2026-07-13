@@ -6,7 +6,14 @@ import { getSheetsClient } from "./sheets-client";
 
 const WISHES_SHEET_NAME =
   process.env.WISHES_SHEET_NAME?.trim() || "Пожелания";
-const WISH_HEADERS = ["Timestamp", "Guest Name", "Wish Text"];
+const WISH_HEADERS = [
+  "Timestamp",
+  "Guest Name",
+  "Wish Text",
+  "Image URL",
+  "Export Signature",
+  "Exported At",
+];
 
 function quoteSheetName(name: string) {
   return `'${name.replace(/'/g, "''")}'`;
@@ -43,13 +50,14 @@ async function ensureWishesSheet(): Promise<void> {
 
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId,
-    range: `${quoteSheetName(WISHES_SHEET_NAME)}!A1:C1`,
+    range: `${quoteSheetName(WISHES_SHEET_NAME)}!A1:F1`,
   });
 
-  if (!response.data.values?.[0]?.length) {
+  const headerRow = response.data.values?.[0] ?? [];
+  if (!headerRow.length || headerRow.length < WISH_HEADERS.length) {
     await sheets.spreadsheets.values.update({
       spreadsheetId,
-      range: `${quoteSheetName(WISHES_SHEET_NAME)}!A1:C1`,
+      range: `${quoteSheetName(WISHES_SHEET_NAME)}!A1:F1`,
       valueInputOption: "USER_ENTERED",
       requestBody: { values: [WISH_HEADERS] },
     });
@@ -61,7 +69,7 @@ export async function listWishes(): Promise<WeddingWish[]> {
 
   const response = await getSheetsClient().spreadsheets.values.get({
     spreadsheetId: getGoogleSpreadsheetId(),
-    range: `${quoteSheetName(WISHES_SHEET_NAME)}!A:C`,
+    range: `${quoteSheetName(WISHES_SHEET_NAME)}!A:F`,
   });
 
   const rows = response.data.values ?? [];
@@ -70,11 +78,18 @@ export async function listWishes(): Promise<WeddingWish[]> {
     const timestamp = String(row[0] ?? "").trim();
     const guestName = String(row[1] ?? "").trim();
     const wishText = String(row[2] ?? "").trim();
+    const imageUrl = String(row[3] ?? "").trim();
+    const signature = String(row[4] ?? "").trim();
+    const exportedAt = String(row[5] ?? "").trim();
 
     if (!guestName || !wishText) return [];
 
     return {
+      exportedAt: exportedAt || undefined,
       id: `${timestamp || "wish"}-${index + 2}`,
+      imageUrl: imageUrl || undefined,
+      sheetRow: index + 2,
+      signature: signature || undefined,
       timestamp,
       guestName,
       wishText,
@@ -99,7 +114,7 @@ export async function appendWish({
     valueInputOption: "USER_ENTERED",
     insertDataOption: "INSERT_ROWS",
     requestBody: {
-      values: [[timestamp, guestName, wishText]],
+      values: [[timestamp, guestName, wishText, "", "", ""]],
     },
   });
 
@@ -109,4 +124,27 @@ export async function appendWish({
     guestName,
     wishText,
   };
+}
+
+export async function updateWishExportInfo({
+  exportedAt,
+  imageUrl,
+  sheetRow,
+  signature,
+}: {
+  exportedAt: string;
+  imageUrl: string;
+  sheetRow: number;
+  signature: string;
+}) {
+  await ensureWishesSheet();
+
+  await getSheetsClient().spreadsheets.values.update({
+    spreadsheetId: getGoogleSpreadsheetId(),
+    range: `${quoteSheetName(WISHES_SHEET_NAME)}!D${sheetRow}:F${sheetRow}`,
+    valueInputOption: "USER_ENTERED",
+    requestBody: {
+      values: [[imageUrl, signature, exportedAt]],
+    },
+  });
 }

@@ -204,7 +204,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             PNG-пожелания выгружены в Drive: новых{" "}
             {searchParams.wishExported}, пропущено уже готовых{" "}
             {searchParams.wishSkipped ?? "0"}. Ссылки записаны в лист
-            WishExports.
+            Пожелания.
           </p>
         ) : null}
       </section>
