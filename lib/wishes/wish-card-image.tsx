@@ -4,9 +4,11 @@ import type { WeddingWish } from "@/types/wish";
 import { ImageResponse } from "next/og";
 
 const CARD_COLORS = ["#f7d6d1", "#dfe7d5", "#fff1a9", "#fff6dd"];
-const CARD_WIDTH = 900;
+const CARD_WIDTH = 792;
 const HORIZONTAL_PADDING = 72;
-const IMAGE_PADDING = 54;
+// Keeps the tape, rounded corners, and shadow inside the transparent PNG canvas.
+const IMAGE_PADDING = 96;
+const IMAGE_WIDTH = CARD_WIDTH + IMAGE_PADDING * 2;
 const VERTICAL_PADDING = 68;
 
 function hashText(value: string): number {
@@ -73,10 +75,8 @@ function getCardMetrics(wishText: string) {
   const lineHeight = Math.round(textSize * 1.04);
   const contentHeight = lines.length * lineHeight;
   const headerHeight = 68;
-  const footerHeight = 78;
   const minCardHeight = 640;
-  const naturalCardHeight =
-    VERTICAL_PADDING * 2 + headerHeight + contentHeight + footerHeight;
+  const naturalCardHeight = VERTICAL_PADDING * 2 + headerHeight + contentHeight;
   const cardHeight = Math.max(minCardHeight, naturalCardHeight);
   const imageHeight = cardHeight + IMAGE_PADDING * 2;
 
@@ -130,7 +130,7 @@ export async function renderWishCardPng(wish: WeddingWish): Promise<Buffer> {
             minHeight: cardHeight,
             padding: `${VERTICAL_PADDING}px ${HORIZONTAL_PADDING}px`,
             position: "relative",
-            width: CARD_WIDTH - IMAGE_PADDING * 2,
+            width: CARD_WIDTH,
           }}
         >
           <div
@@ -181,27 +181,12 @@ export async function renderWishCardPng(wish: WeddingWish): Promise<Buffer> {
               </div>
             ))}
           </div>
-          <div
-            style={{
-              alignItems: "center",
-              color: "rgba(95,110,83,0.72)",
-              display: "flex",
-              fontFamily: "serif",
-              fontSize: 24,
-              justifyContent: "space-between",
-              marginTop: "auto",
-              paddingTop: 46,
-            }}
-          >
-            <span>Илья и Дарья</span>
-            <span>с любовью</span>
-          </div>
         </div>
       </div>
     ),
     {
       height: imageHeight,
-      width: CARD_WIDTH,
+      width: IMAGE_WIDTH,
     },
   );
 

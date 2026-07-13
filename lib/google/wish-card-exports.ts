@@ -9,7 +9,7 @@ import { listWishes, updateWishExportInfo } from "./wishes";
 
 const WISH_CARDS_FOLDER_NAME =
   process.env.WISH_CARDS_FOLDER_NAME?.trim() || "WishCards";
-const WISH_CARD_RENDER_VERSION = "transparent-v1";
+const WISH_CARD_RENDER_VERSION = "transparent-v2";
 
 export interface WishCardExportResult {
   exportedAt: string;
