@@ -25,13 +25,67 @@ export function buildDriveImageViewUrl(fileId: string): string {
   return `https://drive.google.com/uc?export=view&id=${fileId}`;
 }
 
-export async function uploadPublicImage(
+function escapeDriveQueryValue(value: string) {
+  return value.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+}
+
+export async function ensureDriveFolder(
+  parentFolderId: string,
+  folderName: string,
+): Promise<string> {
+  async function ensureWithDriveClient(
+    drive: ReturnType<typeof getDriveClient>,
+  ): Promise<string> {
+    const safeFolderName = escapeDriveQueryValue(folderName);
+    const safeParentFolderId = escapeDriveQueryValue(parentFolderId);
+    const existing = await drive.files.list({
+      supportsAllDrives: true,
+      includeItemsFromAllDrives: true,
+      q: [
+        "mimeType = 'application/vnd.google-apps.folder'",
+        "trashed = false",
+        `name = '${safeFolderName}'`,
+        `'${safeParentFolderId}' in parents`,
+      ].join(" and "),
+      fields: "files(id, name)",
+      pageSize: 1,
+    });
+
+    const existingFolderId = existing.data.files?.[0]?.id;
+    if (existingFolderId) return existingFolderId;
+
+    const created = await drive.files.create({
+      supportsAllDrives: true,
+      requestBody: {
+        name: folderName,
+        mimeType: "application/vnd.google-apps.folder",
+        parents: [parentFolderId],
+      },
+      fields: "id",
+    });
+
+    const folderId = created.data.id;
+    if (!folderId) {
+      throw new Error("Google Drive did not return folder id");
+    }
+
+    return folderId;
+  }
+
+  try {
+    return await ensureWithDriveClient(getDriveClient());
+  } catch (error) {
+    if (!shouldFallbackToServiceAccount(error)) throw error;
+    return ensureWithDriveClient(getServiceAccountDriveClient());
+  }
+}
+
+export async function uploadPublicImageToFolder(
   buffer: Buffer,
   fileName: string,
   mimeType: string,
+  folderId: string,
 ): Promise<string> {
-  const folderId = getInviteBgFolderId();
-
   async function uploadWithDriveClient(
     drive: ReturnType<typeof getDriveClient>,
   ): Promise<string> {
@@ -79,4 +133,17 @@ export async function uploadPublicImage(
       throw fallbackError;
     }
   }
+}
+
+export async function uploadPublicImage(
+  buffer: Buffer,
+  fileName: string,
+  mimeType: string,
+): Promise<string> {
+  return uploadPublicImageToFolder(
+    buffer,
+    fileName,
+    mimeType,
+    getInviteBgFolderId(),
+  );
 }

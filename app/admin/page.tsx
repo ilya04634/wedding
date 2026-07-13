@@ -1,5 +1,6 @@
 import {
   fillMissingGuestIdsAction,
+  exportWishCardsAction,
   generateMissingInviteBackgroundsAction,
   loginAdmin,
   logoutAdmin,
@@ -24,7 +25,7 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 120;
 
 interface AdminPageProps {
-  searchParams: { error?: string };
+  searchParams: { error?: string; wishExported?: string; wishSkipped?: string };
 }
 
 const SECTION_OPTIONS = [
@@ -167,6 +168,11 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               Синхронизировать BackgroundPool
             </Button>
           </form>
+          <form action={exportWishCardsAction}>
+            <Button type="submit" variant="secondary">
+              Выгрузить пожелания PNG в Drive
+            </Button>
+          </form>
           <form action={setInviteBackgroundGenerationAction}>
             <input
               type="hidden"
@@ -193,6 +199,14 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           OpenAI, если фон уже готов — в этом случае она только дозапишет ссылку
           приглашения.
         </p>
+        {searchParams.wishExported !== undefined ? (
+          <p className="mt-3 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-800">
+            PNG-пожелания выгружены в Drive: новых{" "}
+            {searchParams.wishExported}, пропущено уже готовых{" "}
+            {searchParams.wishSkipped ?? "0"}. Ссылки записаны в лист
+            WishExports.
+          </p>
+        ) : null}
       </section>
 
       <section className="mt-8">

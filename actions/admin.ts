@@ -24,6 +24,7 @@ import {
   updateSiteSettings,
   type SiteSettingsFormData,
 } from "@/lib/google/settings";
+import { exportWishCardsToDrive } from "@/lib/google/wish-card-exports";
 import { syncRsvpGuestNamesFromInvites } from "@/lib/google/sheets";
 import { DEFAULT_SITE_SETTINGS } from "@/lib/settings/defaults";
 import type { GuestPersonType } from "@/types/guest";
@@ -199,6 +200,15 @@ export async function syncBackgroundPoolAction() {
   }
 
   revalidatePath("/admin");
+}
+
+export async function exportWishCardsAction() {
+  assertAdminAuthenticated();
+
+  const result = await exportWishCardsToDrive();
+  redirect(
+    `/admin?wishExported=${result.total}&wishSkipped=${result.skipped}`,
+  );
 }
 
 export async function generateInviteBackgroundAction(formData: FormData) {
