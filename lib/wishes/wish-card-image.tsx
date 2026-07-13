@@ -6,6 +6,7 @@ import { ImageResponse } from "next/og";
 const CARD_COLORS = ["#f7d6d1", "#dfe7d5", "#fff1a9", "#fff6dd"];
 const CARD_WIDTH = 900;
 const HORIZONTAL_PADDING = 72;
+const IMAGE_PADDING = 54;
 const VERTICAL_PADDING = 68;
 
 function hashText(value: string): number {
@@ -17,10 +18,6 @@ function hashText(value: string): number {
   }
 
   return hash >>> 0;
-}
-
-function clamp(value: number, min: number, max: number) {
-  return Math.min(max, Math.max(min, value));
 }
 
 function splitLongWord(word: string, maxChars: number) {
@@ -75,9 +72,15 @@ function getCardMetrics(wishText: string) {
   const lines = wrapText(wishText, maxChars);
   const lineHeight = Math.round(textSize * 1.04);
   const contentHeight = lines.length * lineHeight;
-  const cardHeight = clamp(360 + contentHeight, 640, 2200);
+  const headerHeight = 68;
+  const footerHeight = 78;
+  const minCardHeight = 640;
+  const naturalCardHeight =
+    VERTICAL_PADDING * 2 + headerHeight + contentHeight + footerHeight;
+  const cardHeight = Math.max(minCardHeight, naturalCardHeight);
+  const imageHeight = cardHeight + IMAGE_PADDING * 2;
 
-  return { cardHeight, lineHeight, lines, textSize };
+  return { cardHeight, imageHeight, lineHeight, lines, textSize };
 }
 
 function sanitizeFilePart(value: string) {
@@ -100,19 +103,19 @@ export function buildWishCardFileName(wish: WeddingWish, index: number) {
 export async function renderWishCardPng(wish: WeddingWish): Promise<Buffer> {
   const hash = hashText(`${wish.id}-${wish.guestName}-${wish.wishText}`);
   const color = CARD_COLORS[hash % CARD_COLORS.length];
-  const { cardHeight, lineHeight, lines, textSize } = getCardMetrics(wish.wishText);
+  const { cardHeight, imageHeight, lineHeight, lines, textSize } =
+    getCardMetrics(wish.wishText);
 
   const response = new ImageResponse(
     (
       <div
         style={{
           alignItems: "center",
-          background:
-            "radial-gradient(circle at 18% 12%, rgba(244,208,63,0.18), transparent 28%), radial-gradient(circle at 82% 20%, rgba(231,151,150,0.14), transparent 30%), linear-gradient(135deg, #f3ecdf 0%, #fbf3d9 100%)",
+          background: "transparent",
           display: "flex",
           height: "100%",
           justifyContent: "center",
-          padding: 40,
+          padding: IMAGE_PADDING,
           width: "100%",
         }}
       >
@@ -124,10 +127,10 @@ export async function renderWishCardPng(wish: WeddingWish): Promise<Buffer> {
             boxShadow: "0 28px 70px rgba(52,49,45,0.16)",
             display: "flex",
             flexDirection: "column",
-            minHeight: cardHeight - 80,
+            minHeight: cardHeight,
             padding: `${VERTICAL_PADDING}px ${HORIZONTAL_PADDING}px`,
             position: "relative",
-            width: CARD_WIDTH - 80,
+            width: CARD_WIDTH - IMAGE_PADDING * 2,
           }}
         >
           <div
@@ -197,7 +200,7 @@ export async function renderWishCardPng(wish: WeddingWish): Promise<Buffer> {
       </div>
     ),
     {
-      height: cardHeight,
+      height: imageHeight,
       width: CARD_WIDTH,
     },
   );
