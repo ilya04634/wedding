@@ -9,6 +9,7 @@ import { listWishes, updateWishExportInfo } from "./wishes";
 
 const WISH_CARDS_FOLDER_NAME =
   process.env.WISH_CARDS_FOLDER_NAME?.trim() || "WishCards";
+const WISH_CARD_RENDER_VERSION = "transparent-v1";
 
 export interface WishCardExportResult {
   exportedAt: string;
@@ -22,7 +23,14 @@ export interface WishCardExportResult {
 
 function buildWishSignature(wish: WeddingWish) {
   return createHash("sha256")
-    .update(JSON.stringify([wish.id, wish.guestName, wish.wishText]))
+    .update(
+      JSON.stringify([
+        WISH_CARD_RENDER_VERSION,
+        wish.id,
+        wish.guestName,
+        wish.wishText,
+      ]),
+    )
     .digest("hex");
 }
 
